@@ -26,5 +26,5 @@ html.nocturne-scroll{overflow-anchor:none!important}
 html.nocturne-scroll .word-heading .motion-word{transition:none!important}
 html.nocturne-scroll :is(.scroll-tuning-panel,.utility-options,[data-free-scroll],.dialog-content){overscroll-behavior:contain}
 /* Keep direct vector editing and sliders from starting a native page swipe. */
-html.nocturne-scroll #vectorCanvas{touch-action:none!important}
+html.nocturne-scroll #vectorCanvas{touch-action:pan-y pinch-zoom!important}
 html.nocturne-scroll input[type=range]{touch-action:pan-x}

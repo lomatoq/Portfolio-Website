@@ -594,7 +594,7 @@
         const m = new DOMMatrix(getComputedStyle(c.canvas.closest('.vector-window')).transform), a = Math.atan2(m.b, m.a), x = e.clientX - r.left - r.width / 2, y = e.clientY - r.top - r.height / 2;
         return [x * Math.cos(a) + y * Math.sin(a) + c.w / 2, -x * Math.sin(a) + y * Math.cos(a) + c.h / 2];
     } return [(e.clientX - r.left) * c.w / r.width, (e.clientY - r.top) * c.h / r.height]; }
-    vectorCanvas.addEventListener('pointerdown', e => { if (vectorAmount < .55)
+    vectorCanvas.addEventListener('pointerdown', e => { if (e.pointerType === 'touch' || vectorAmount < .55)
         return; const c = ctxs.vectorCanvas, [px, py] = canvasPoint(e, c), side = Math.min(c.w * .84, c.h * 1.03), X = (c.w - side) / 2, Y = (c.h - side) / 2; let min = 28; nodes.forEach(([x, y], i) => { const d = Math.hypot(px - X - side * (.1 + x * .8), py - Y - side * (.1 + y * .8)); if (d < min) {
         min = d;
         drag = i;

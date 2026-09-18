@@ -344,6 +344,9 @@
       window.NocturneScroll?.to(rs.owner.top+rs.owner.span*p,{instant:true,source:'gallery-drag'});window.portfolioWake?.();
     },{passive:false});
     const finish=e=>{
+      // Touch starts with implicit capture on the card. Transferring it to
+      // the rail emits a bubbling loss from that child, not the end of a swipe.
+      if(e.pointerType==='touch'&&e.type==='lostpointercapture'&&e.target!==rs.win)return;
       if(!drag||e.pointerId!==drag.id)return;
       const moved=drag.horizontal,velocity=drag.velocity;drag=null;rs.dragging=false;
       if(rs.win.hasPointerCapture(e.pointerId))rs.win.releasePointerCapture(e.pointerId);

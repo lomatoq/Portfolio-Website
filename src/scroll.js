@@ -19,6 +19,9 @@
   let lastFrame=0,lastInputAt=-Infinity,inputDirection=0,mode='idle',done=null;
   let touch=null,scrollbarHeld=false,settleTimer=0,resizeTimer=0,lastCaptured=null;
   let departure=null, arrival=null;
+  // Touch scrolling belongs to the browser/compositor, in both orientations.
+  // Never feed finger movement into the wheel spring or its presentation gates.
+  let touchDriven=matchMedia('(pointer: coarse)').matches;
   let acceptedInputs=0,settleSerial=0;const trace=[];
   function record(type,data={}){trace.push({type,at:Math.round(performance.now()),y:+position.toFixed(2),...data});if(trace.length>70)trace.shift();}
   function invalidate(){dirty=true;wake();}
@@ -129,6 +132,7 @@
   function managesInput(e){return !reduced()&&!suspended()&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!freeNode(e.target);}
   addEventListener('wheel',e=>{
     if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.altKey||reduced()||suspended())return;
+    touchDriven=false;
     const native=freeNode(e.target);if(native){if(native.scrollHeight<=native.clientHeight+1&&e.cancelable)e.preventDefault();return;}
     if(e.target.closest?.('select'))return;
     let delta=e.deltaY;
@@ -146,25 +150,19 @@
     e.preventDefault();consume(dir*(e.key.startsWith('Arrow')?90:innerHeight*.78),'keyboard');
   });
   addEventListener('touchstart',e=>{
-    if(e.touches.length!==1||reduced()||suspended()||freeNode(e.target)||e.target.closest?.('input,select,textarea,[data-direct-manipulation="true"]')){touch=null;return;}
-    const t=e.touches[0];clearSettle();touch={x:t.clientX,y:t.clientY,lastY:t.clientY,at:performance.now(),v:0,axis:null};
-  },{passive:true});
-  addEventListener('touchmove',e=>{
-    if(!touch||e.touches.length!==1||reduced()||suspended())return;
-    if(e.target.closest?.('[data-direct-manipulation="true"]'))return;
-    const t=e.touches[0],dx=t.clientX-touch.x,dy=touch.y-t.clientY;
-    if(!touch.axis&&Math.max(Math.abs(dx),Math.abs(dy))>5)touch.axis=Math.abs(dx)>Math.abs(dy)?'x':'y';
-    if(touch.axis==='x')return;if(e.cancelable)e.preventDefault();if(touch.axis!=='y')return;
-    const now=performance.now(),delta=touch.lastY-t.clientY;touch.v=delta/Math.max(8,now-touch.at);touch.lastY=t.clientY;touch.at=now;
-    consume(delta*1.1,'touch');clearSettle();
-  },{passive:false});
-  addEventListener('touchend',()=>{if(touch?.axis==='y'){const v=performance.now()-touch.at<90?touch.v:0;touch=null;if(Math.abs(v)>.15)consume(clamp(v*130,-innerHeight*.55,innerHeight*.55),'touch-inertia');scheduleSettle();}else touch=null;},{passive:true});
-  addEventListener('touchcancel',()=>{touch=null;clearSettle();},{passive:true});
+    touchDriven=true;
+    // Interrupt an anchor/button animation at the current position on contact.
+    // Nested scrollers retain their own native gesture and background lock.
+    if(!suspended()&&!freeNode(e.target))cancel('native-touch');
+  },{capture:true,passive:true});
   addEventListener('pointerdown',e=>{if((e.clientX>=root.clientWidth&&innerWidth>root.clientWidth)||e.button===1){cancel('scrollbar');scrollbarHeld=true;}},{passive:true});
   addEventListener('pointerup',()=>{if(scrollbarHeld){scrollbarHeld=false;cancel('scrollbar-release');}},{passive:true});
   addEventListener('scroll',()=>{if(owned&&Math.abs(scrollY-lastWritten)>2)cancel('native-scroll');},{passive:true});
   addEventListener('blur',()=>{scrollbarHeld=false;cancel('blur');});
   addEventListener('resize',()=>{
+    // Mobile browser bars resize the viewport during a swipe. Never snap back
+    // to a checkpoint when the visual viewport changes underneath native inertia.
+    if(touchDriven){if(owned)cancel('touch-resize');invalidate();return;}
     measure();const p=nearest(points,position),id=p&&Math.abs(p.y-position)<2?p.id:null;cancel('resize');invalidate();clearTimeout(resizeTimer);
     resizeTimer=setTimeout(()=>{measure();const q=points.find(p=>p.id===id);if(q&&!suspended())begin(q.y,{instant:true});},150);
   },{passive:true});
@@ -178,10 +176,10 @@
   function configure(values,persist=true){Object.assign(settings,sanitize(values));if(persist)try{localStorage.setItem(STORAGE,JSON.stringify(settings));storageAvailable=true;}catch{storageAvailable=false;}updateSettingsUI();return {...settings};}
   const api=window.NocturneScroll={
     to:begin,cancel,tick,invalidate,managesInput,next(dir){consume(Math.sign(dir)*innerHeight*.75,'next');},
-    active:()=>moving,synchronized:()=>owned,playhead:()=>owned?position:scrollY,
+    active:()=>moving,synchronized:()=>owned||touchDriven,playhead:()=>owned?position:scrollY,
     checkpoints:()=>{measure();return points.map(p=>({...p}));},configure,reset:()=>configure(DEFAULTS),
     get settings(){return {...settings};},
-    diagnostics:()=>{measure();return {version:'flow59',mode,position,actual:scrollY,target,velocity,active:moving,synchronized:owned,gate:arrival?{id:arrival.point.id,readyAt:arrival.readyAt}:null,locked:!!arrival,acceptedInputs,settleSerial,pointCount:points.length,settings:{...settings},trace:trace.map(e=>({...e}))};}
+    diagnostics:()=>{measure();return {version:'flow60',mode,nativeTouch:touchDriven,position:owned?position:scrollY,actual:scrollY,target,velocity,active:moving,synchronized:owned||touchDriven,gate:arrival?{id:arrival.point.id,readyAt:arrival.readyAt}:null,locked:!!arrival,acceptedInputs,settleSerial,pointCount:points.length,settings:{...settings},trace:trace.map(e=>({...e}))};}
   };
   root.classList.add('nocturne-scroll');
   const options=$('#utilityOptions');let panel=null;

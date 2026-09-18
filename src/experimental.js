@@ -74,10 +74,11 @@
  const insideCaseScroller=target=>target?.closest?.('[data-free-scroll]');
  function blockCaseScroll(e){if(caseScrollLock&&!e.ctrlKey&&!insideCaseScroller(e.target))e.preventDefault();}
  addEventListener('wheel',blockCaseScroll,{capture:true,passive:false});
- addEventListener('touchmove',blockCaseScroll,{capture:true,passive:false});
- function lockCaseScroll(){if(caseScrollLock)return;caseScrollLock={y:scrollY,x:scrollX};}
+ // A page-wide non-passive listener forces every native swipe through JS.
+ // Install the modal guard only while a case actually owns the background.
+ function lockCaseScroll(){if(caseScrollLock)return;caseScrollLock={y:scrollY,x:scrollX};addEventListener('touchmove',blockCaseScroll,{capture:true,passive:false});}
  function keepCaseScroll(){if(caseScrollLock&&(scrollY!==caseScrollLock.y||scrollX!==caseScrollLock.x))scrollTo({left:caseScrollLock.x,top:caseScrollLock.y,behavior:'instant'});}
- function unlockCaseScroll(){if(!caseScrollLock)return;caseScrollLock=null;}
+ function unlockCaseScroll(){if(!caseScrollLock)return;caseScrollLock=null;removeEventListener('touchmove',blockCaseScroll,true);}
 
  function openPanel(html,source){if(!flags.careerInlineCase)return false;window.NocturneScroll?.cancel();hover(null);lockCaseScroll();
   inlineAnimation?.cancel();closing=false;activeTween++;if(!inline){restoreFocus=source||document.activeElement;origin=source?.closest?.('.exp')||null;sourceRect=(source||origin?.querySelector('summary'))?.getBoundingClientRect();}
@@ -410,4 +411,3 @@
 
  apply();window.portfolioWake?.();
 })();
-

@@ -1,0 +1,42 @@
+{
+  "checks": [
+    {
+      "name": "Exact spring is frame-rate independent at 30/60/120/144 Hz",
+      "pass": true,
+      "details": {
+        "x": 598.049306065293,
+        "v": 27.422138256589378
+      }
+    },
+    {
+      "name": "Default response reaches 95% of a wheel step in 300 ms",
+      "pass": true,
+      "details": 0.9502527525820564
+    },
+    {
+      "name": "Approach from rest is monotone without an overshoot",
+      "pass": true
+    },
+    {
+      "name": "Retargeting preserves position and current velocity at t=0",
+      "pass": true
+    },
+    {
+      "name": "Reversal dissipates velocity and reaches the new target",
+      "pass": true,
+      "details": {
+        "x": 2.718531562969278e-10,
+        "v": -4.170905376519669e-9
+      }
+    },
+    {
+      "name": "No gesture freshness, gate, hold or lock state machine in runtime",
+      "pass": true
+    },
+    {
+      "name": "Every JavaScript source parses",
+      "pass": true,
+      "details": 10
+    }
+  ]
+}

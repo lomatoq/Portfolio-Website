@@ -1,0 +1,74 @@
+{
+  "checks": [
+    {
+      "name": "Selected work supports mixed cell types",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Tall-image viewer opens over original case",
+      "pass": true,
+      "details": {
+        "id": "chick",
+        "type": "long-image",
+        "open": true,
+        "closing": false,
+        "backgroundY": 2908,
+        "scrollTop": 0,
+        "videoTime": null,
+        "notesVisible": true
+      }
+    },
+    {
+      "name": "Image loaded with tall natural aspect ratio",
+      "pass": true,
+      "details": {
+        "w": 1200,
+        "h": 4480
+      }
+    },
+    {
+      "name": "Viewer scroll leaves page position unchanged",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Escape closes only media, keeps company case",
+      "pass": true,
+      "details": {
+        "media": {
+          "id": null,
+          "type": null,
+          "open": false,
+          "closing": false,
+          "backgroundY": null,
+          "scrollTop": 0,
+          "videoTime": null,
+          "notesVisible": true
+        },
+        "inline": true
+      }
+    },
+    {
+      "name": "Video autoplay advances",
+      "pass": true,
+      "details": {
+        "paused": false,
+        "t": 1.21045,
+        "error": null,
+        "ready": 4
+      }
+    },
+    {
+      "name": "Ordinary context case still opens normally",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "No JS errors",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "errors": []
+}

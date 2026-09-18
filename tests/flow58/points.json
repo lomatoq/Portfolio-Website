@@ -1,0 +1,320 @@
+[
+  {
+    "y": 0,
+    "id": "top",
+    "kind": "hero",
+    "hard": false
+  },
+  {
+    "y": 1144,
+    "id": "freelance",
+    "kind": "career",
+    "hard": false
+  },
+  {
+    "y": 1384,
+    "id": "playgendary",
+    "kind": "career",
+    "hard": false
+  },
+  {
+    "y": 1638,
+    "id": "rocketscience",
+    "kind": "career",
+    "hard": false
+  },
+  {
+    "y": 1892,
+    "id": "pandaplay",
+    "kind": "career",
+    "hard": false
+  },
+  {
+    "y": 2146,
+    "id": "flime",
+    "kind": "career",
+    "hard": false
+  },
+  {
+    "y": 2400,
+    "id": "voodoo",
+    "kind": "career",
+    "hard": false
+  },
+  {
+    "y": 2654,
+    "id": "software28",
+    "kind": "career",
+    "hard": false
+  },
+  {
+    "y": 2908,
+    "id": "spribe",
+    "kind": "career",
+    "hard": false
+  },
+  {
+    "y": 3731,
+    "id": "projects",
+    "kind": "orbit",
+    "hard": false
+  },
+  {
+    "y": 5315.86875,
+    "id": "vice",
+    "kind": "chapter",
+    "hard": false,
+    "progress": 0.14,
+    "chapter": "vice",
+    "rail": 0,
+    "slide": null
+  },
+  {
+    "y": 5983.44375,
+    "id": "vice:0:0",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.485,
+    "chapter": "vice",
+    "rail": 0,
+    "slide": 0
+  },
+  {
+    "y": 6254.34375,
+    "id": "vice:0:1",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.625,
+    "chapter": "vice",
+    "rail": 0,
+    "slide": 1
+  },
+  {
+    "y": 6525.24375,
+    "id": "vice:0:2",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.765,
+    "chapter": "vice",
+    "rail": 0,
+    "slide": 2
+  },
+  {
+    "y": 6796.14375,
+    "id": "vice:0:3",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.905,
+    "chapter": "vice",
+    "rail": 0,
+    "slide": 3
+  },
+  {
+    "y": 8119.36875,
+    "id": "companion",
+    "kind": "chapter",
+    "hard": false,
+    "progress": 0.14,
+    "chapter": "companion",
+    "rail": 0,
+    "slide": null
+  },
+  {
+    "y": 8709.31875,
+    "id": "companion:0:0",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.485,
+    "chapter": "companion",
+    "rail": 0,
+    "slide": 0
+  },
+  {
+    "y": 8948.71875,
+    "id": "companion:0:1",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.625,
+    "chapter": "companion",
+    "rail": 0,
+    "slide": 1
+  },
+  {
+    "y": 9188.11875,
+    "id": "companion:0:2",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.765,
+    "chapter": "companion",
+    "rail": 0,
+    "slide": 2
+  },
+  {
+    "y": 9427.51875,
+    "id": "companion:0:3",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.905,
+    "chapter": "companion",
+    "rail": 0,
+    "slide": 3
+  },
+  {
+    "y": 10729.36875,
+    "id": "party",
+    "kind": "chapter",
+    "hard": false,
+    "progress": 0.14,
+    "chapter": "party",
+    "rail": 0,
+    "slide": null
+  },
+  {
+    "y": 11319.31875,
+    "id": "party:0:0",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.485,
+    "chapter": "party",
+    "rail": 0,
+    "slide": 0
+  },
+  {
+    "y": 11558.71875,
+    "id": "party:0:1",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.625,
+    "chapter": "party",
+    "rail": 0,
+    "slide": 1
+  },
+  {
+    "y": 11798.11875,
+    "id": "party:0:2",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.765,
+    "chapter": "party",
+    "rail": 0,
+    "slide": 2
+  },
+  {
+    "y": 12037.51875,
+    "id": "party:0:3",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.905,
+    "chapter": "party",
+    "rail": 0,
+    "slide": 3
+  },
+  {
+    "y": 13339.36875,
+    "id": "elemental",
+    "kind": "chapter",
+    "hard": false,
+    "progress": 0.14,
+    "chapter": "elemental",
+    "rail": 0,
+    "slide": null
+  },
+  {
+    "y": 13929.31875,
+    "id": "elemental:0:0",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.485,
+    "chapter": "elemental",
+    "rail": 0,
+    "slide": 0
+  },
+  {
+    "y": 14168.71875,
+    "id": "elemental:0:1",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.625,
+    "chapter": "elemental",
+    "rail": 0,
+    "slide": 1
+  },
+  {
+    "y": 14408.11875,
+    "id": "elemental:0:2",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.765,
+    "chapter": "elemental",
+    "rail": 0,
+    "slide": 2
+  },
+  {
+    "y": 14647.51875,
+    "id": "elemental:0:3",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.905,
+    "chapter": "elemental",
+    "rail": 0,
+    "slide": 3
+  },
+  {
+    "y": 15949.36875,
+    "id": "tools",
+    "kind": "chapter",
+    "hard": false,
+    "progress": 0.14,
+    "chapter": "tools",
+    "rail": 0,
+    "slide": null
+  },
+  {
+    "y": 16539.31875,
+    "id": "tools:0:0",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.485,
+    "chapter": "tools",
+    "rail": 0,
+    "slide": 0
+  },
+  {
+    "y": 16898.41875,
+    "id": "tools:0:1",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.6950000000000001,
+    "chapter": "tools",
+    "rail": 0,
+    "slide": 1
+  },
+  {
+    "y": 17257.51875,
+    "id": "tools:0:2",
+    "kind": "gallery",
+    "hard": false,
+    "progress": 0.905,
+    "chapter": "tools",
+    "rail": 0,
+    "slide": 2
+  },
+  {
+    "y": 18320,
+    "id": "bento",
+    "kind": "section",
+    "hard": false
+  },
+  {
+    "y": 20300,
+    "id": "lab",
+    "kind": "section",
+    "hard": false
+  },
+  {
+    "y": 21451,
+    "id": "contact",
+    "kind": "section",
+    "hard": false
+  }
+]

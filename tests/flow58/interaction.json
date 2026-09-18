@@ -1,0 +1,97 @@
+{
+  "checks": [
+    {
+      "name": "vice: wheel entrance lands fully open",
+      "pass": true,
+      "details": 4903
+    },
+    {
+      "name": "companion: wheel entrance lands fully open",
+      "pass": true,
+      "details": 7295
+    },
+    {
+      "name": "party: wheel entrance lands fully open",
+      "pass": true,
+      "details": 9523
+    },
+    {
+      "name": "elemental: wheel entrance lands fully open",
+      "pass": true,
+      "details": 11750
+    },
+    {
+      "name": "tools: wheel entrance lands fully open",
+      "pass": true,
+      "details": 13977
+    },
+    {
+      "name": "Next input moves actual position within two rendered frames",
+      "pass": true,
+      "details": {
+        "position": 4937.793291542723,
+        "anchor": 4903.16625
+      }
+    },
+    {
+      "name": "First wheel after intro gives visible composition feedback",
+      "pass": true,
+      "details": {
+        "before": {
+          "x": 325.5,
+          "y": 368,
+          "width": 700,
+          "height": 317
+        },
+        "after": {
+          "x": 303.0841064453125,
+          "y": 362.0228576660156,
+          "width": 706.7951049804688,
+          "height": 329.4533996582031
+        }
+      }
+    },
+    {
+      "name": "Reverse approach also has a soft entrance",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Reverse input interrupts pending forward inertia",
+      "pass": true,
+      "details": {
+        "forwardTarget": 6072.8259375,
+        "reverseTarget": 5846.040937627699
+      }
+    },
+    {
+      "name": "Horizontal drag remains synchronized with page position",
+      "pass": true,
+      "details": {
+        "y": 5704,
+        "first": 5472.8259375
+      }
+    },
+    {
+      "name": "Repeated keyboard input is accepted without a wait",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Native position change cancels smooth ownership",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Input resumes after native scrolling",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "No interaction JS errors",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "errors": []
+}

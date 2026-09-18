@@ -1,0 +1,772 @@
+{
+  "checks": [
+    {
+      "name": "Large single impulse lands at project intro",
+      "pass": true,
+      "details": {
+        "version": "flow58",
+        "mode": "idle",
+        "position": 5315.86875,
+        "actual": 5316,
+        "target": 5315.86875,
+        "velocity": 0,
+        "active": false,
+        "synchronized": true,
+        "gate": null,
+        "locked": false,
+        "acceptedInputs": 1,
+        "settleSerial": 1,
+        "pointCount": 37,
+        "settings": {
+          "response": 300,
+          "sensitivity": 1,
+          "entranceResistance": 0.48,
+          "magnet": 1
+        },
+        "trace": [
+          {
+            "type": "cancel",
+            "at": 2299,
+            "y": 0,
+            "reason": "pageshow"
+          },
+          {
+            "type": "cancel",
+            "at": 5091,
+            "y": 0,
+            "reason": "booted"
+          },
+          {
+            "type": "entrance",
+            "at": 8088,
+            "y": 4935.87,
+            "id": "vice"
+          },
+          {
+            "type": "input",
+            "at": 8088,
+            "y": 4935.87,
+            "source": "wheel",
+            "delta": 900,
+            "to": 5315.87
+          }
+        ]
+      }
+    },
+    {
+      "name": "Intro is fully visible",
+      "pass": true,
+      "details": [
+        {
+          "id": "vice",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 1,
+          "progress": 0.13999999999999982,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": 0,
+              "visible": false
+            }
+          ],
+          "masked": false
+        },
+        {
+          "id": "companion",
+          "visible": false,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": null,
+              "visible": false
+            }
+          ],
+          "masked": false
+        },
+        {
+          "id": "party",
+          "visible": false,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": null,
+              "visible": false
+            }
+          ],
+          "masked": false
+        },
+        {
+          "id": "elemental",
+          "visible": false,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": null,
+              "visible": false
+            }
+          ],
+          "masked": false
+        },
+        {
+          "id": "tools",
+          "visible": false,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": null,
+              "visible": false
+            }
+          ],
+          "masked": false
+        }
+      ]
+    },
+    {
+      "name": "Next wheel responds immediately without fresh gesture",
+      "pass": true,
+      "details": {
+        "version": "flow58",
+        "mode": "free",
+        "position": 5331.371561472154,
+        "actual": 5331,
+        "target": 5373.46875,
+        "velocity": 335.47649135877055,
+        "active": true,
+        "synchronized": true,
+        "gate": null,
+        "locked": false,
+        "acceptedInputs": 2,
+        "settleSerial": 1,
+        "pointCount": 37,
+        "settings": {
+          "response": 300,
+          "sensitivity": 1,
+          "entranceResistance": 0.48,
+          "magnet": 1
+        },
+        "trace": [
+          {
+            "type": "cancel",
+            "at": 2299,
+            "y": 0,
+            "reason": "pageshow"
+          },
+          {
+            "type": "cancel",
+            "at": 5091,
+            "y": 0,
+            "reason": "booted"
+          },
+          {
+            "type": "entrance",
+            "at": 8088,
+            "y": 4935.87,
+            "id": "vice"
+          },
+          {
+            "type": "input",
+            "at": 8088,
+            "y": 4935.87,
+            "source": "wheel",
+            "delta": 900,
+            "to": 5315.87
+          },
+          {
+            "type": "input",
+            "at": 11943,
+            "y": 5315.87,
+            "source": "wheel",
+            "delta": 120,
+            "to": 5373.47
+          }
+        ]
+      }
+    },
+    {
+      "name": "Soft settle does not pull departure back to intro",
+      "pass": true,
+      "details": {
+        "version": "flow58",
+        "mode": "idle",
+        "position": 5373.46875,
+        "actual": 5373,
+        "target": 5373.46875,
+        "velocity": 0,
+        "active": false,
+        "synchronized": true,
+        "gate": null,
+        "locked": false,
+        "acceptedInputs": 2,
+        "settleSerial": 2,
+        "pointCount": 37,
+        "settings": {
+          "response": 300,
+          "sensitivity": 1,
+          "entranceResistance": 0.48,
+          "magnet": 1
+        },
+        "trace": [
+          {
+            "type": "cancel",
+            "at": 2299,
+            "y": 0,
+            "reason": "pageshow"
+          },
+          {
+            "type": "cancel",
+            "at": 5091,
+            "y": 0,
+            "reason": "booted"
+          },
+          {
+            "type": "entrance",
+            "at": 8088,
+            "y": 4935.87,
+            "id": "vice"
+          },
+          {
+            "type": "input",
+            "at": 8088,
+            "y": 4935.87,
+            "source": "wheel",
+            "delta": 900,
+            "to": 5315.87
+          },
+          {
+            "type": "input",
+            "at": 11943,
+            "y": 5315.87,
+            "source": "wheel",
+            "delta": 120,
+            "to": 5373.47
+          }
+        ]
+      }
+    },
+    {
+      "name": "Input retargets DURING entrance animation",
+      "pass": true,
+      "details": {
+        "version": "flow58",
+        "mode": "free",
+        "position": 5260.835861299171,
+        "actual": 5261,
+        "target": 5392.66875,
+        "velocity": 1242.4261945958344,
+        "active": true,
+        "synchronized": true,
+        "gate": null,
+        "locked": false,
+        "acceptedInputs": 4,
+        "settleSerial": 2,
+        "pointCount": 37,
+        "settings": {
+          "response": 300,
+          "sensitivity": 1,
+          "entranceResistance": 0.48,
+          "magnet": 1
+        },
+        "trace": [
+          {
+            "type": "cancel",
+            "at": 2299,
+            "y": 0,
+            "reason": "pageshow"
+          },
+          {
+            "type": "cancel",
+            "at": 5091,
+            "y": 0,
+            "reason": "booted"
+          },
+          {
+            "type": "entrance",
+            "at": 8088,
+            "y": 4935.87,
+            "id": "vice"
+          },
+          {
+            "type": "input",
+            "at": 8088,
+            "y": 4935.87,
+            "source": "wheel",
+            "delta": 900,
+            "to": 5315.87
+          },
+          {
+            "type": "input",
+            "at": 11943,
+            "y": 5315.87,
+            "source": "wheel",
+            "delta": 120,
+            "to": 5373.47
+          },
+          {
+            "type": "entrance",
+            "at": 13598,
+            "y": 4935.87,
+            "id": "vice"
+          },
+          {
+            "type": "input",
+            "at": 13598,
+            "y": 4935.87,
+            "source": "wheel",
+            "delta": 850,
+            "to": 5315.87
+          },
+          {
+            "type": "input",
+            "at": 13932,
+            "y": 5178.46,
+            "source": "wheel",
+            "delta": 160,
+            "to": 5392.67
+          }
+        ]
+      }
+    },
+    {
+      "name": "Gallery moves across multiple cards without mandatory stops",
+      "pass": true,
+      "details": {
+        "version": "flow58",
+        "mode": "idle",
+        "position": 6946.14375,
+        "actual": 6946,
+        "target": 6946.14375,
+        "velocity": 0,
+        "active": false,
+        "synchronized": true,
+        "gate": null,
+        "locked": false,
+        "acceptedInputs": 11,
+        "settleSerial": 3,
+        "pointCount": 37,
+        "settings": {
+          "response": 300,
+          "sensitivity": 1,
+          "entranceResistance": 0.48,
+          "magnet": 1
+        },
+        "trace": [
+          {
+            "type": "cancel",
+            "at": 2299,
+            "y": 0,
+            "reason": "pageshow"
+          },
+          {
+            "type": "cancel",
+            "at": 5091,
+            "y": 0,
+            "reason": "booted"
+          },
+          {
+            "type": "entrance",
+            "at": 8088,
+            "y": 4935.87,
+            "id": "vice"
+          },
+          {
+            "type": "input",
+            "at": 8088,
+            "y": 4935.87,
+            "source": "wheel",
+            "delta": 900,
+            "to": 5315.87
+          },
+          {
+            "type": "input",
+            "at": 11943,
+            "y": 5315.87,
+            "source": "wheel",
+            "delta": 120,
+            "to": 5373.47
+          },
+          {
+            "type": "entrance",
+            "at": 13598,
+            "y": 4935.87,
+            "id": "vice"
+          },
+          {
+            "type": "input",
+            "at": 13598,
+            "y": 4935.87,
+            "source": "wheel",
+            "delta": 850,
+            "to": 5315.87
+          },
+          {
+            "type": "input",
+            "at": 13932,
+            "y": 5178.46,
+            "source": "wheel",
+            "delta": 160,
+            "to": 5392.67
+          },
+          {
+            "type": "input",
+            "at": 14465,
+            "y": 5983.44,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6133.44
+          },
+          {
+            "type": "input",
+            "at": 14870,
+            "y": 6104.46,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6283.44
+          },
+          {
+            "type": "soft-settle",
+            "at": 15052,
+            "y": 6217.88,
+            "id": "vice:0:1",
+            "to": 6254.34375
+          },
+          {
+            "type": "input",
+            "at": 15337,
+            "y": 6251.78,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6404.34
+          },
+          {
+            "type": "input",
+            "at": 15795,
+            "y": 6375.39,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6554.34
+          },
+          {
+            "type": "soft-settle",
+            "at": 15978,
+            "y": 6488.8,
+            "id": "vice:0:2",
+            "to": 6525.24375
+          },
+          {
+            "type": "input",
+            "at": 16192,
+            "y": 6522.68,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6675.24
+          },
+          {
+            "type": "input",
+            "at": 16734,
+            "y": 6651.57,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6825.24
+          },
+          {
+            "type": "soft-settle",
+            "at": 16930,
+            "y": 6760.84,
+            "id": "vice:0:3",
+            "to": 6796.14375
+          },
+          {
+            "type": "input",
+            "at": 17132,
+            "y": 6786.5,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6946.14
+          }
+        ]
+      }
+    },
+    {
+      "name": "Work history scrolls continuously",
+      "pass": true,
+      "details": {
+        "version": "flow58",
+        "mode": "idle",
+        "position": 3068,
+        "actual": 3068,
+        "target": 3068,
+        "velocity": 0,
+        "active": false,
+        "synchronized": true,
+        "gate": null,
+        "locked": false,
+        "acceptedInputs": 19,
+        "settleSerial": 4,
+        "pointCount": 37,
+        "settings": {
+          "response": 300,
+          "sensitivity": 1,
+          "entranceResistance": 0.48,
+          "magnet": 1
+        },
+        "trace": [
+          {
+            "type": "cancel",
+            "at": 2299,
+            "y": 0,
+            "reason": "pageshow"
+          },
+          {
+            "type": "cancel",
+            "at": 5091,
+            "y": 0,
+            "reason": "booted"
+          },
+          {
+            "type": "entrance",
+            "at": 8088,
+            "y": 4935.87,
+            "id": "vice"
+          },
+          {
+            "type": "input",
+            "at": 8088,
+            "y": 4935.87,
+            "source": "wheel",
+            "delta": 900,
+            "to": 5315.87
+          },
+          {
+            "type": "input",
+            "at": 11943,
+            "y": 5315.87,
+            "source": "wheel",
+            "delta": 120,
+            "to": 5373.47
+          },
+          {
+            "type": "entrance",
+            "at": 13598,
+            "y": 4935.87,
+            "id": "vice"
+          },
+          {
+            "type": "input",
+            "at": 13598,
+            "y": 4935.87,
+            "source": "wheel",
+            "delta": 850,
+            "to": 5315.87
+          },
+          {
+            "type": "input",
+            "at": 13932,
+            "y": 5178.46,
+            "source": "wheel",
+            "delta": 160,
+            "to": 5392.67
+          },
+          {
+            "type": "input",
+            "at": 14465,
+            "y": 5983.44,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6133.44
+          },
+          {
+            "type": "input",
+            "at": 14870,
+            "y": 6104.46,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6283.44
+          },
+          {
+            "type": "soft-settle",
+            "at": 15052,
+            "y": 6217.88,
+            "id": "vice:0:1",
+            "to": 6254.34375
+          },
+          {
+            "type": "input",
+            "at": 15337,
+            "y": 6251.78,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6404.34
+          },
+          {
+            "type": "input",
+            "at": 15795,
+            "y": 6375.39,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6554.34
+          },
+          {
+            "type": "soft-settle",
+            "at": 15978,
+            "y": 6488.8,
+            "id": "vice:0:2",
+            "to": 6525.24375
+          },
+          {
+            "type": "input",
+            "at": 16192,
+            "y": 6522.68,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6675.24
+          },
+          {
+            "type": "input",
+            "at": 16734,
+            "y": 6651.57,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6825.24
+          },
+          {
+            "type": "soft-settle",
+            "at": 16930,
+            "y": 6760.84,
+            "id": "vice:0:3",
+            "to": 6796.14375
+          },
+          {
+            "type": "input",
+            "at": 17132,
+            "y": 6786.5,
+            "source": "wheel",
+            "delta": 150,
+            "to": 6946.14
+          },
+          {
+            "type": "input",
+            "at": 20487,
+            "y": 1144,
+            "source": "wheel",
+            "delta": 160,
+            "to": 1304
+          },
+          {
+            "type": "soft-settle",
+            "at": 20629,
+            "y": 1144,
+            "id": "playgendary",
+            "to": 1384
+          },
+          {
+            "type": "input",
+            "at": 21448,
+            "y": 1288.28,
+            "source": "wheel",
+            "delta": 160,
+            "to": 1544
+          },
+          {
+            "type": "soft-settle",
+            "at": 21583,
+            "y": 1380.68,
+            "id": "rocketscience",
+            "to": 1638
+          },
+          {
+            "type": "input",
+            "at": 22279,
+            "y": 1560.41,
+            "source": "wheel",
+            "delta": 160,
+            "to": 1798
+          },
+          {
+            "type": "soft-settle",
+            "at": 22511,
+            "y": 1644.97,
+            "id": "pandaplay",
+            "to": 1892
+          },
+          {
+            "type": "input",
+            "at": 24011,
+            "y": 1856.93,
+            "source": "wheel",
+            "delta": 160,
+            "to": 2052
+          },
+          {
+            "type": "soft-settle",
+            "at": 24382,
+            "y": 1919.52,
+            "id": "flime",
+            "to": 2146
+          },
+          {
+            "type": "input",
+            "at": 24945,
+            "y": 2074.8,
+            "source": "wheel",
+            "delta": 160,
+            "to": 2306
+          },
+          {
+            "type": "soft-settle",
+            "at": 25427,
+            "y": 2227.35,
+            "id": "voodoo",
+            "to": 2400
+          },
+          {
+            "type": "input",
+            "at": 25796,
+            "y": 2294.01,
+            "source": "wheel",
+            "delta": 160,
+            "to": 2560
+          },
+          {
+            "type": "soft-settle",
+            "at": 26010,
+            "y": 2388.86,
+            "id": "software28",
+            "to": 2654
+          },
+          {
+            "type": "input",
+            "at": 26704,
+            "y": 2574.3,
+            "source": "wheel",
+            "delta": 160,
+            "to": 2814
+          },
+          {
+            "type": "soft-settle",
+            "at": 26849,
+            "y": 2660.01,
+            "id": "spribe",
+            "to": 2908
+          },
+          {
+            "type": "input",
+            "at": 27246,
+            "y": 2759.09,
+            "source": "wheel",
+            "delta": 160,
+            "to": 3068
+          }
+        ]
+      }
+    },
+    {
+      "name": "No JS errors",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,65 @@
+{
+  "checks": [
+    {
+      "name": "Media can open without replacing a parent case",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Focus remains within top layer",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Local media replacement preserves natural aspect ratio",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Rapid close/reopen does not leave stale modal state",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Backdrop click closes video and pauses playback",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Body/root scrolling restored after media without parent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Viewport change keeps both layers open",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Underlying company case refits after viewport change",
+      "pass": true,
+      "details": {
+        "x": 24,
+        "y": 40,
+        "width": 342,
+        "height": 764
+      }
+    },
+    {
+      "name": "Reduced-motion preference is respected",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Reduced-motion wheel remains native and unblocked",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "No edge-case JS errors",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "errors": []
+}

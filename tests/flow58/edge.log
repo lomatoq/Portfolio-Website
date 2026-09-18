@@ -1,0 +1,11 @@
+PASS Media can open without replacing a parent case None
+PASS Focus remains within top layer None
+PASS Local media replacement preserves natural aspect ratio None
+PASS Rapid close/reopen does not leave stale modal state None
+PASS Backdrop click closes video and pauses playback None
+PASS Body/root scrolling restored after media without parent None
+PASS Viewport change keeps both layers open None
+PASS Underlying company case refits after viewport change {'x': 24, 'y': 40, 'width': 342, 'height': 764}
+PASS Reduced-motion preference is respected None
+PASS Reduced-motion wheel remains native and unblocked None
+PASS No edge-case JS errors []

@@ -1,0 +1,11 @@
+PASS Mobile first project fully visible None
+PASS Vertical touch scroll changes gallery position without a step gate {'before': 4837, 'after': 5211}
+PASS Mobile native overlay opens over company case None
+PASS Overlay fits mobile viewport {'x': 8, 'y': 10, 'width': 374, 'height': 824}
+PASS Notes start below tall image and are not overlaid None
+PASS Notes reveal at image end on mobile None
+PASS Overlay scroll does not move background None
+PASS Close restores same case and page coordinate None
+PASS Video plays inline on mobile None
+PASS Video has text below on mobile None
+PASS No mobile JS errors []

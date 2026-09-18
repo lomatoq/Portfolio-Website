@@ -1,0 +1,1261 @@
+{
+  "checks": [
+    {
+      "name": "vice: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 325.5,
+          "y": 368,
+          "w": 700,
+          "h": 317,
+          "right": 1025.5,
+          "bottom": 685
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "vice",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 1,
+          "progress": 0.14000000000000012,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": 0,
+              "visible": false
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "vice:0:0: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.72222900390625,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.2691040039062,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "vice",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.4849999999999999,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "vice:0:1: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.7135314941406,
+          "y": 317,
+          "w": 467.5469055175781,
+          "h": 319,
+          "right": 909.2604370117188,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "vice",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.625,
+          "rails": [
+            {
+              "position": 1,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "vice:0:2: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.704833984375,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.251708984375,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "vice",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.7650000000000001,
+          "rails": [
+            {
+              "position": 2.000000000000001,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "vice:0:3: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.6961669921875,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.2430419921875,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "vice",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.9050000000000002,
+          "rails": [
+            {
+              "position": 3,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "companion: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 320.5,
+          "y": 368,
+          "w": 710,
+          "h": 317,
+          "right": 1030.5,
+          "bottom": 685
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "companion",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 1,
+          "progress": 0.14000000000000007,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": 0,
+              "visible": false
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "companion:0:0: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.72222900390625,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.2691040039062,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "companion",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.48499999999999993,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "companion:0:1: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.7135314941406,
+          "y": 317,
+          "w": 467.5469055175781,
+          "h": 319,
+          "right": 909.2604370117188,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "companion",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.625,
+          "rails": [
+            {
+              "position": 1,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "companion:0:2: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.704833984375,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.251708984375,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "companion",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.7650000000000007,
+          "rails": [
+            {
+              "position": 2.000000000000005,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "companion:0:3: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.6961669921875,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.2430419921875,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "companion",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.9050000000000001,
+          "rails": [
+            {
+              "position": 3,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "party: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 395.5,
+          "y": 368,
+          "w": 560,
+          "h": 253,
+          "right": 955.5,
+          "bottom": 621
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "party",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 1,
+          "progress": 0.13999999999999946,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": 0,
+              "visible": false
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "party:0:0: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.72222900390625,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.2691040039062,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "party",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.48500000000000054,
+          "rails": [
+            {
+              "position": 3.96508223080413e-15,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "party:0:1: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.7135314941406,
+          "y": 317,
+          "w": 467.5469055175781,
+          "h": 319,
+          "right": 909.2604370117188,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "party",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.625,
+          "rails": [
+            {
+              "position": 1,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "party:0:2: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.704833984375,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.251708984375,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "party",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.7650000000000007,
+          "rails": [
+            {
+              "position": 2.000000000000005,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "party:0:3: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.6961669921875,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.2430419921875,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "party",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.9050000000000001,
+          "rails": [
+            {
+              "position": 3,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "elemental: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 275.5,
+          "y": 368,
+          "w": 800,
+          "h": 317,
+          "right": 1075.5,
+          "bottom": 685
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "elemental",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 1,
+          "progress": 0.13999999999999946,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": 0,
+              "visible": false
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "elemental:0:0: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.72222900390625,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.2691040039062,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "elemental",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.48500000000000054,
+          "rails": [
+            {
+              "position": 3.96508223080413e-15,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "elemental:0:1: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.7135314941406,
+          "y": 317,
+          "w": 467.5469055175781,
+          "h": 319,
+          "right": 909.2604370117188,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "elemental",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.625,
+          "rails": [
+            {
+              "position": 1,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "elemental:0:2: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.704833984375,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.251708984375,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "elemental",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.7650000000000007,
+          "rails": [
+            {
+              "position": 2.000000000000005,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "elemental:0:3: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.6961669921875,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.2430419921875,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "elemental",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.9050000000000001,
+          "rails": [
+            {
+              "position": 3,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "tools: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 320.5,
+          "y": 368,
+          "w": 710,
+          "h": 317,
+          "right": 1030.5,
+          "bottom": 685
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "tools",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 1,
+          "progress": 0.13999999999999946,
+          "rails": [
+            {
+              "position": 0,
+              "opacity": 0,
+              "visible": false
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "tools:0:0: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.72222900390625,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.2691040039062,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "tools",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.48500000000000054,
+          "rails": [
+            {
+              "position": 2.64338815386942e-15,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "tools:0:1: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.7135314941406,
+          "y": 317,
+          "w": 467.5469055175781,
+          "h": 319,
+          "right": 909.2604370117188,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "tools",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.6950000000000004,
+          "rails": [
+            {
+              "position": 1.0000000000000018,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "tools:0:2: complete pose and readable heading",
+      "pass": true,
+      "details": {
+        "rect": {
+          "x": 441.704833984375,
+          "y": 317,
+          "w": 467.546875,
+          "h": 319,
+          "right": 909.251708984375,
+          "bottom": 636
+        },
+        "words": [
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          },
+          {
+            "opacity": 1,
+            "filter": "none",
+            "transform": "none"
+          }
+        ],
+        "ready": true,
+        "state": {
+          "id": "tools",
+          "visible": true,
+          "entry": 1,
+          "exit": 0,
+          "heading": 1,
+          "study": 0,
+          "progress": 0.9050000000000001,
+          "rails": [
+            {
+              "position": 2,
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "masked": false
+        }
+      }
+    },
+    {
+      "name": "No horizontal overflow",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "No JS errors",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "errors": []
+}

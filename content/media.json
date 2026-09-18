@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "items": {
+    "polysphere": {
+      "type": "long-image",
+      "title": "Polysphere",
+      "eyebrow": "PLAYGENDARY / VISUAL STORY",
+      "src": "",
+      "width": 1200,
+      "height": 4480,
+      "alt": "Illustrative vertical case-study layout. Original Polysphere images have not been added.",
+      "demoArt": "poly",
+      "demo": true,
+      "description": "A place for the complete visual story: key art, interface details and the decisions behind the work.",
+      "sections": [
+        {"title": "The visual story", "text": "Replace this clearly labelled layout study with one tall image, or an ordered array of image segments. The artwork stays at its natural aspect ratio."},
+        {"title": "Context beside the work", "text": "Use this space for your contribution, the brief, constraints and credits. On a phone these notes follow the final image rather than covering it."}
+      ],
+      "tags": ["Visual direction", "UI / UX", "VFX"],
+      "note": "LAYOUT DEMO — NOT ORIGINAL PRODUCT IMAGERY"
+    },
+    "chick": {
+      "type": "long-image",
+      "title": "Chick Fiesta",
+      "eyebrow": "SPRIBE / VISUAL STORY",
+      "src": "",
+      "width": 1200,
+      "height": 4480,
+      "alt": "Illustrative tall-image placeholder for Chick Fiesta. Original project art is not included.",
+      "demoArt": "chick",
+      "demo": true,
+      "description": "One continuous canvas for the character, the interface and the rhythm of the game.",
+      "sections": [
+        {"title": "Character & interface", "text": "This is a functional tall-image viewer with schematic placeholder content. Approved character art, UI frames and animation breakdowns can replace it without changing the viewer."},
+        {"title": "Your contribution", "text": "Add project-specific responsibilities, collaborators and context here. These notes remain beside the image on desktop and appear after it on mobile."}
+      ],
+      "tags": ["Character", "Mobile UI", "Motion"],
+      "note": "SCHEMATIC PLACEHOLDER — PUBLICATION APPROVAL PENDING"
+    },
+    "dragon": {
+      "type": "video",
+      "title": "Dragon Heist",
+      "eyebrow": "SPRIBE / MOTION STUDY",
+      "src": "",
+      "poster": "",
+      "demoVideoSelector": "#party video[data-owned-demo]",
+      "demo": true,
+      "autoplay": true,
+      "muted": true,
+      "loop": true,
+      "description": "A dedicated space for motion, with the context kept out of the picture.",
+      "sections": [
+        {"title": "Playback demo", "text": "The embedded clip is the site's synthetic Local Party demo, used only to demonstrate playback. It is not Dragon Heist footage. Replace it with approved project video."},
+        {"title": "About the work", "text": "Use this column for animation direction, sequence notes, your contribution and credits. Playback starts muted; sound and transport stay under the viewer's control."}
+      ],
+      "tags": ["Motion direction", "Character", "Sequence"],
+      "note": "SYNTHETIC PLAYBACK DEMO — NOT DRAGON HEIST FOOTAGE"
+    }
+  }
+}

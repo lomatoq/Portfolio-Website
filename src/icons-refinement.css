@@ -1,0 +1,105 @@
+@property --icon-hover-scale{syntax:"<number>";inherits:false;initial-value:1}
+/* Orbit: spatial motion belongs to the director; independent transforms handle
+   interaction, so entering/leaving never interrupts the drifting position. */
+body .orbit-icon {
+  scale:1!important;--icon-hover-scale:1;transform-origin:50% 50%;
+  translate:0 0!important;
+  transition:--icon-hover-scale 1360ms cubic-bezier(.22,1,.36,1),translate 1360ms cubic-bezier(.22,1,.36,1),border-color 1000ms ease,box-shadow 1360ms ease!important;
+}
+body .orbit-icon:is(:hover,:focus-visible) {
+  scale:1!important;--icon-hover-scale:1.075;
+  translate:0 -7px!important;
+  z-index:40!important;
+  border-color:color-mix(in srgb,var(--icon-accent) 72%,white);
+  box-shadow:inset 0 1px 1px #ffffff70,0 20px 35px -18px #000,0 0 28px color-mix(in srgb,var(--icon-accent) 14%,transparent);
+}
+body .orbit-icon>span {
+  top:calc(100% + 13px);
+  font:600 14px/1.3 'Syne',sans-serif!important;
+  letter-spacing:-.025em!important;
+  color:#bbc3cf;
+  scale:1!important;
+  transition:color 840ms ease,text-shadow 1200ms ease!important;
+}
+body .orbit-icon:is(:hover,:focus-visible)>span {
+  color:var(--icon-accent);
+  text-shadow:0 0 20px color-mix(in srgb,var(--icon-accent) 45%,transparent);
+}
+body .orbit-icon svg {transition:transform 1360ms cubic-bezier(.22,1,.36,1),filter 1200ms ease!important}
+body .orbit-icon:is(:hover,:focus-visible) svg {transform:scale(1.035)!important;filter:drop-shadow(0 0 9px color-mix(in srgb,var(--icon-accent) 40%,transparent))}
+body .orbit-icon .mx-orbit-detail,
+body .orbit-icon:nth-child(n) .mx-orbit-detail {
+  top:calc(100% + 36px);left:50%;right:auto;width:125px;
+  text-align:center;white-space:nowrap;font:400 11px/1.5 'Space Grotesk',sans-serif;
+  letter-spacing:.035em;color:#aeb8c7;opacity:0;filter:blur(4px);
+  transform:translate(-50%,8px);pointer-events:none;
+  transition:opacity 640ms ease,filter 1000ms ease,transform 1160ms cubic-bezier(.22,1,.36,1);
+}
+body .orbit-icon:nth-child(n):is(:hover,:focus-visible) .mx-orbit-detail {
+  opacity:1;filter:blur(0);transform:translate(-50%,0);transition-delay:150ms;
+}
+/* All full descriptions share the clear centre of the constellation. They no
+   longer spill out underneath a tile into its neighbour's hit area. */
+body .orbit-center {width:clamp(142px,12vw,190px);height:200px;max-width:none;gap:18px}
+body .orbit-center>strong,body .orbit-center>.mono {
+  transition:opacity 640ms ease,filter 840ms ease,translate 1040ms cubic-bezier(.22,1,.36,1);
+}
+body .orbit-center.has-project>strong,body .orbit-center.has-project>.mono {opacity:0;filter:blur(5px);translate:0 -8px}
+.orbit-focus-story {
+  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:12px;
+  opacity:0;pointer-events:none;visibility:hidden;
+  transition:opacity 440ms ease,visibility 0s 600ms;
+}
+.orbit-focus-story.visible {opacity:1;visibility:visible;transition:opacity 700ms ease,visibility 0s}
+.orbit-focus-story>b {
+  color:var(--icon-accent,#e0e8f4);font:600 24px/1.15 'Syne',sans-serif;
+  letter-spacing:-.025em;filter:blur(5px);transform:translateY(10px);
+  transition:filter 1200ms ease,transform 1300ms cubic-bezier(.22,1,.36,1);
+}
+.orbit-focus-story p {margin:0;color:#c3ccd9;font:400 14px/1.6 'Space Grotesk',sans-serif;letter-spacing:0;text-wrap:pretty}
+.orbit-focus-story p span {display:inline-block;white-space:pre;opacity:0;filter:blur(4px);transform:translateY(9px);transition:opacity 800ms ease,filter 1000ms ease,transform 1200ms cubic-bezier(.22,1,.36,1)}
+.orbit-focus-story.visible p span {opacity:1;filter:blur(0);transform:none;transition-delay:var(--word-delay)}
+.orbit-focus-story>span {font:500 11px/1.5 'Space Grotesk',sans-serif;letter-spacing:.025em;color:#edf1f7;opacity:0;transform:translateY(8px);transition:opacity 900ms 300ms ease,transform 1200ms 300ms cubic-bezier(.22,1,.36,1)}
+.orbit-focus-story.visible>b {filter:blur(0);transform:none}
+.orbit-focus-story.visible>span {opacity:1;transform:none}
+@media(max-width:760px) {
+  body .orbit-icon>span {font-size:11px!important}
+  body .orbit-icon:nth-child(n) .mx-orbit-detail {display:none}
+  body .orbit-center {width:116px;height:154px;gap:12px}
+  .orbit-focus-story {gap:7px}
+  .orbit-focus-story>b {font-size:16px}
+  .orbit-focus-story p {font-size:10px;line-height:1.45}
+  .orbit-focus-story>span {font-size:9px}
+}
+body.reduced .orbit-icon,body.reduced .orbit-icon *,body.reduced .orbit-center * {transition:none!important;filter:none!important}
+body.reduced .orbit-icon:is(:hover,:focus-visible) {scale:1!important;--icon-hover-scale:1;transform-origin:50% 50%;translate:0 0!important}
+@media(prefers-reduced-motion:reduce) {
+  body .orbit-icon,body .orbit-icon *,body .orbit-center * {transition:none!important;filter:none!important}
+  body .orbit-icon:is(:hover,:focus-visible) {scale:1!important;--icon-hover-scale:1;transform-origin:50% 50%;translate:0 0!important}
+}
+/* Narrow screens use the editorial heading area for the selected project.
+   A complete paragraph cannot fit safely inside the small constellation. */
+@media(max-width:760px) {
+  .orbit-copy> :not(.orbit-focus-story) {transition:opacity 600ms ease,filter 800ms ease}
+  .orbit-copy.has-project> :not(.orbit-focus-story) {opacity:0!important;filter:blur(5px)!important;pointer-events:none}
+  .orbit-copy>.orbit-focus-story {inset:0;max-width:290px;min-height:170px;gap:14px;text-align:left;align-items:flex-start;justify-content:center}
+  .orbit-copy>.orbit-focus-story>b {font:600 34px/1.05 'Syne',sans-serif;letter-spacing:-.04em}
+  .orbit-copy>.orbit-focus-story p {font:400 15px/1.6 'Space Grotesk',sans-serif;max-width:28ch;color:#cbd3df}
+  .orbit-copy>.orbit-focus-story>span {font:500 11px/1.5 'Space Grotesk',sans-serif;letter-spacing:.025em}
+}
+@media(max-width:360px) {
+  body .orbit-center>strong,body .orbit-center>strong em {font-size:29px}
+  body .orbit-center>.mono {font-size:5px;letter-spacing:.11em}
+}
+body.reduced .orbit-copy * {transition:none!important;filter:none!important}
+@media(prefers-reduced-motion:reduce) {.orbit-copy * {transition:none!important;filter:none!important}}
+
+body.reduced .orbit-icon{--icon-hover-scale:1!important}
+@media(prefers-reduced-motion:reduce){body .orbit-icon{--icon-hover-scale:1!important}}
+
+
+/* Keep the same inset/outer shadow ordering: mismatched lists switch discretely. */
+body .orbit-icon{box-shadow:inset 0 1px 1px #ffffff38,0 20px 35px -18px #000,0 0 28px color-mix(in srgb,var(--icon-accent) 0%,transparent);filter:brightness(1);transition:--icon-hover-scale 1360ms cubic-bezier(.4,0,.2,1),translate 1360ms cubic-bezier(.4,0,.2,1),border-color 1200ms cubic-bezier(.4,0,.2,1),box-shadow 1360ms cubic-bezier(.4,0,.2,1),filter 900ms ease!important}
+body .orbit-icon:is(:hover,:focus-visible){box-shadow:inset 0 1px 1px #ffffff70,0 20px 35px -18px #000,0 0 28px color-mix(in srgb,var(--icon-accent) 14%,transparent)}
+@media(prefers-reduced-motion:reduce){body .orbit-icon{transition:none!important}}
+body.reduced .orbit-icon{transition:none!important}

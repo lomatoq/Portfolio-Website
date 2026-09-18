@@ -1,0 +1,14 @@
+PASS vice: wheel entrance lands fully open 4903
+PASS companion: wheel entrance lands fully open 7295
+PASS party: wheel entrance lands fully open 9523
+PASS elemental: wheel entrance lands fully open 11750
+PASS tools: wheel entrance lands fully open 13977
+PASS Next input moves actual position within two rendered frames {'position': 4937.793291542723, 'anchor': 4903.16625}
+PASS First wheel after intro gives visible composition feedback {'before': {'x': 325.5, 'y': 368, 'width': 700, 'height': 317}, 'after': {'x': 303.0841064453125, 'y': 362.0228576660156, 'width': 706.7951049804688, 'height': 329.4533996582031}}
+PASS Reverse approach also has a soft entrance None
+PASS Reverse input interrupts pending forward inertia {'forwardTarget': 6072.8259375, 'reverseTarget': 5846.040937627699}
+PASS Horizontal drag remains synchronized with page position {'y': 5704, 'first': 5472.8259375}
+PASS Repeated keyboard input is accepted without a wait None
+PASS Native position change cancels smooth ownership None
+PASS Input resumes after native scrolling None
+PASS No interaction JS errors []

@@ -1,0 +1,20 @@
+#bento{height:auto}
+.bento-pin{position:relative;height:auto;padding:70px 0}
+.bento-head,.bento-strip,.bento-foot{opacity:1!important;position:relative;top:auto;transform:none}
+.bento-track{position:relative;flex-wrap:wrap;justify-content:center}
+.bento-tile{width:min(340px,80vw);height:260px}
+.opening{--intro-light:1}
+.exp summary{opacity:1!important;transform:none!important}
+.career-bubble{background:#18202ae6}
+.project-intro{height:auto}
+.orbit-pin{position:relative;min-height:680px}
+.project-chapter{height:auto!important}
+.scene-pin{position:relative!important;min-height:1000px}
+.world-content,.world-background{mask-image:none!important;-webkit-mask-image:none!important}
+.chapter-heading{opacity:1}
+.media-rail{opacity:1;pointer-events:auto;filter:none;transform:none;position:relative;top:550px;height:350px}
+.rail-window{overflow:auto}
+.rail-track{width:max-content}
+.media-card{width:320px}
+.stage-study{display:none}
+.name-glyph{opacity:1}

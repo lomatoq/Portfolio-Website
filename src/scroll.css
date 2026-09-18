@@ -1,0 +1,30 @@
+/* FLOW58: only scroll ownership and the optional panel. Existing art is unchanged. */
+html.nocturne-scroll{scroll-behavior:auto!important;scroll-snap-type:none!important}
+html.nocturne-scrolling{overflow-anchor:none}
+.scroll-tuning-panel[hidden]{display:none!important}
+.scroll-tuning-panel{position:fixed;right:22px;bottom:84px;z-index:160;width:min(352px,calc(100vw - 28px));max-height:calc(100svh - 116px);overflow:auto;overscroll-behavior:contain;box-sizing:border-box;padding:24px;border:1px solid rgba(230,237,255,.12);border-radius:23px;background:rgba(18,21,28,.96);color:#e5e8ef;box-shadow:0 18px 70px #0007;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font-family:var(--sans,Arial,sans-serif);touch-action:pan-y;cursor:auto}
+.scroll-tuning-head{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.scroll-tuning-head small{display:block;color:#939aa8;font-size:8px;letter-spacing:.16em;line-height:1.5}
+.scroll-tuning-head h3{font-size:22px;letter-spacing:-.04em;line-height:1.2;margin:7px 0 0;font-weight:500}
+.scroll-tuning-panel button{font:inherit;cursor:pointer;color:inherit;border:0}
+.scroll-tuning-head button{width:38px;height:38px;border-radius:50%;background:#ffffff0b;font-size:25px}
+.scroll-tuning-panel>p{font-size:11px;line-height:1.7;color:#a6adba;margin:14px 0 24px}
+.scroll-tuning-field{display:block;margin:0 0 17px;font-size:11px;line-height:1.5;cursor:pointer}
+.scroll-tuning-field>span{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.scroll-tuning-field output{color:#aebaca;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scroll-tuning-field input{display:block;width:100%;height:28px;margin:6px 0 0;padding:0;accent-color:#d7e4f1;cursor:ew-resize;touch-action:pan-x}
+.scroll-tuning-check{display:flex;gap:10px;align-items:center;font-size:10px;line-height:1.6;margin:10px 0 24px;cursor:pointer}
+.scroll-tuning-check input{accent-color:#d7e4f1;width:17px;height:17px;flex:none}
+.scroll-tuning-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:9px;color:#939aa8}
+.scroll-tuning-foot button{background:#ffffff0b;padding:10px 12px;border-radius:12px;min-height:38px;font-size:10px}
+.scroll-tuning-panel :focus-visible{outline:2px solid #c7daef;outline-offset:4px}
+@media(max-width:760px){.scroll-tuning-panel{right:14px;bottom:72px;padding:20px;max-height:calc(100svh - 100px)}}
+@media(prefers-reduced-motion:reduce){.scroll-tuning-panel{scroll-behavior:auto}}
+
+/* A JS-rendered heading must not chase a second 1.4s CSS opacity transition. */
+html.nocturne-scroll{overflow-anchor:none!important}
+html.nocturne-scroll .word-heading .motion-word{transition:none!important}
+html.nocturne-scroll :is(.scroll-tuning-panel,.utility-options,[data-free-scroll],.dialog-content){overscroll-behavior:contain}
+/* Keep direct vector editing and sliders from starting a native page swipe. */
+html.nocturne-scroll #vectorCanvas{touch-action:none!important}
+html.nocturne-scroll input[type=range]{touch-action:pan-x}

@@ -1,0 +1,26 @@
+{
+  "sha256": "e3ec56d8ac4cda20bb6edf7c48f135b30dc7122097368ac9a3cfafee7556690a",
+  "checks": [
+    {
+      "name": "Final HTML: complete first entrance from wheel",
+      "pass": true
+    },
+    {
+      "name": "Final HTML: next input has no lock",
+      "pass": true
+    },
+    {
+      "name": "Final HTML: long media loads",
+      "pass": true
+    },
+    {
+      "name": "Final HTML: close restores page",
+      "pass": true
+    },
+    {
+      "name": "Final HTML: no JavaScript errors",
+      "pass": true,
+      "errors": []
+    }
+  ]
+}

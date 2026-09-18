@@ -1,0 +1,162 @@
+{
+  "release": "Flow58",
+  "date": "2026-09-17",
+  "html_sha256": "e3ec56d8ac4cda20bb6edf7c48f135b30dc7122097368ac9a3cfafee7556690a",
+  "html_bytes": 1283758,
+  "inlined_blocks": [
+    "src/base.css",
+    "src/visual.css",
+    "src/polish.css",
+    "src/motion.css",
+    "src/continuity.css",
+    "src/loader.css",
+    "src/experimental.css",
+    "src/refinement.css",
+    "src/icons-refinement.css",
+    "src/case-refinement.css",
+    "src/popup-editorial.css",
+    "src/scroll.css",
+    "src/media-viewer.css",
+    "src/loader.js",
+    "src/motion.js",
+    "src/director.js",
+    "src/application.js",
+    "src/renderer.js",
+    "src/scroll.js",
+    "src/effects.js",
+    "src/fallback.css",
+    "src/continuity.js",
+    "src/experimental.js",
+    "content/media.json",
+    "src/media-viewer.js"
+  ],
+  "backup_matches_original_flow57_zip": true,
+  "source_changes": [
+    {
+      "file": "src/application.js",
+      "change": "modified"
+    },
+    {
+      "file": "src/continuity.js",
+      "change": "modified"
+    },
+    {
+      "file": "src/director.js",
+      "change": "modified"
+    },
+    {
+      "file": "src/experimental.js",
+      "change": "modified"
+    },
+    {
+      "file": "src/media-viewer.css",
+      "change": "added"
+    },
+    {
+      "file": "src/media-viewer.js",
+      "change": "added"
+    },
+    {
+      "file": "src/motion.js",
+      "change": "modified"
+    },
+    {
+      "file": "src/scroll.css",
+      "change": "modified"
+    },
+    {
+      "file": "src/scroll.js",
+      "change": "modified"
+    }
+  ],
+  "unchanged_sources": [
+    "src/base.css",
+    "src/case-refinement.css",
+    "src/continuity.css",
+    "src/effects.js",
+    "src/experimental.css",
+    "src/fallback.css",
+    "src/icons-refinement.css",
+    "src/loader.css",
+    "src/loader.js",
+    "src/motion.css",
+    "src/motion2.css",
+    "src/polish.css",
+    "src/popup-editorial.css",
+    "src/refinement.css",
+    "src/renderer.js",
+    "src/visual.css"
+  ],
+  "reports": [
+    {
+      "file": "tests/flow58/edge.json",
+      "passed": 11,
+      "failed": 0,
+      "blocked": 0
+    },
+    {
+      "file": "tests/flow58/final.json",
+      "passed": 5,
+      "failed": 0,
+      "blocked": 0
+    },
+    {
+      "file": "tests/flow58/interaction.json",
+      "passed": 14,
+      "failed": 0,
+      "blocked": 0
+    },
+    {
+      "file": "tests/flow58/kinematics.json",
+      "passed": 7,
+      "failed": 0,
+      "blocked": 0
+    },
+    {
+      "file": "tests/flow58/media.json",
+      "passed": 8,
+      "failed": 0,
+      "blocked": 0
+    },
+    {
+      "file": "tests/flow58/mobile.json",
+      "passed": 11,
+      "failed": 0,
+      "blocked": 0
+    },
+    {
+      "file": "tests/flow58/poses-1366-768.json",
+      "passed": 26,
+      "failed": 0,
+      "blocked": 0
+    },
+    {
+      "file": "tests/flow58/poses-390-844.json",
+      "passed": 26,
+      "failed": 0,
+      "blocked": 0
+    },
+    {
+      "file": "tests/flow58/renderer-fallback.json",
+      "passed": 1,
+      "failed": 0,
+      "blocked": 0
+    },
+    {
+      "file": "tests/flow58/renderer-webgl.json",
+      "passed": 0,
+      "failed": 0,
+      "blocked": 1
+    },
+    {
+      "file": "tests/flow58/smoke.json",
+      "passed": 8,
+      "failed": 0,
+      "blocked": 0
+    }
+  ],
+  "hardware_webgl_verified": false,
+  "physical_touch_or_trackpad_verified": false,
+  "browser_file_navigation": "Blocked by browser policy; tested full HTML via set_content",
+  "fonts": "External font requests blocked in testing; no font files packaged"
+}

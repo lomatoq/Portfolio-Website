@@ -1,0 +1,13 @@
+booted
+scrolled
+clicked
+waited
+PASS Selected work supports mixed cell types None
+chick clicked
+PASS Tall-image viewer opens over original case {'id': 'chick', 'type': 'long-image', 'open': True, 'closing': False, 'backgroundY': 2908, 'scrollTop': 0, 'videoTime': None, 'notesVisible': True}
+PASS Image loaded with tall natural aspect ratio {'w': 1200, 'h': 4480}
+PASS Viewer scroll leaves page position unchanged None
+PASS Escape closes only media, keeps company case {'media': {'id': None, 'type': None, 'open': False, 'closing': False, 'backgroundY': None, 'scrollTop': 0, 'videoTime': None, 'notesVisible': True}, 'inline': True}
+PASS Video autoplay advances {'paused': False, 't': 1.21045, 'error': None, 'ready': 4}
+PASS Ordinary context case still opens normally None
+PASS No JS errors []

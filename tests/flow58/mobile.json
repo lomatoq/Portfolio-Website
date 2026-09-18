@@ -1,0 +1,68 @@
+{
+  "checks": [
+    {
+      "name": "Mobile first project fully visible",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Vertical touch scroll changes gallery position without a step gate",
+      "pass": true,
+      "details": {
+        "before": 4837,
+        "after": 5211
+      }
+    },
+    {
+      "name": "Mobile native overlay opens over company case",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Overlay fits mobile viewport",
+      "pass": true,
+      "details": {
+        "x": 8,
+        "y": 10,
+        "width": 374,
+        "height": 824
+      }
+    },
+    {
+      "name": "Notes start below tall image and are not overlaid",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Notes reveal at image end on mobile",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Overlay scroll does not move background",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Close restores same case and page coordinate",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Video plays inline on mobile",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "Video has text below on mobile",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "No mobile JS errors",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "errors": []
+}

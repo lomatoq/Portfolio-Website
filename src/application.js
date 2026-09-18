@@ -902,6 +902,7 @@
             updateScroll();
         window.NocturneLab?.tick(t,uiDt);
         window.NocturneR14?.read(t);
+        window.NocturneFX?.read();
         window.LiquidPortfolio?.tick(t, uiDt, reduced);
         window.NocturneMotion?.tick(t,uiDt,reduced);
         window.NocturneR14?.tick(t,uiDt,reduced);

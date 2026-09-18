@@ -23,6 +23,8 @@
     const rowMetrics=new Map();
     const W8 = { dir: 0, vel: 0, lastY: 0, surgeT: 9, power: 0, flare: 0 };
     const state = window.Nocturne = { pulse: (p = 1) => { pulseReq = Math.max(pulseReq, p); window.portfolioWake?.(); }, windState: () => W8, tick, needsFrame: () => !reduced, diagnostics: () => ({ ...report, embedded: window.self !== window.top, navigationHistory: window.portfolioHistoryFallback ? 'in-memory (opaque preview)' : 'browser' }), restartIntro, riverStops:()=>riverStops.map(v=>({...v})), layout: () => { layoutDirty = true; window.portfolioWake?.(); }, showCompany, quality: setQuality, pauseRendering: false, surfaces, registerSurface, shaderSources:()=>({...GLSL}), forceTime: null, retryRenderer: restartRenderer, graphics: openGraphics };
+    // GLSL pow has an undefined result for negative bases, even with exponent 2.
+    // abs preserves the authored squared falloff on every GPU (including Metal).
     const GLSL = {
         quad: `#version 300 es
 precision highp float;
@@ -36,7 +38,7 @@ float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1)),f.x),f.y);}
 float fbm(vec2 p){return .57*noise(p)+.28*noise(p*2.03+4.)+.15*noise(p*4.1);}
 void main(){float aspect=resolution.x/resolution.y;vec2 q=(uv-sun)*vec2(aspect,1.);float d=length(q);
- float fog=exp(-pow((uv.y-.48)*5.,2.));float focus=exp(-pow((uv.x-.5)*aspect*1.2,2.));
+ float fog=exp(-pow(abs((uv.y-.48)*5.),2.));float focus=exp(-pow(abs((uv.x-.5)*aspect*1.2),2.));
  float n=fbm(uv*vec2(4.,8.)+vec2(time*.011,-time*.006));
  vec3 col=vec3(.017,.020,.023)+vec3(.115,.116,.115)*fog*(.48+.52*focus);
  col+=vec3(.17,.165,.15)*exp(-d*4.7)*(.86+.25*n)*rise;
@@ -88,7 +90,7 @@ vec3 surface(float h,float side){
  float shiver=sin(time*3.1+iOffset.x*.31+iOffset.z*.12)*.28+sin(time*5.3+iOffset.z*.2)*.14;
  wind=wind*(1.4+gust*windBoost)+gust*windBoost*(.85+shiver)+shiver*.9;
  wind+=windDir*(1.9+gust*.55)*(1.+shiver*.25);
- float rad=length(iOffset.xz);float front2=exp(-pow((rad-surgeR)/17.,2.))*surge;
+ float rad=length(iOffset.xz);float front2=exp(-pow(abs((rad-surgeR)/17.),2.))*surge;
  wind+=front2*7.5*sign(iOffset.x+.001);
  float arc=h*h;float curl=sin(h*2.8)*h*iFlex.x;
  p.x+=iShape.y*arc+curl+wind*arc*(.09+iOffset.w*.021);
@@ -156,7 +158,7 @@ vec3 at(vec2 p){return texture(scene,clamp(p,vec2(.001),vec2(.999))).rgb;}
 void main(){
  vec2 uvw=uv;float lens=0.,pull=0.,wave=0.;
  if(seam.z>.001){
-  float curve=seam.x+.12*pow((uv.x-.5)/.88,2.);
+  float curve=seam.x+.12*pow(abs((uv.x-.5)/.88),2.);
   float d=(uv.y-curve)/max(.004,seam.y);
   lens=exp(-d*d)*seam.z;
   // The well itself: light is drawn toward the line, hardest just off it.
@@ -197,7 +199,7 @@ void main(){float along=flux.y-start;float appear=smoothstep(18.,255.,along);flo
  float lead=1.-smoothstep(head-65.,head+12.,flux.y);
  // Across-stream falloff hides the quad edge. It must not be driven by the
  // distance to a card, or the stream breaks into separate pools between them.
- float endSpread=max(exp(-along/430.),exp(-pow((flux.y-(end-200.))/420.,2.)));
+ float endSpread=max(exp(-along/430.),exp(-pow(abs((flux.y-(end-200.))/420.),2.)));
  float across=abs(flux.x)/mix(240.,520.,endSpread);
  float alpha=appear*vanish*lead*reveal*(1.-smoothstep(.46,1.,across));
  float tail=exp(-max(0.,end-260.-flux.y)/300.)*(1.-smoothstep(end-300.,end-90.,flux.y));float crown=min(1.,exp(-along/250.)+tail*.26);
@@ -215,11 +217,11 @@ void main(){float along=flux.y-start;float appear=smoothstep(18.,255.,along);flo
  // Fine detail is retired before it passes under a card, so nothing flickers
  // through the glass.
  filaments*=1.-contact*.88;
- float ridge=exp(-pow((abs(x)-width*.90)/(1.8+defocus),2.));
+ float ridge=exp(-pow(abs((abs(x)-width*.90)/(1.8+defocus)),2.));
  vec3 color=vec3(.51*mix(soft,sr,split),.53*soft,.54*mix(soft,sb,split))*(.60+noise*.48)+vec3(.19,.23,.28)*halo*(.50+tail*.7)+vec3(.95,.95,.84)*filaments*(1.-min(1.,crown)*.55);
  color+=ridge*vec3(x>0.?.21:.03,.095,x>0.?.03:.23)*.45;
  // Continuous signed-distance falloffs, no stroke dashes and no rectangular masks.
- float moon=exp(-pow(along/(70.+620.*(1.-burst)),2.))*burst*reveal;
+ float moon=exp(-pow(abs(along/(70.+620.*(1.-burst))),2.))*burst*reveal;
  vec3 flare=vec3(.88,.92,1.)*moon*exp(-x*x/(14000.*burst+1400.));
  // The moon flare shares the ribbon's feathered start and lateral bounds.
  // Without this envelope its first triangle exposed a horizontal rectangle.
@@ -268,7 +270,7 @@ float sdf(vec2 p){
  vec2 shaped=p;shaped.y*=1.+pinch*.055;shaped.y+=pinch*dimensions.y*.012;
  float edge=box(shaped,dimensions*.5,cornerRadius(p));
  float wave=sin(p.x*.0295+time*.52)*sin(p.y*.0375-time*.41)*1.15+sin(p.x*.0102-p.y*.0061-time*.21)*.95;
- float tension=sin(p.y*.043+time*.65)*exp(-pow((p.x-pointer.x)/120.,2.))*hover*1.8;
+ float tension=sin(p.y*.043+time*.65)*exp(-pow(abs((p.x-pointer.x)/120.),2.))*hover*1.8;
  return edge+wave+tension;}
 vec3 sampleGlass(vec2 pos,vec2 warp,vec2 spread){vec3 c;c.r=texture(scene,clamp(pos+warp+spread,vec2(.001),vec2(.999))).r;c.g=texture(scene,clamp(pos+warp,vec2(.001),vec2(.999))).g;c.b=texture(scene,clamp(pos+warp-spread,vec2(.001),vec2(.999))).b;return c;}
 vec3 frosted(vec2 pos,vec2 warp,vec2 spread,vec2 pixel,float amt){vec3 sum=vec3(0.);
@@ -278,9 +280,9 @@ vec3 frosted(vec2 pos,vec2 warp,vec2 spread,vec2 pixel,float amt){vec3 sum=vec3(
  return sum/taps;}
 void main(){vec2 p=(local-.5)*(dimensions+padding*2.);float d=sdf(p);float cover=1.-smoothstep(-1.1-returnBlur,1.6+returnBlur,d);
  if(d>padding-1.)discard;vec2 normal=normalize(vec2(sdf(p+vec2(.8,0))-sdf(p-vec2(.8,0)),sdf(p+vec2(0,.8))-sdf(p-vec2(0,.8)))+vec2(.0001));
- float rim=exp(-pow((d+7.)/11.,2.));float inner=1.-smoothstep(-44.,-1.,d);
+ float rim=exp(-pow(abs((d+7.)/11.),2.));float inner=1.-smoothstep(-44.,-1.,d);
  vec2 toMouse=p-pointer;float lens=exp(-dot(toMouse,toMouse)/14500.)*hover;
- float r=length(p-clickPoint);float ripple=sin(r*.105-age*12.)*exp(-pow((r-age*175.)/42.,2.))*exp(-age*2.2)*step(0.,age);
+ float r=length(p-clickPoint);float ripple=sin(r*.105-age*12.)*exp(-pow(abs((r-age*175.)/42.),2.))*exp(-age*2.2)*step(0.,age);
  vec2 rippleN=(p-clickPoint)/max(1.,r);
  vec2 warp=(normal*(rim*19.+press*5.)+toMouse*lens*.065+rippleN*ripple*7.);
  vec2 pixel=vec2(1.,-1.)/resolution;vec2 screen=gl_FragCoord.xy/resolution;
@@ -288,11 +290,11 @@ void main(){vec2 p=(local-.5)*(dimensions+padding*2.);float d=sdf(p);float cover
  vec3 refracted=frosted(screen,warp*pixel,normal*pixel*(rim*3.5+hover*1.1),pixel,frost);
  vec3 col=refracted*.62+vec3(.038,.044,.055)+vec3(.014,.016,.02)*inner;
  col=mix(col,vec3(.065,.105,.25)+refracted*.14+vec3(.18,.22,.30)*pow(max(0.,1.-local.y),3.)*.60,blueSheet*.90);
- float topLight=pow(max(0.,dot(normal,normalize(vec2(-.46,-.88)))),2.);
+ float topLight=pow(abs(max(0.,dot(normal,normalize(vec2(-.46,-.88))))),2.);
  float sheen=exp(-dot((p-pointer)*vec2(.45,1.),(p-pointer)*vec2(.45,1.))/7500.);
  col+=vec3(.17,.19,.21)*sheen*(.18+hover*.58)*(1.-smoothstep(-3.,1.,d));
- float thin=exp(-pow((d+.9)/(1.05+returnBlur*.4),2.))*1.05/(1.05+returnBlur*.4);col+=vec3(.5,.53,.57)*thin*(.23+.77*topLight);
- float band=exp(-pow((d+4.)/(2.3+returnBlur*.35),2.))*2.3/(2.3+returnBlur*.35);vec3 spectrum=.5+.5*cos(vec3(0.,2.1,4.2)+atan(normal.y,normal.x)*2.0+time*.08);
+ float thin=exp(-pow(abs((d+.9)/(1.05+returnBlur*.4)),2.))*1.05/(1.05+returnBlur*.4);col+=vec3(.5,.53,.57)*thin*(.23+.77*topLight);
+ float band=exp(-pow(abs((d+4.)/(2.3+returnBlur*.35)),2.))*2.3/(2.3+returnBlur*.35);vec3 spectrum=.5+.5*cos(vec3(0.,2.1,4.2)+atan(normal.y,normal.x)*2.0+time*.08);
  col+=mix(vec3(.8),spectrum,.65)*band*(.13+hover*.20);col+=vec3(.11,.14,.16)*rim*topLight;
  col+=vec3(.28,.32,.35)*max(0.,ripple)*hover*.4;
  float shadow=exp(-max(0.,d)*.14)*.045;
@@ -300,12 +302,12 @@ void main(){vec2 p=(local-.5)*(dimensions+padding*2.);float d=sdf(p);float cover
  float ang=atan(p.y,p.x*max(.35,dimensions.y/max(1.,dimensions.x)))*.15915494+.5;
  float u2=fract(ang-flow);
  vec3 rimCol=mix(vec3(.60,.68,.78),tint,.42);
- rimCol+=vec3(.33,.78,1.05)*exp(-pow((u2-.215)/.052,2.))*.85;
- rimCol+=vec3(1.05,.70,.93)*exp(-pow((u2-.305)/.052,2.))*.85;
- rimCol+=vec3(1.)*exp(-pow((u2-.26)/.030,2.))*1.25;
- rimCol+=vec3(.58,.80,1.)*exp(-pow((u2-.775)/.075,2.))*.62;
- float line=exp(-pow((d+1.35)/(1.05+lux*.35),2.));
- float bloom=exp(-pow((d+3.4)/(5.4+lux*4.2),2.));
+ rimCol+=vec3(.33,.78,1.05)*exp(-pow(abs((u2-.215)/.052),2.))*.85;
+ rimCol+=vec3(1.05,.70,.93)*exp(-pow(abs((u2-.305)/.052),2.))*.85;
+ rimCol+=vec3(1.)*exp(-pow(abs((u2-.26)/.030),2.))*1.25;
+ rimCol+=vec3(.58,.80,1.)*exp(-pow(abs((u2-.775)/.075),2.))*.62;
+ float line=exp(-pow(abs((d+1.35)/(1.05+lux*.35)),2.));
+ float bloom=exp(-pow(abs((d+3.4)/(5.4+lux*4.2)),2.));
  float rimPower=.34+lux*.58;
  col+=rimCol*line*rimPower*1.05+rimCol*bloom*(.055+lux*.17);
  // Blue sheets get a brighter ice rim, confined to the inside of the silhouette.
@@ -401,7 +403,12 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         function free(type, x) { if (x && resources[type].delete(x))
             gl['delete' + types[type]](x); }
         function dispose() { if (disposed)
-            return; disposed = true; for (const [type, set] of Object.entries(resources))
+            return; disposed = true;
+            for(const vao of vertexArrays.values()){
+                if(is2)gl.deleteVertexArray(vao);else vaoExt.deleteVertexArrayOES(vao);
+            }
+            vertexArrays.clear();boundAttributes=null;
+            for (const [type, set] of Object.entries(resources))
             for (const x of [...set])
                 free(type, x); }
         function program(name, v, f) { const p = make('program'); for (const [type, source] of [[gl.VERTEX_SHADER, v], [gl.FRAGMENT_SHADER, f]]) {
@@ -427,7 +434,20 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         else
             inst.vertexAttribDivisorANGLE(index, n); }
         const attributeCount = Math.min(8, gl.getParameter(gl.MAX_VERTEX_ATTRIBS));
-        function attributes(spec) { for (let i = 0; i < attributeCount; i++) {
+        const vaoExt = is2 ? null : gl.getExtension('OES_vertex_array_object');
+        const vertexArrays = new Map();
+        let boundAttributes = null;
+        const bindVAO = vao => is2 ? gl.bindVertexArray(vao) : vaoExt.bindVertexArrayOES(vao);
+        function attributes(spec) {
+            if(boundAttributes===spec)return;
+            boundAttributes=spec;
+            if(is2||vaoExt){
+                if(vertexArrays.has(spec)){bindVAO(vertexArrays.get(spec));return;}
+                const vao=is2?gl.createVertexArray():vaoExt.createVertexArrayOES();
+                if(!vao)throw Error('Vertex array allocation failed');
+                vertexArrays.set(spec,vao);bindVAO(vao);
+            }
+            for (let i = 0; i < attributeCount; i++) {
             gl.disableVertexAttribArray(i);
             divisor(i, 0);
         } for (const [l, b, n, stride = 0, offset = 0, div = 0] of spec) {
@@ -491,11 +511,15 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
                 }
             }
             samples.push(0);
+            const vpLimit = gl.getParameter(gl.MAX_VIEWPORT_DIMS);
+            const renderLimit = Math.min(4096, gl.getParameter(gl.MAX_TEXTURE_SIZE), gl.getParameter(gl.MAX_RENDERBUFFER_SIZE), vpLimit[0], vpLimit[1]);
+            let resizeKey='';
             function resize() {
                 if (disposed || lost)
                     return;
-                const W = Math.max(1, innerWidth), H = Math.max(1, innerHeight), vpLimit = gl.getParameter(gl.MAX_VIEWPORT_DIMS);
-                const limit = Math.min(4096, gl.getParameter(gl.MAX_TEXTURE_SIZE), gl.getParameter(gl.MAX_RENDERBUFFER_SIZE), vpLimit[0], vpLimit[1]);
+                const W = Math.max(1, innerWidth), H = Math.max(1, innerHeight), limit=renderLimit;
+                const key=[W,H,devicePixelRatio||1,quality].join('/');
+                if(key===resizeKey)return;
                 const budget=quality==='eco'?(W<761?800000:1250000):(W<761?1400000:2400000);
                 let ratio = Math.min(quality === 'eco' ? .9 : Math.max(devicePixelRatio || 1,1),1.4,limit/W,limit/H,Math.sqrt(budget/(W*H)));
                 let ok = false;
@@ -538,6 +562,8 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
                 report.samples = sampleCount;
                 report.antialiasing = sampleCount ? 'MSAA ' + sampleCount + '×' : 'supersampling + depth optics';
                 firstFrame = true;
+                resizeKey=key;
+                report.targetAllocations=(report.targetAllocations||0)+1;
             }
             const use = (p, spec = quad) => { gl.useProgram(p.p); attributes(spec); }, f = (p, n, v) => gl.uniform1f(p.u(n), v), v2 = (p, n, a, b) => gl.uniform2f(p.u(n), a, b), v3 = (p, n, v) => gl.uniform3fv(p.u(n), v);
             function sampler(p, tex) { gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex); gl.uniform1i(p.u('scene'), 0); }
@@ -937,6 +963,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     // Navigation is a flat CSS glass surface; do not render a second inflated GPU skin.
     $$('.card-glass').forEach(el => registerSurface(el, el, 'media'));
     function updateSurfaces(t, dt) {
+        const {innerWidth,innerHeight}=window;
         const visible=[],batch=[],modal=$('#dialog').open;
         // Read all bounds before changing transforms. Avoid read/write ping-pong.
         for(const [el,s] of surfaces){
@@ -1104,6 +1131,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     let introSettled=false,lastIntroScroll=-1;
     const settledIntro={rise:1,riverReveal:1,world:1,burst:0,descend:1};
     function updateIntro(t) {
+        const {scrollY,innerWidth,innerHeight}=window;
         if(introSettled&&lastIntroScroll===scrollY)return settledIntro;
         lastIntroScroll=scrollY;
         
@@ -1157,6 +1185,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     }
     function restartIntro() { introSettled=false; introSkip = false; started = performance.now(); window.scrollTo({ top: 0, behavior: 'instant' }); window.portfolioWake?.(); }
     function tick(ts, dt, isReduced) {
+        const {scrollY,innerWidth,innerHeight}=window;
         reduced = !!isReduced;
         dt = clamp(dt, .001, .08);
         clock = state.forceTime ?? ts * .001;

@@ -53,7 +53,7 @@
   try{pgl=cv.getContext('webgl',{alpha:true,premultipliedAlpha:false,antialias:false,depth:false});if(pgl){
    const compile=(type,source)=>{const shader=pgl.createShader(type);pgl.shaderSource(shader,source);pgl.compileShader(shader);if(!pgl.getShaderParameter(shader,pgl.COMPILE_STATUS))throw Error(pgl.getShaderInfoLog(shader));return shader;};
    pp=pgl.createProgram();pgl.attachShader(pp,compile(pgl.VERTEX_SHADER,`attribute vec2 position;attribute vec4 material;uniform vec2 viewport;uniform float ratio;varying vec3 v;void main(){gl_Position=vec4(position/viewport*vec2(2.,-2.)+vec2(-1.,1.),0.,1.);gl_PointSize=material.x*ratio;v=material.yzw;}`));
-   pgl.attachShader(pp,compile(pgl.FRAGMENT_SHADER,`precision mediump float;varying vec3 v;uniform float time;void main(){vec2 p=gl_PointCoord*2.-1.;float angle=v.y*.71+sin(time*.22+v.y)*.35;float c=cos(angle),s=sin(angle);p=mat2(c,-s,s,c)*p;float taper=max(0.,1.-p.y*p.y);float bend=p.x-.16*sin(p.y*2.8+time*.3+v.y);float body=exp(-bend*bend/0.007)*taper*taper;float halo=exp(-bend*bend/.085)*taper*taper*.10;float glint=exp(-pow((p.y-sin(time*.5+v.y)*.7)*4.,2.));vec3 silver=mix(vec3(.55,.68,.79),vec3(.95,.89,.77),glint*.6+.2);float alpha=(body*(.42+glint*.4)+halo)*v.x;if(alpha<.004)discard;gl_FragColor=vec4(silver,alpha);}`));
+   pgl.attachShader(pp,compile(pgl.FRAGMENT_SHADER,`precision mediump float;varying vec3 v;uniform float time;void main(){vec2 p=gl_PointCoord*2.-1.;float angle=v.y*.71+sin(time*.22+v.y)*.35;float c=cos(angle),s=sin(angle);p=mat2(c,-s,s,c)*p;float taper=max(0.,1.-p.y*p.y);float bend=p.x-.16*sin(p.y*2.8+time*.3+v.y);float body=exp(-bend*bend/0.007)*taper*taper;float halo=exp(-bend*bend/.085)*taper*taper*.10;float glint=exp(-pow(abs((p.y-sin(time*.5+v.y)*.7)*4.),2.));vec3 silver=mix(vec3(.55,.68,.79),vec3(.95,.89,.77),glint*.6+.2);float alpha=(body*(.42+glint*.4)+halo)*v.x;if(alpha<.004)discard;gl_FragColor=vec4(silver,alpha);}`));
    pgl.linkProgram(pp);if(!pgl.getProgramParameter(pp,pgl.LINK_STATUS))throw Error('Fibre shader link');pgl.useProgram(pp);pbuf=pgl.createBuffer();pgl.bindBuffer(pgl.ARRAY_BUFFER,pbuf);pgl.bufferData(pgl.ARRAY_BUFFER,pdata,pgl.DYNAMIC_DRAW);
    const pos=pgl.getAttribLocation(pp,'position'),mat=pgl.getAttribLocation(pp,'material');pgl.enableVertexAttribArray(pos);pgl.vertexAttribPointer(pos,2,pgl.FLOAT,false,24,0);pgl.enableVertexAttribArray(mat);pgl.vertexAttribPointer(mat,4,pgl.FLOAT,false,24,8);pgl.enable(pgl.BLEND);pgl.blendFunc(pgl.SRC_ALPHA,pgl.ONE_MINUS_SRC_ALPHA);
    pp.viewport=pgl.getUniformLocation(pp,'viewport');pp.ratio=pgl.getUniformLocation(pp,'ratio');pp.time=pgl.getUniformLocation(pp,'time');
@@ -70,10 +70,17 @@
   }
   function resize(){wallDirty=true;width=innerWidth;height=innerHeight;if(ctx||pgl){const dpr=Math.min(devicePixelRatio||1,1.5);cv.width=width*dpr;cv.height=height*dpr;if(ctx)ctx.setTransform(dpr,0,0,dpr,0,0);if(pgl){pgl.viewport(0,0,cv.width,cv.height);pgl.uniform2f(pp.viewport,width,height);pgl.uniform1f(pp.ratio,dpr);}}}
   resize();addEventListener('resize',resize,{passive:true});
+  let frameStoryRect=null,frameWallRect=null;
+  function read(){
+    // These section boxes do not depend on the animated child transforms.
+    // Sample them alongside the other reads, before the frame's style writes.
+    measureWall();frameStoryRect=story.getBoundingClientRect();frameWallRect=wall.getBoundingClientRect();
+  }
   function energy(t,dt){
+    const scrollY=window.scrollY;
     // Read first, then paint. Geometry for the glowing rim is the same box as
     // the actual card, never a separate viewport-sized displacement overlay.
-    const sr=story.getBoundingClientRect();if(sr.top>height||sr.bottom<0)return;
+    const sr=frameStoryRect||story.getBoundingClientRect();if(sr.top>height||sr.bottom<0)return;
     const head=window.Nocturne?.riverHead||0;
     // Card geometry comes from the renderer's own layout pass. Re-measuring it
     // here, after the frame had already written transforms, forced a second
@@ -93,7 +100,7 @@
     }
   }
   function drawWall(t,still,dt){
-    measureWall();const H=innerHeight,r=wall.getBoundingClientRect(),top=r.top,pin=$('.bento-pin',wall);
+    measureWall();const H=innerHeight,r=frameWallRect||wall.getBoundingClientRect(),top=r.top,pin=$('.bento-pin',wall);
     wallTop=top+scrollY;wallHeight=r.height;
     const desktop=innerWidth>900&&!still;
     if(top>H*1.18||top+wallHeight<0){
@@ -185,7 +192,7 @@
       if(ctx){ctx.globalAlpha=alpha;ctx.drawImage(dot,b.x-s/2,b.y-s/2,s,s);}if(pgl)pdata.set([b.x,b.y,s,alpha,b.phase,depth],i*6);
     }if(ctx)ctx.globalAlpha=1;if(pgl){pgl.bufferSubData(pgl.ARRAY_BUFFER,0,pdata.subarray(0,count*6));pgl.uniform1f(pp.time,t);pgl.drawArrays(pgl.POINTS,0,count);}
   }
-  window.NocturneFX={tick:frame,needsFrame:()=>!reduced()};
+  window.NocturneFX={read,tick:frame,needsFrame:()=>!reduced()};
   document.addEventListener('click',e=>{const el=e.target.closest('.exp summary,.orbit-icon,.bento-tile');if(el){const r=el.getBoundingClientRect();shock(r.left+r.width/2,r.top+r.height/2,.28);}},true);
   // Close the utility popover on outside click/Escape; do not trap keyboard focus.
   function closeUtility(){const b=$('#utilityToggle');b.setAttribute('aria-expanded','false');$('#utilityOptions').hidden=true;}

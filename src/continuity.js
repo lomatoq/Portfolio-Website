@@ -209,7 +209,7 @@
           float radius=mix(.018,.12,k);vec2 d=abs(p)-box+radius;
           float sdf=length(max(d,0.))+min(max(d.x,d.y),0.)-radius;
           float width=mix(.022,.14,k*k)*(.65+ink*.9);
-          float glow=exp(-pow(sdf/width,2.))*.52+exp(-abs(sdf)/(width*2.8))*.12;
+          float glow=exp(-pow(abs(sdf/width),2.))*.52+exp(-abs(sdf)/(width*2.8))*.12;
           float dispersion=.008*(1.-k);vec3 color=mix(vec3(.64,.82,1.),vec3(.97,.73,.86),smoothstep(-dispersion,dispersion,sdf));
           float fade=smoothstep(.52,.74,k)*(1.-smoothstep(.68,1.,e));
           gl_FragColor=vec4(color,glow*fade*.113*(1.+firstWave*2.*(1.-smoothstep(.55,.95,e))));

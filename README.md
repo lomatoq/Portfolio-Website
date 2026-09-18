@@ -4,6 +4,8 @@ An experimental single-page portfolio built around cinematic scroll choreography
 
 **Live site:** https://lomatoq.github.io/Portfolio-Website/
 
+Mobile rendering optimizations and measured results: [FLOW61](docs/FLOW61_PERFORMANCE_RU.md). Native swipes retain the full visual effects and render resolution.
+
 ## What is inside
 
 - Animated professional journey and project chapters

@@ -309,7 +309,7 @@
   v.addEventListener('waiting',()=>host.classList.add('mx-buffering'));v.addEventListener('playing',()=>host.classList.remove('mx-buffering'));v.addEventListener('error',()=>{clock.textContent='Preview unavailable';host.classList.remove('mx-buffering');});
  }}upgradePlayers();document.addEventListener('portfolio-player-ready',upgradePlayers);new MutationObserver(upgradePlayers).observe($('main'),{childList:true,subtree:true});
  const api=window.NocturneLab={flags,fast,markFast,openInline,closeInline,upgradePlayers,get caseProgress(){return clamp(expansion?.p||0)},get caseShift(){return caseShift},get inlineOpen(){return !!inline},get pointer(){return ptr},needsFrame:()=>!!inline||ptr.inside||scrollY<innerHeight,diagnostics:()=>({flags:{...flags},fast:fast(),inline:!!inline,trail:cards.filter(c=>performance.now()-c.born<1100).length,flowAvailable:!!gl,flowReady}),tick};
- function tick(t,dt){const now=t*1000,dy=scrollY-lastY;updateExpansion(now,dt);for(let i=retiringPreviews.length-1;i>=0;i--){if(now-retiringPreviews[i].at>950){retiringPreviews[i].el.remove();retiringPreviews.splice(i,1);}}const speed=Math.abs(dy)/Math.max(.008,dt);if(!window.NocturneScroll?.synchronized?.()&&(Math.abs(dy)>innerHeight*.6||speed>innerHeight*2.5))markFast();lastY=scrollY;lastTick=t;
+ function tick(t,dt){updateExpansion(t*1000,dt);const {scrollY,innerWidth,innerHeight}=window;const now=t*1000,dy=scrollY-lastY;for(let i=retiringPreviews.length-1;i>=0;i--){if(now-retiringPreviews[i].at>950){retiringPreviews[i].el.remove();retiringPreviews.splice(i,1);}}const speed=Math.abs(dy)/Math.max(.008,dt);if(!window.NocturneScroll?.synchronized?.()&&(Math.abs(dy)>innerHeight*.6||speed>innerHeight*2.5))markFast();lastY=scrollY;lastTick=t;
   const reduced=isReduced(),active=fine.matches&&!reduced;body.classList.toggle('mx-fast',fast());body.classList.toggle('mx-cursor-ready',flags.contextCursor&&active&&ptr.inside);
   const grassStep=1-Math.exp(-Math.min(dt,.05)*3.5);
   ptr.gx=mix(ptr.gx,ptr.x,grassStep);ptr.gy=mix(ptr.gy,ptr.y,grassStep);
@@ -351,8 +351,12 @@
   marquee.style.opacity=String(1-depart);marquee.style.transform=reduced?'none':`translate3d(${-depart*38}px,${-depart*115}px,0) scale(${1+depart*.035})`;marquee.style.filter=reduced?'none':`blur(${depart*11}px)`;
   const fluidOn=flags.fluidPointer&&active&&ptr.inside&&!fast()&&!inline&&scrollY<innerHeight;
   points[0].x=ptr.rx;points[0].y=ptr.ry;for(let i=1;i<points.length;i++){points[i].x=mix(points[i].x,points[i-1].x,1-Math.exp(-dt*20));points[i].y=mix(points[i].y,points[i-1].y,1-Math.exp(-dt*20));}fluid.style.opacity=String(fluidOn?clamp(ptr.brush*2.8):0);const path=$('path',fluid);
+  // Touch has no visible pointer ribbon. Keep its spring state up to date,
+  // but do not rebuild an invisible SVG path (and invalidate styles) per frame.
+  if(fine.matches){
   const outline=[];for(const side of [1,-1]){const edge=[];for(let i=0;i<points.length;i++){const a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],len=Math.max(1,Math.hypot(b.x-a.x,b.y-a.y)),w=(5+ptr.brush*32)*Math.pow(1-i/(points.length-1),1.65);edge.push({x:points[i].x-(b.y-a.y)/len*w*side,y:points[i].y+(b.x-a.x)/len*w*side});}outline.push(...(side===1?edge:edge.reverse()));}
   let d=`M${outline[0].x},${outline[0].y}`;for(let i=1;i<=outline.length;i++){const a=outline[i%outline.length],b=outline[(i+1)%outline.length];d+=` Q${a.x},${a.y} ${(a.x+b.x)/2},${(a.y+b.y)/2}`;}path.setAttribute('d',d+' Z');
+  }
 
   applyGoo(t,reduced);drawFlow(dt);
  }

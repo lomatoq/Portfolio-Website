@@ -184,18 +184,17 @@
 
   // A deformed Bezier perimeter, not a scaled rounded rectangle. Distortion
   // stays in the transient shell; it never distorts readable page content.
-  let shellsSerial=0;
   function organicShell(frame,e,t){
-    if(reduced){frame.style.display='none';return;}
+    if(reduced||e<.001||e>.999){frame.style.display='none';return;}
     let shell=shells.get(frame);
     if(!shell){
       const canvas=document.createElement('canvas');canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none';
-      const gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:false,antialias:false,depth:false});
+      const gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:false,depth:false});
       if(!gl){frame.style.display='none';return;}
       const compile=(type,src)=>{const sh=gl.createShader(type);gl.shaderSource(sh,src);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(sh));return sh;};
       const program=gl.createProgram();
       gl.attachShader(program,compile(gl.VERTEX_SHADER,'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
-      gl.attachShader(program,compile(gl.FRAGMENT_SHADER,`precision mediump float;
+      gl.attachShader(program,compile(gl.FRAGMENT_SHADER,`precision highp float;
         uniform vec2 res;uniform float progress;uniform float clock;uniform float firstWave;
         float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
         float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+1.),f.x),f.y);}
@@ -210,18 +209,18 @@
           float sdf=length(max(d,0.))+min(max(d.x,d.y),0.)-radius;
           float width=mix(.022,.14,k*k)*(.65+ink*.9);
           float glow=exp(-pow(abs(sdf/width),2.))*.52+exp(-abs(sdf)/(width*2.8))*.12;
-          float dispersion=.008*(1.-k);vec3 color=mix(vec3(.64,.82,1.),vec3(.97,.73,.86),smoothstep(-dispersion,dispersion,sdf));
+          float dispersion=max(.0001,.008*(1.-k));vec3 color=mix(vec3(.64,.82,1.),vec3(.97,.73,.86),smoothstep(-dispersion,dispersion,sdf));
           float fade=smoothstep(.52,.74,k)*(1.-smoothstep(.68,1.,e));
-          gl_FragColor=vec4(color,glow*fade*.113*(1.+firstWave*2.*(1.-smoothstep(.55,.95,e))));
+          float alpha=clamp(glow*fade*.113*(1.+firstWave*2.*(1.-smoothstep(.55,.95,e))),0.,1.);
+          gl_FragColor=vec4(color*alpha,alpha);
         }`));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
       gl.useProgram(program);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);const loc=gl.getAttribLocation(program,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
       shell={canvas,gl,program,e,time:t,uniforms:Object.fromEntries(['firstWave','res','progress','clock'].map(name=>[name,gl.getUniformLocation(program,name)]))};shells.set(frame,shell);frame.prepend(canvas);
       const seed=frame.querySelector('.portal-seed');if(seed)seed.style.display='none';
     }
-    const dt=Math.min(.06,Math.max(0,t-shell.time));shell.time=t;const delta=(e-shell.e)*(1-Math.exp(-dt*2.6));
-    shell.e+=Math.max(-dt*.38,Math.min(dt*.38,delta));e=shell.e;
-    const arrivalAge=t-moonAt;
-    if(frame.dataset.firstWave==='true'&&arrivalAge>=0&&arrivalAge<2.8){e=.30+.70*smooth(arrivalAge,0,2.8);shell.e=e;}
+    // The optical echo shares the exact content playhead. A separate spring
+    // and 2.8s first-wave timer used to paint it over already-arrived text.
+    shell.time=t;shell.e=e;
     frame.style.display=e<.001||e>.999?'none':'block';frame.style.opacity='1';frame.style.filter='none';
     if(frame.style.display==='none')return;
     const {gl,canvas,program}=shell,w=Math.round(innerWidth*.35),h=Math.round(innerHeight*.35);

@@ -2532,6 +2532,10 @@ body .handoff-icon:after{content:'';position:absolute;inset:-15%;border-radius:5
 :is(.world-host,.boot-loader) .film-grain{position:absolute;inset:-192px -2496px -192px -192px;z-index:5;pointer-events:none;background-repeat:repeat;background-size:2304px 192px;mix-blend-mode:soft-light;opacity:.19;animation:film-grain-drift 500ms steps(12,end) infinite;will-change:transform}
 :is(.world-host,.boot-loader) .film-grain[hidden]{display:none;animation:none}
 @keyframes film-grain-drift{from{transform:translateX(0)}to{transform:translateX(-2304px)}}
+/* Keep the same 12 noise frames without a viewport + 2688px composited
+   texture on high-DPR touch screens. The tile repeats every 192px vertically. */
+html.touch-compositor :is(.world-host,.boot-loader) .film-grain{inset:0;background-position:-192px 0;will-change:auto;animation-name:film-grain-bounded}
+@keyframes film-grain-bounded{from{background-position:-192px 0}to{background-position:-2496px 0}}
 @media(prefers-reduced-motion:reduce){:is(.world-host,.boot-loader) .film-grain{animation:none}}
 body.reduced :is(.world-host,.boot-loader) .film-grain{animation:none}
 
@@ -3358,6 +3362,18 @@ body.reduced .orbit-icon{transition:none!important}
 </style><style data-nocturne-source="src/case-refinement.css">
 /* Case surface: one responsive return control, a quiet backdrop, original header metrics. */
 body.gpu-ready:not(.no-glass) .career-bubble>i.lux{display:none!important}
+/* Native scrolling must composite the material and its text together. A fixed
+   WebGL replica cannot follow Safari's asynchronous scroll during a busy frame. */
+html.touch-compositor body.gpu-ready:not(.no-glass) .exp .career-bubble{
+ background:linear-gradient(130deg,#ffffff24,#12151ab5 45%,#ffffff12)!important;
+ border:1px solid #ffffff52!important;
+ box-shadow:0 25px 55px #0005,inset 0 1px 0 #ffffff9c,inset -1px 0 1px #85ecff55,inset 1px 0 1px #ffabd755!important;
+ -webkit-backdrop-filter:blur(20px) saturate(1.15)!important;
+ backdrop-filter:blur(20px) saturate(1.15)!important;
+}
+html.touch-compositor body.gpu-ready.mx-blue:not(.no-glass) .exp .career-bubble{
+ background:linear-gradient(130deg,#e5f5ff35,#20395d9c 45%,#afcaff20)!important;
+}
 body.gpu-ready .exp.mx-expanded .career-bubble{border:1px solid transparent!important}
 body .mx-case-backdrop{display:block!important;background:rgba(2,5,10,.46);backdrop-filter:none;-webkit-backdrop-filter:none;z-index:150}
 body.mx-case-open .mx-case-backdrop{opacity:1}
@@ -3713,6 +3729,10 @@ body.reduced .mobile-history-intro{transition:none!important}
 (() => {
   'use strict';
   const root = document.documentElement;
+  // Native touch scroll is composited independently of WebGL presentation.
+  // Keep moving card materials in the same DOM layer as their live text.
+  window.NocturnePlatform=Object.freeze({attachedGlass:matchMedia('(pointer: coarse)').matches});
+  root.classList.toggle('touch-compositor',window.NocturnePlatform.attachedGlass);
   const host = document.getElementById('bootLoader');
   if (!host) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -5600,6 +5620,7 @@ body.reduced .mobile-history-intro{transition:none!important}
     const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
     const escape = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const data = JSON.parse($('#portfolio-data').textContent), root = document.documentElement, body = document.body;
+    const attachedGlass=!!window.NocturnePlatform?.attachedGlass;
     let canvas = $('#worldCanvas');
     let riverPoints = [], riverStops = [], followedRiverHead=null;
     let reduced = matchMedia('(prefers-reduced-motion:reduce)').matches, quality = 'full', started = performance.now(), introSkip = !!location.hash || scrollY > 50;
@@ -5613,6 +5634,7 @@ body.reduced .mobile-history-intro{transition:none!important}
     const rowMetrics=new Map();
     const W8 = { dir: 0, vel: 0, lastY: 0, surgeT: 9, power: 0, flare: 0 };
     const state = window.Nocturne = { pulse: (p = 1) => { pulseReq = Math.max(pulseReq, p); window.portfolioWake?.(); }, windState: () => W8, tick, needsFrame: () => !reduced, diagnostics: () => ({ ...report, embedded: window.self !== window.top, navigationHistory: window.portfolioHistoryFallback ? 'in-memory (opaque preview)' : 'browser' }), restartIntro, riverStops:()=>riverStops.map(v=>({...v})), layout: () => { layoutDirty = true; window.portfolioWake?.(); }, showCompany, quality: setQuality, pauseRendering: false, surfaces, registerSurface, shaderSources:()=>({...GLSL}), forceTime: null, retryRenderer: restartRenderer, graphics: openGraphics };
+    report.glassComposition=attachedGlass?'attached-dom':'world-webgl';
     // GLSL pow has an undefined result for negative bases, even with exponent 2.
     // abs preserves the authored squared falloff on every GPU (including Metal).
     const GLSL = {
@@ -6262,7 +6284,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
                 f(pPresent,'themeBlue',themeBlue);
                 gl.drawArrays(gl.TRIANGLES, 0, 6);
                 report.visibleGlass = 0;
-                if (!state.captureClean && !body.classList.contains('no-glass')) {
+                if (skins.length && !state.captureClean && !body.classList.contains('no-glass')) {
                     gl.enable(gl.BLEND);
                     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
                     use(pGlass);
@@ -6574,7 +6596,8 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             // Read the transformed anchor in this frame, including the story gate and focus.
             // The former hand-built box omitted ancestor transforms and summary offsets.
             const analytic=s.kind==='career'?null:s.box;
-            const bounds=analytic||s.anchor.getBoundingClientRect();
+            const cached=attachedGlass&&s.kind==='career'&&!s.el.closest('.mx-expanded')?rowMetrics.get(s.el.closest('.exp')):null;
+            const bounds=cached?{top:cached.top-scrollY,bottom:cached.top-scrollY+cached.height,left:cached.left,width:cached.bw,height:cached.bh}:analytic||s.anchor.getBoundingClientRect();
             if(bounds.bottom < -120||bounds.top > innerHeight+120||bounds.width<1||bounds.height<1)continue;
             // Self-healing: a pointer sequence swallowed by a modal, a rail
             // re-render or a focus change can never leave a card stuck in its
@@ -6592,7 +6615,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
               s.hoverTo=on?1:0;s.dx=on?clamp((railPointer.x-r.left)/r.width*2-1,-1,1):0;s.dy=on?clamp((railPointer.y-r.top)/r.height*2-1,-1,1):0;
             }
             const opacityRow=s.kind==='career'?s.el.closest('.exp'):null;
-            batch.push([s,bounds,analytic?s.boxW:s.el.offsetWidth,analytic?s.boxH:s.el.offsetHeight,opacityRow?Number(getComputedStyle(opacityRow).opacity):1]);
+            batch.push([s,bounds,cached?cached.bw:analytic?s.boxW:s.el.offsetWidth,cached?cached.bh:analytic?s.boxH:s.el.offsetHeight,opacityRow&&!attachedGlass?Number(getComputedStyle(opacityRow).opacity):1]);
         }
         for(const [s,bounds,width,height,rowOpacity] of batch){
             const expandedRow=s.el.closest('.mx-expanded');
@@ -6662,7 +6685,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             s.apertureEntry=reduced?1:Number(s.anchor.dataset.arcEntry??1);s.apertureExit=reduced?0:Number(s.anchor.dataset.arcExit??0);
             if(s.el.closest('.mx-expanded')){const p=Number(s.el.closest('.mx-expanded').dataset.mxProgress||0);s.apertureEntry=lerp(s.apertureEntry,1,p);s.apertureExit*=1-p;}
             if(s.anchor._returnPose){const from=s.anchor._returnPose,k=s.anchor._returnBlend||0;s.alpha=lerp(from.gpuAlpha,s.alpha,k);s.apertureEntry=lerp(from.entry,s.apertureEntry,k);s.apertureExit=lerp(from.exit,s.apertureExit,k);}
-            visible.push(s);
+            if(!attachedGlass)visible.push(s);
         }
         return visible;
     }
@@ -6848,7 +6871,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             if(w.al!==al){w.al=al;s.style.opacity=al;s.dataset.visibility=al;}
             const yaw=displayYaw.toFixed(3),rot=displayRot.toFixed(3);
             if(w.yaw!==yaw||w.rot!==rot){w.yaw=yaw;w.rot=rot;s.style.setProperty('--in-yaw',yaw);s.style.setProperty('--in-rot',rot);}
-            const fl=reduced?'none':`blur(${displayBlur.toFixed(3)}px)`;
+            const fl=reduced||displayBlur<.001?'none':`blur(${displayBlur.toFixed(3)}px)`;
             s.dataset.motionBlur=String(displayBlur);
             if(w.fl!==fl){w.fl=fl;s.style.filter=fl;}
             const ab=((1-e)*9+soft*2.2).toFixed(2)+'px';
@@ -6983,7 +7006,8 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     $('#qualityToggle')?.addEventListener('click', () => setQuality());
     $('#replayIntro')?.addEventListener('click', restartIntro);
     window.addEventListener('pointermove', e => mouse = [e.clientX, e.clientY], { passive: true });
-    window.addEventListener('resize', () => { fitName(); try {
+    let resizeTimer=0,resizeWidth=innerWidth,resizeDpr=devicePixelRatio;
+    function resizeRenderer(){try {
         engine?.resize();
     }
     catch (e) {
@@ -6991,10 +7015,17 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         engine?.dispose();
         engine = initCanvas2D();
         layoutDirty = true;
-    } layoutDirty = true; window.portfolioWake?.(); });
+    } layoutDirty = true; window.portfolioWake?.();}
+    window.addEventListener('resize', () => {
+        const widthChanged=resizeWidth!==innerWidth||resizeDpr!==devicePixelRatio;
+        resizeWidth=innerWidth;resizeDpr=devicePixelRatio;clearTimeout(resizeTimer);
+        if(!attachedGlass||widthChanged){fitName();resizeRenderer();}
+        else resizeTimer=setTimeout(resizeRenderer,160);
+        layoutDirty=true;window.portfolioWake?.();
+    });
     new ResizeObserver(() => { layoutDirty = true; window.portfolioWake?.(); }).observe($('.timeline'));
     window.addEventListener('pagehide', e => { if (e.persisted)
-        return; companyMedia.forEach(m => URL.revokeObjectURL(m.url)); engine?.dispose(); clearTimeout(fontTimer); });
+        return; companyMedia.forEach(m => URL.revokeObjectURL(m.url)); engine?.dispose(); clearTimeout(fontTimer); clearTimeout(resizeTimer); });
     $('#renderStatus')?.addEventListener('click', openGraphics);
     restartRenderer();
     fitName();
@@ -7691,18 +7722,17 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
 
   // A deformed Bezier perimeter, not a scaled rounded rectangle. Distortion
   // stays in the transient shell; it never distorts readable page content.
-  let shellsSerial=0;
   function organicShell(frame,e,t){
-    if(reduced){frame.style.display='none';return;}
+    if(reduced||e<.001||e>.999){frame.style.display='none';return;}
     let shell=shells.get(frame);
     if(!shell){
       const canvas=document.createElement('canvas');canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none';
-      const gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:false,antialias:false,depth:false});
+      const gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:false,depth:false});
       if(!gl){frame.style.display='none';return;}
       const compile=(type,src)=>{const sh=gl.createShader(type);gl.shaderSource(sh,src);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(sh));return sh;};
       const program=gl.createProgram();
       gl.attachShader(program,compile(gl.VERTEX_SHADER,'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
-      gl.attachShader(program,compile(gl.FRAGMENT_SHADER,`precision mediump float;
+      gl.attachShader(program,compile(gl.FRAGMENT_SHADER,`precision highp float;
         uniform vec2 res;uniform float progress;uniform float clock;uniform float firstWave;
         float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
         float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+1.),f.x),f.y);}
@@ -7717,18 +7747,18 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
           float sdf=length(max(d,0.))+min(max(d.x,d.y),0.)-radius;
           float width=mix(.022,.14,k*k)*(.65+ink*.9);
           float glow=exp(-pow(abs(sdf/width),2.))*.52+exp(-abs(sdf)/(width*2.8))*.12;
-          float dispersion=.008*(1.-k);vec3 color=mix(vec3(.64,.82,1.),vec3(.97,.73,.86),smoothstep(-dispersion,dispersion,sdf));
+          float dispersion=max(.0001,.008*(1.-k));vec3 color=mix(vec3(.64,.82,1.),vec3(.97,.73,.86),smoothstep(-dispersion,dispersion,sdf));
           float fade=smoothstep(.52,.74,k)*(1.-smoothstep(.68,1.,e));
-          gl_FragColor=vec4(color,glow*fade*.113*(1.+firstWave*2.*(1.-smoothstep(.55,.95,e))));
+          float alpha=clamp(glow*fade*.113*(1.+firstWave*2.*(1.-smoothstep(.55,.95,e))),0.,1.);
+          gl_FragColor=vec4(color*alpha,alpha);
         }`));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
       gl.useProgram(program);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);const loc=gl.getAttribLocation(program,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
       shell={canvas,gl,program,e,time:t,uniforms:Object.fromEntries(['firstWave','res','progress','clock'].map(name=>[name,gl.getUniformLocation(program,name)]))};shells.set(frame,shell);frame.prepend(canvas);
       const seed=frame.querySelector('.portal-seed');if(seed)seed.style.display='none';
     }
-    const dt=Math.min(.06,Math.max(0,t-shell.time));shell.time=t;const delta=(e-shell.e)*(1-Math.exp(-dt*2.6));
-    shell.e+=Math.max(-dt*.38,Math.min(dt*.38,delta));e=shell.e;
-    const arrivalAge=t-moonAt;
-    if(frame.dataset.firstWave==='true'&&arrivalAge>=0&&arrivalAge<2.8){e=.30+.70*smooth(arrivalAge,0,2.8);shell.e=e;}
+    // The optical echo shares the exact content playhead. A separate spring
+    // and 2.8s first-wave timer used to paint it over already-arrived text.
+    shell.time=t;shell.e=e;
     frame.style.display=e<.001||e>.999?'none':'block';frame.style.opacity='1';frame.style.filter='none';
     if(frame.style.display==='none')return;
     const {gl,canvas,program}=shell,w=Math.round(innerWidth*.35),h=Math.round(innerHeight*.35);

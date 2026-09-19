@@ -10,6 +10,7 @@
     const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
     const escape = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const data = JSON.parse($('#portfolio-data').textContent), root = document.documentElement, body = document.body;
+    const attachedGlass=!!window.NocturnePlatform?.attachedGlass;
     let canvas = $('#worldCanvas');
     let riverPoints = [], riverStops = [], followedRiverHead=null;
     let reduced = matchMedia('(prefers-reduced-motion:reduce)').matches, quality = 'full', started = performance.now(), introSkip = !!location.hash || scrollY > 50;
@@ -23,6 +24,7 @@
     const rowMetrics=new Map();
     const W8 = { dir: 0, vel: 0, lastY: 0, surgeT: 9, power: 0, flare: 0 };
     const state = window.Nocturne = { pulse: (p = 1) => { pulseReq = Math.max(pulseReq, p); window.portfolioWake?.(); }, windState: () => W8, tick, needsFrame: () => !reduced, diagnostics: () => ({ ...report, embedded: window.self !== window.top, navigationHistory: window.portfolioHistoryFallback ? 'in-memory (opaque preview)' : 'browser' }), restartIntro, riverStops:()=>riverStops.map(v=>({...v})), layout: () => { layoutDirty = true; window.portfolioWake?.(); }, showCompany, quality: setQuality, pauseRendering: false, surfaces, registerSurface, shaderSources:()=>({...GLSL}), forceTime: null, retryRenderer: restartRenderer, graphics: openGraphics };
+    report.glassComposition=attachedGlass?'attached-dom':'world-webgl';
     // GLSL pow has an undefined result for negative bases, even with exponent 2.
     // abs preserves the authored squared falloff on every GPU (including Metal).
     const GLSL = {
@@ -672,7 +674,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
                 f(pPresent,'themeBlue',themeBlue);
                 gl.drawArrays(gl.TRIANGLES, 0, 6);
                 report.visibleGlass = 0;
-                if (!state.captureClean && !body.classList.contains('no-glass')) {
+                if (skins.length && !state.captureClean && !body.classList.contains('no-glass')) {
                     gl.enable(gl.BLEND);
                     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
                     use(pGlass);
@@ -984,7 +986,8 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             // Read the transformed anchor in this frame, including the story gate and focus.
             // The former hand-built box omitted ancestor transforms and summary offsets.
             const analytic=s.kind==='career'?null:s.box;
-            const bounds=analytic||s.anchor.getBoundingClientRect();
+            const cached=attachedGlass&&s.kind==='career'&&!s.el.closest('.mx-expanded')?rowMetrics.get(s.el.closest('.exp')):null;
+            const bounds=cached?{top:cached.top-scrollY,bottom:cached.top-scrollY+cached.height,left:cached.left,width:cached.bw,height:cached.bh}:analytic||s.anchor.getBoundingClientRect();
             if(bounds.bottom < -120||bounds.top > innerHeight+120||bounds.width<1||bounds.height<1)continue;
             // Self-healing: a pointer sequence swallowed by a modal, a rail
             // re-render or a focus change can never leave a card stuck in its
@@ -1002,7 +1005,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
               s.hoverTo=on?1:0;s.dx=on?clamp((railPointer.x-r.left)/r.width*2-1,-1,1):0;s.dy=on?clamp((railPointer.y-r.top)/r.height*2-1,-1,1):0;
             }
             const opacityRow=s.kind==='career'?s.el.closest('.exp'):null;
-            batch.push([s,bounds,analytic?s.boxW:s.el.offsetWidth,analytic?s.boxH:s.el.offsetHeight,opacityRow?Number(getComputedStyle(opacityRow).opacity):1]);
+            batch.push([s,bounds,cached?cached.bw:analytic?s.boxW:s.el.offsetWidth,cached?cached.bh:analytic?s.boxH:s.el.offsetHeight,opacityRow&&!attachedGlass?Number(getComputedStyle(opacityRow).opacity):1]);
         }
         for(const [s,bounds,width,height,rowOpacity] of batch){
             const expandedRow=s.el.closest('.mx-expanded');
@@ -1072,7 +1075,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             s.apertureEntry=reduced?1:Number(s.anchor.dataset.arcEntry??1);s.apertureExit=reduced?0:Number(s.anchor.dataset.arcExit??0);
             if(s.el.closest('.mx-expanded')){const p=Number(s.el.closest('.mx-expanded').dataset.mxProgress||0);s.apertureEntry=lerp(s.apertureEntry,1,p);s.apertureExit*=1-p;}
             if(s.anchor._returnPose){const from=s.anchor._returnPose,k=s.anchor._returnBlend||0;s.alpha=lerp(from.gpuAlpha,s.alpha,k);s.apertureEntry=lerp(from.entry,s.apertureEntry,k);s.apertureExit=lerp(from.exit,s.apertureExit,k);}
-            visible.push(s);
+            if(!attachedGlass)visible.push(s);
         }
         return visible;
     }
@@ -1258,7 +1261,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             if(w.al!==al){w.al=al;s.style.opacity=al;s.dataset.visibility=al;}
             const yaw=displayYaw.toFixed(3),rot=displayRot.toFixed(3);
             if(w.yaw!==yaw||w.rot!==rot){w.yaw=yaw;w.rot=rot;s.style.setProperty('--in-yaw',yaw);s.style.setProperty('--in-rot',rot);}
-            const fl=reduced?'none':`blur(${displayBlur.toFixed(3)}px)`;
+            const fl=reduced||displayBlur<.001?'none':`blur(${displayBlur.toFixed(3)}px)`;
             s.dataset.motionBlur=String(displayBlur);
             if(w.fl!==fl){w.fl=fl;s.style.filter=fl;}
             const ab=((1-e)*9+soft*2.2).toFixed(2)+'px';
@@ -1393,7 +1396,8 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     $('#qualityToggle')?.addEventListener('click', () => setQuality());
     $('#replayIntro')?.addEventListener('click', restartIntro);
     window.addEventListener('pointermove', e => mouse = [e.clientX, e.clientY], { passive: true });
-    window.addEventListener('resize', () => { fitName(); try {
+    let resizeTimer=0,resizeWidth=innerWidth,resizeDpr=devicePixelRatio;
+    function resizeRenderer(){try {
         engine?.resize();
     }
     catch (e) {
@@ -1401,10 +1405,17 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         engine?.dispose();
         engine = initCanvas2D();
         layoutDirty = true;
-    } layoutDirty = true; window.portfolioWake?.(); });
+    } layoutDirty = true; window.portfolioWake?.();}
+    window.addEventListener('resize', () => {
+        const widthChanged=resizeWidth!==innerWidth||resizeDpr!==devicePixelRatio;
+        resizeWidth=innerWidth;resizeDpr=devicePixelRatio;clearTimeout(resizeTimer);
+        if(!attachedGlass||widthChanged){fitName();resizeRenderer();}
+        else resizeTimer=setTimeout(resizeRenderer,160);
+        layoutDirty=true;window.portfolioWake?.();
+    });
     new ResizeObserver(() => { layoutDirty = true; window.portfolioWake?.(); }).observe($('.timeline'));
     window.addEventListener('pagehide', e => { if (e.persisted)
-        return; companyMedia.forEach(m => URL.revokeObjectURL(m.url)); engine?.dispose(); clearTimeout(fontTimer); });
+        return; companyMedia.forEach(m => URL.revokeObjectURL(m.url)); engine?.dispose(); clearTimeout(fontTimer); clearTimeout(resizeTimer); });
     $('#renderStatus')?.addEventListener('click', openGraphics);
     restartRenderer();
     fitName();

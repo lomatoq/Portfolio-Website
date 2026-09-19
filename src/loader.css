@@ -304,6 +304,10 @@ body .handoff-icon:after{content:'';position:absolute;inset:-15%;border-radius:5
 :is(.world-host,.boot-loader) .film-grain{position:absolute;inset:-192px -2496px -192px -192px;z-index:5;pointer-events:none;background-repeat:repeat;background-size:2304px 192px;mix-blend-mode:soft-light;opacity:.19;animation:film-grain-drift 500ms steps(12,end) infinite;will-change:transform}
 :is(.world-host,.boot-loader) .film-grain[hidden]{display:none;animation:none}
 @keyframes film-grain-drift{from{transform:translateX(0)}to{transform:translateX(-2304px)}}
+/* Keep the same 12 noise frames without a viewport + 2688px composited
+   texture on high-DPR touch screens. The tile repeats every 192px vertically. */
+html.touch-compositor :is(.world-host,.boot-loader) .film-grain{inset:0;background-position:-192px 0;will-change:auto;animation-name:film-grain-bounded}
+@keyframes film-grain-bounded{from{background-position:-192px 0}to{background-position:-2496px 0}}
 @media(prefers-reduced-motion:reduce){:is(.world-host,.boot-loader) .film-grain{animation:none}}
 body.reduced :is(.world-host,.boot-loader) .film-grain{animation:none}
 

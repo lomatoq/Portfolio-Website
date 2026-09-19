@@ -143,12 +143,75 @@
   $$('.name-glyph').forEach((outer,i)=>{
     const ink=$('.glyph-ink',outer),layer=document.createElement('span');layer.className='glyph-motion';
     ink.before(layer);layer.append(ink);
+    // The moving colour sweep must not invalidate two wide glow convolutions
+    // for every letter. Keep the glow's silhouette static and composite the
+    // same clipped sweep above it as a separate, unfiltered sibling.
+    if(matchMedia('(pointer:coarse)').matches){const sheen=ink.cloneNode(true);sheen.classList.add('glyph-sheen');sheen.setAttribute('aria-hidden','true');layer.append(sheen);}
     for(const [cls,color] of [['cyan','#9eefff'],['rose','#ffb9dc']]){
       const fringe=ink.cloneNode(true);fringe.classList.add('glyph-fringe',cls);fringe.setAttribute('aria-hidden','true');fringe.style.color=color;layer.prepend(fringe);
     }
     glyphs.push({outer,layer,i,x:0,y:0,w:0,h:0,a:{value:0,velocity:0},sx:{value:0,velocity:0},sy:{value:0,velocity:0}});
   });
   const name=$('.name-sculpture'),hero=$('.intro');
+  // Bake only the unchanging wide glow. Live glyphs, their colour sweep and
+  // motion stay in the DOM. Re-running two drop-shadow filters per glyph per
+  // frame is particularly expensive in WebKit's filter compositor.
+  if(matchMedia('(pointer:coarse)').matches){
+    const renderGlow=(image,ratio,makeCanvas)=>{
+      const w=image.width,h=image.height,first=makeCanvas(w,h),a=first.getContext('2d');
+      a.shadowColor='rgba(255,248,223,0.36862745)';a.shadowBlur=12*ratio;a.drawImage(image,0,0);
+      const second=makeCanvas(w,h),b=second.getContext('2d');
+      b.shadowColor='rgba(239,235,225,0.23921569)';b.shadowBlur=52*ratio;b.drawImage(first,0,0);
+      b.shadowColor='transparent';b.shadowBlur=0;b.globalCompositeOperation='destination-out';b.drawImage(image,0,0);
+      return second;
+    };
+    const glowWorkerMain=()=>{
+      self.onmessage=async({data:d})=>{try{
+        const second=renderGlow(d.image,d.ratio,(w,h)=>new OffscreenCanvas(w,h));
+        d.image.close();const bitmap=second.transferToImageBitmap();self.postMessage({id:d.id,bitmap},[bitmap]);
+      }catch(e){self.postMessage({id:d.id,error:String(e)})}};
+    };
+    let worker=null,generation=0,timer=0;const jobs=new Map();
+    try{if(window.OffscreenCanvas&&window.Worker&&window.createImageBitmap){
+      const url=URL.createObjectURL(new Blob(['const renderGlow='+renderGlow.toString()+';('+glowWorkerMain.toString()+')()'],{type:'text/javascript'}));
+      worker=new Worker(url);URL.revokeObjectURL(url);
+      worker.onmessage=({data:d})=>{const job=jobs.get(d.id);jobs.delete(d.id);if(!job){d.bitmap?.close();return;}job(d);};
+      worker.onerror=()=>{worker?.terminate();worker=null;for(const job of jobs.values())job({error:'worker unavailable'});jobs.clear();queueGlow();};
+    }}catch{}
+    async function cacheGlows(){
+      if(!document.body.classList.contains('webfont-ready'))return;
+      const version=++generation;
+      for(const [i,g] of glyphs.entries()){
+        const ink=g.layer.querySelector('.glyph-ink:not(.glyph-fringe):not(.glyph-sheen)'),letter=ink?.querySelector('.live-letter');
+        if(!letter)continue;
+        const css=getComputedStyle(letter),size=parseFloat(css.fontSize),ratio=Math.min(devicePixelRatio||1,3),pad=84;
+        const key=[css.fontFamily,size,letter.textContent,ratio].join('/');if(ink.dataset.glowKey===key)continue;
+        const width=ink.offsetWidth,height=ink.offsetHeight;if(!width||!height)continue;
+        const source=document.createElement('canvas');source.width=Math.ceil((width+pad*2)*ratio);source.height=Math.ceil((height+pad*2)*ratio);
+        const c=source.getContext('2d');c.scale(ratio,ratio);c.font=`${css.fontStyle} ${css.fontWeight} ${css.fontSize} ${css.fontFamily}`;c.fillStyle='#fff';
+        const m=c.measureText(letter.textContent),line=parseFloat(css.lineHeight)||size*1.14;
+        const ascent=m.fontBoundingBoxAscent,descent=m.fontBoundingBoxDescent;if(!Number.isFinite(ascent+descent))continue;
+        c.fillText(letter.textContent,pad,pad+(line-ascent-descent)/2+ascent);
+        const bitmap=worker?await createImageBitmap(source):source;if(version!==generation){bitmap.close?.();return;}
+        const id=version+':'+i;
+        await new Promise(resolve=>{
+          jobs.set(id,d=>{if(d.error){worker?.terminate();worker=null;queueGlow();}if(d.bitmap){if(version===generation){
+            const glow=g.glow||document.createElement('canvas');glow.className='glyph-cached-glow';glow.setAttribute('aria-hidden','true');
+            glow.width=source.width;glow.height=source.height;glow.style.cssText=`position:absolute;left:-${pad}px;top:-${pad}px;width:${source.width/ratio}px;height:${source.height/ratio}px;pointer-events:none;z-index:0`;
+            glow.getContext('2d').drawImage(d.bitmap,0,0);if(!g.glow){g.layer.prepend(glow);g.glow=glow;}
+            ink.classList.add('glow-cached');ink.dataset.glowKey=key;
+          }d.bitmap.close?.();}resolve();});
+          if(worker)worker.postMessage({id,image:bitmap,ratio},[bitmap]);
+          else{const result=renderGlow(source,ratio,(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;});const done=jobs.get(id);jobs.delete(id);done({bitmap:result});}
+        });
+        if(!worker)await new Promise(resolve=>setTimeout(resolve,0));
+      }
+    }
+    const queueGlow=()=>{clearTimeout(timer);timer=setTimeout(()=>cacheGlows().catch(()=>{}),180);};
+    document.fonts?.ready.then(queueGlow);new ResizeObserver(queueGlow).observe(name);
+    new MutationObserver(queueGlow).observe(document.body,{attributes:true,attributeFilter:['class']});
+    addEventListener('pagehide',e=>{if(!e.persisted){clearTimeout(timer);worker?.terminate();jobs.clear();}});
+  }
   new IntersectionObserver(es=>{heroVisible=es[0].isIntersecting;if(!heroVisible)pointerInside=false;wake();},{threshold:0}).observe(hero);
   name.addEventListener('pointermove',e=>{if(e.pointerType==='touch'||!fine.matches)return;mx=e.clientX;my=e.clientY;pointerInside=true;wake();},{passive:true});
   name.addEventListener('pointerleave',()=>{pointerInside=false;wake();});

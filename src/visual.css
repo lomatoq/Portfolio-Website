@@ -673,6 +673,10 @@ body.reduced .hero-side,body.reduced .hero-eyebrow,body.reduced .hero-tagline,bo
  backdrop-filter:blur(calc(var(--boot,0)*18px)) saturate(calc(1 + var(--boot,0)*.5)) brightness(calc(1 - var(--boot,0)*.25));
  background:radial-gradient(ellipse at 50% 42%,#05070a00,#05070aab 72%)}
 body.reduced .boot-veil{display:none}
+.boot-veil[hidden]{display:none}
+/* Cover the large viewport while Safari's address bar changes the visible
+   viewport. The veil has no section-sized containing block or bottom edge. */
+.boot-veil,.boot-loader,.mx-case-backdrop{min-height:100lvh;bottom:auto;height:100%;}
 .glyph-ink{--ab:calc(.6px + var(--edge,0)*3.4px + var(--ab-boot,0px))}
 /* линия под карточкой размывается сильнее */
 .career-bubble{background:linear-gradient(130deg,#1a1f27b8,#0b0f14d1 46%,#161b23bf);

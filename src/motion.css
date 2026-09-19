@@ -46,6 +46,10 @@ body .dialog-head .mono{font-size:10.5px;line-height:1.5;letter-spacing:.11em}
 .glyph-fringe svg path{fill:currentColor}
 .glyph-motion>.glyph-ink{display:flow-root}
 .glyph-motion>.glyph-ink:not(.glyph-fringe){z-index:1}
+html.touch-compositor .glyph-motion>.glyph-ink:not(.glyph-sheen)::before{display:none!important}
+.glyph-motion>.glyph-sheen{position:absolute;inset:0;z-index:2;pointer-events:none;color:transparent!important;-webkit-text-fill-color:transparent;filter:none!important;text-shadow:none!important;mix-blend-mode:screen}
+.glyph-motion>.glyph-sheen>.fallback-letter,.glyph-motion>.glyph-sheen::after{display:none!important}
+.glyph-motion>.glyph-ink.glow-cached{filter:none!important}
 /* Each word has room for blur, overshoot and italic ascenders. No line crop. */
 .word-heading{overflow:visible!important;clip-path:none!important;perspective:1100px}
 .motion-word{display:inline-block;white-space:nowrap;position:relative;transform-origin:50% 80%;backface-visibility:hidden;overflow:visible;vertical-align:baseline}

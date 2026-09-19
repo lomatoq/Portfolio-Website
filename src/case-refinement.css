@@ -1,17 +1,5 @@
 /* Case surface: one responsive return control, a quiet backdrop, original header metrics. */
 body.gpu-ready:not(.no-glass) .career-bubble>i.lux{display:none!important}
-/* Native scrolling must composite the material and its text together. A fixed
-   WebGL replica cannot follow Safari's asynchronous scroll during a busy frame. */
-html.touch-compositor body.gpu-ready:not(.no-glass) .exp .career-bubble{
- background:linear-gradient(130deg,#ffffff24,#12151ab5 45%,#ffffff12)!important;
- border:1px solid #ffffff52!important;
- box-shadow:0 25px 55px #0005,inset 0 1px 0 #ffffff9c,inset -1px 0 1px #85ecff55,inset 1px 0 1px #ffabd755!important;
- -webkit-backdrop-filter:blur(20px) saturate(1.15)!important;
- backdrop-filter:blur(20px) saturate(1.15)!important;
-}
-html.touch-compositor body.gpu-ready.mx-blue:not(.no-glass) .exp .career-bubble{
- background:linear-gradient(130deg,#e5f5ff35,#20395d9c 45%,#afcaff20)!important;
-}
 body.gpu-ready .exp.mx-expanded .career-bubble{border:1px solid transparent!important}
 body .mx-case-backdrop{display:block!important;background:rgba(2,5,10,.46);backdrop-filter:none;-webkit-backdrop-filter:none;z-index:150}
 body.mx-case-open .mx-case-backdrop{opacity:1}

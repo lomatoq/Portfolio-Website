@@ -1310,6 +1310,10 @@ body.reduced .hero-side,body.reduced .hero-eyebrow,body.reduced .hero-tagline,bo
  backdrop-filter:blur(calc(var(--boot,0)*18px)) saturate(calc(1 + var(--boot,0)*.5)) brightness(calc(1 - var(--boot,0)*.25));
  background:radial-gradient(ellipse at 50% 42%,#05070a00,#05070aab 72%)}
 body.reduced .boot-veil{display:none}
+.boot-veil[hidden]{display:none}
+/* Cover the large viewport while Safari's address bar changes the visible
+   viewport. The veil has no section-sized containing block or bottom edge. */
+.boot-veil,.boot-loader,.mx-case-backdrop{min-height:100lvh;bottom:auto;height:100%;}
 .glyph-ink{--ab:calc(.6px + var(--edge,0)*3.4px + var(--ab-boot,0px))}
 /* линия под карточкой размывается сильнее */
 .career-bubble{background:linear-gradient(130deg,#1a1f27b8,#0b0f14d1 46%,#161b23bf);
@@ -1871,6 +1875,10 @@ body .dialog-head .mono{font-size:10.5px;line-height:1.5;letter-spacing:.11em}
 .glyph-fringe svg path{fill:currentColor}
 .glyph-motion>.glyph-ink{display:flow-root}
 .glyph-motion>.glyph-ink:not(.glyph-fringe){z-index:1}
+html.touch-compositor .glyph-motion>.glyph-ink:not(.glyph-sheen)::before{display:none!important}
+.glyph-motion>.glyph-sheen{position:absolute;inset:0;z-index:2;pointer-events:none;color:transparent!important;-webkit-text-fill-color:transparent;filter:none!important;text-shadow:none!important;mix-blend-mode:screen}
+.glyph-motion>.glyph-sheen>.fallback-letter,.glyph-motion>.glyph-sheen::after{display:none!important}
+.glyph-motion>.glyph-ink.glow-cached{filter:none!important}
 /* Each word has room for blur, overshoot and italic ascenders. No line crop. */
 .word-heading{overflow:visible!important;clip-path:none!important;perspective:1100px}
 .motion-word{display:inline-block;white-space:nowrap;position:relative;transform-origin:50% 80%;backface-visibility:hidden;overflow:visible;vertical-align:baseline}
@@ -3362,18 +3370,6 @@ body.reduced .orbit-icon{transition:none!important}
 </style><style data-nocturne-source="src/case-refinement.css">
 /* Case surface: one responsive return control, a quiet backdrop, original header metrics. */
 body.gpu-ready:not(.no-glass) .career-bubble>i.lux{display:none!important}
-/* Native scrolling must composite the material and its text together. A fixed
-   WebGL replica cannot follow Safari's asynchronous scroll during a busy frame. */
-html.touch-compositor body.gpu-ready:not(.no-glass) .exp .career-bubble{
- background:linear-gradient(130deg,#ffffff24,#12151ab5 45%,#ffffff12)!important;
- border:1px solid #ffffff52!important;
- box-shadow:0 25px 55px #0005,inset 0 1px 0 #ffffff9c,inset -1px 0 1px #85ecff55,inset 1px 0 1px #ffabd755!important;
- -webkit-backdrop-filter:blur(20px) saturate(1.15)!important;
- backdrop-filter:blur(20px) saturate(1.15)!important;
-}
-html.touch-compositor body.gpu-ready.mx-blue:not(.no-glass) .exp .career-bubble{
- background:linear-gradient(130deg,#e5f5ff35,#20395d9c 45%,#afcaff20)!important;
-}
 body.gpu-ready .exp.mx-expanded .career-bubble{border:1px solid transparent!important}
 body .mx-case-backdrop{display:block!important;background:rgba(2,5,10,.46);backdrop-filter:none;-webkit-backdrop-filter:none;z-index:150}
 body.mx-case-open .mx-case-backdrop{opacity:1}
@@ -3729,10 +3725,8 @@ body.reduced .mobile-history-intro{transition:none!important}
 (() => {
   'use strict';
   const root = document.documentElement;
-  // Native touch scroll is composited independently of WebGL presentation.
-  // Keep moving card materials in the same DOM layer as their live text.
-  window.NocturnePlatform=Object.freeze({attachedGlass:matchMedia('(pointer: coarse)').matches});
-  root.classList.toggle('touch-compositor',window.NocturnePlatform.attachedGlass);
+  // Touch-specific raster caching and viewport allocation policy.
+  root.classList.toggle('touch-compositor',matchMedia('(pointer: coarse)').matches);
   const host = document.getElementById('bootLoader');
   if (!host) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -4061,12 +4055,75 @@ body.reduced .mobile-history-intro{transition:none!important}
   $$('.name-glyph').forEach((outer,i)=>{
     const ink=$('.glyph-ink',outer),layer=document.createElement('span');layer.className='glyph-motion';
     ink.before(layer);layer.append(ink);
+    // The moving colour sweep must not invalidate two wide glow convolutions
+    // for every letter. Keep the glow's silhouette static and composite the
+    // same clipped sweep above it as a separate, unfiltered sibling.
+    if(matchMedia('(pointer:coarse)').matches){const sheen=ink.cloneNode(true);sheen.classList.add('glyph-sheen');sheen.setAttribute('aria-hidden','true');layer.append(sheen);}
     for(const [cls,color] of [['cyan','#9eefff'],['rose','#ffb9dc']]){
       const fringe=ink.cloneNode(true);fringe.classList.add('glyph-fringe',cls);fringe.setAttribute('aria-hidden','true');fringe.style.color=color;layer.prepend(fringe);
     }
     glyphs.push({outer,layer,i,x:0,y:0,w:0,h:0,a:{value:0,velocity:0},sx:{value:0,velocity:0},sy:{value:0,velocity:0}});
   });
   const name=$('.name-sculpture'),hero=$('.intro');
+  // Bake only the unchanging wide glow. Live glyphs, their colour sweep and
+  // motion stay in the DOM. Re-running two drop-shadow filters per glyph per
+  // frame is particularly expensive in WebKit's filter compositor.
+  if(matchMedia('(pointer:coarse)').matches){
+    const renderGlow=(image,ratio,makeCanvas)=>{
+      const w=image.width,h=image.height,first=makeCanvas(w,h),a=first.getContext('2d');
+      a.shadowColor='rgba(255,248,223,0.36862745)';a.shadowBlur=12*ratio;a.drawImage(image,0,0);
+      const second=makeCanvas(w,h),b=second.getContext('2d');
+      b.shadowColor='rgba(239,235,225,0.23921569)';b.shadowBlur=52*ratio;b.drawImage(first,0,0);
+      b.shadowColor='transparent';b.shadowBlur=0;b.globalCompositeOperation='destination-out';b.drawImage(image,0,0);
+      return second;
+    };
+    const glowWorkerMain=()=>{
+      self.onmessage=async({data:d})=>{try{
+        const second=renderGlow(d.image,d.ratio,(w,h)=>new OffscreenCanvas(w,h));
+        d.image.close();const bitmap=second.transferToImageBitmap();self.postMessage({id:d.id,bitmap},[bitmap]);
+      }catch(e){self.postMessage({id:d.id,error:String(e)})}};
+    };
+    let worker=null,generation=0,timer=0;const jobs=new Map();
+    try{if(window.OffscreenCanvas&&window.Worker&&window.createImageBitmap){
+      const url=URL.createObjectURL(new Blob(['const renderGlow='+renderGlow.toString()+';('+glowWorkerMain.toString()+')()'],{type:'text/javascript'}));
+      worker=new Worker(url);URL.revokeObjectURL(url);
+      worker.onmessage=({data:d})=>{const job=jobs.get(d.id);jobs.delete(d.id);if(!job){d.bitmap?.close();return;}job(d);};
+      worker.onerror=()=>{worker?.terminate();worker=null;for(const job of jobs.values())job({error:'worker unavailable'});jobs.clear();queueGlow();};
+    }}catch{}
+    async function cacheGlows(){
+      if(!document.body.classList.contains('webfont-ready'))return;
+      const version=++generation;
+      for(const [i,g] of glyphs.entries()){
+        const ink=g.layer.querySelector('.glyph-ink:not(.glyph-fringe):not(.glyph-sheen)'),letter=ink?.querySelector('.live-letter');
+        if(!letter)continue;
+        const css=getComputedStyle(letter),size=parseFloat(css.fontSize),ratio=Math.min(devicePixelRatio||1,3),pad=84;
+        const key=[css.fontFamily,size,letter.textContent,ratio].join('/');if(ink.dataset.glowKey===key)continue;
+        const width=ink.offsetWidth,height=ink.offsetHeight;if(!width||!height)continue;
+        const source=document.createElement('canvas');source.width=Math.ceil((width+pad*2)*ratio);source.height=Math.ceil((height+pad*2)*ratio);
+        const c=source.getContext('2d');c.scale(ratio,ratio);c.font=`${css.fontStyle} ${css.fontWeight} ${css.fontSize} ${css.fontFamily}`;c.fillStyle='#fff';
+        const m=c.measureText(letter.textContent),line=parseFloat(css.lineHeight)||size*1.14;
+        const ascent=m.fontBoundingBoxAscent,descent=m.fontBoundingBoxDescent;if(!Number.isFinite(ascent+descent))continue;
+        c.fillText(letter.textContent,pad,pad+(line-ascent-descent)/2+ascent);
+        const bitmap=worker?await createImageBitmap(source):source;if(version!==generation){bitmap.close?.();return;}
+        const id=version+':'+i;
+        await new Promise(resolve=>{
+          jobs.set(id,d=>{if(d.error){worker?.terminate();worker=null;queueGlow();}if(d.bitmap){if(version===generation){
+            const glow=g.glow||document.createElement('canvas');glow.className='glyph-cached-glow';glow.setAttribute('aria-hidden','true');
+            glow.width=source.width;glow.height=source.height;glow.style.cssText=`position:absolute;left:-${pad}px;top:-${pad}px;width:${source.width/ratio}px;height:${source.height/ratio}px;pointer-events:none;z-index:0`;
+            glow.getContext('2d').drawImage(d.bitmap,0,0);if(!g.glow){g.layer.prepend(glow);g.glow=glow;}
+            ink.classList.add('glow-cached');ink.dataset.glowKey=key;
+          }d.bitmap.close?.();}resolve();});
+          if(worker)worker.postMessage({id,image:bitmap,ratio},[bitmap]);
+          else{const result=renderGlow(source,ratio,(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;});const done=jobs.get(id);jobs.delete(id);done({bitmap:result});}
+        });
+        if(!worker)await new Promise(resolve=>setTimeout(resolve,0));
+      }
+    }
+    const queueGlow=()=>{clearTimeout(timer);timer=setTimeout(()=>cacheGlows().catch(()=>{}),180);};
+    document.fonts?.ready.then(queueGlow);new ResizeObserver(queueGlow).observe(name);
+    new MutationObserver(queueGlow).observe(document.body,{attributes:true,attributeFilter:['class']});
+    addEventListener('pagehide',e=>{if(!e.persisted){clearTimeout(timer);worker?.terminate();jobs.clear();}});
+  }
   new IntersectionObserver(es=>{heroVisible=es[0].isIntersecting;if(!heroVisible)pointerInside=false;wake();},{threshold:0}).observe(hero);
   name.addEventListener('pointermove',e=>{if(e.pointerType==='touch'||!fine.matches)return;mx=e.clientX;my=e.clientY;pointerInside=true;wake();},{passive:true});
   name.addEventListener('pointerleave',()=>{pointerInside=false;wake();});
@@ -5482,7 +5539,14 @@ body.reduced .mobile-history-intro{transition:none!important}
     let colorIndex = 0;
     const palettes = [['#252823', '#c8d4ba', '#d2fc59'], ['#2d2533', '#c3b6d6', '#896ac2'], ['#492e26', '#efbba2', '#ed7654'], ['#1f3839', '#a9cccc', '#79bcc0']];
     $('#swapColor').addEventListener('click', () => { colorIndex = (colorIndex + 1) % palettes.length; $$('.specimen').forEach((n, i) => n.style.background = palettes[colorIndex][i]); toast('Colour family ' + (colorIndex + 1) + ' / ' + palettes.length); });
+    const frameTimes=new Float64Array(120),cpuTimes=new Float64Array(120);let frameSample=0,frameCount=0,previousFrame=0;
+    window.portfolioFrameStats=()=>{
+        const n=Math.min(frameCount,frameTimes.length),times=Array.from(frameTimes.subarray(0,n)).sort((a,b)=>a-b);
+        const sum=times.reduce((a,b)=>a+b,0),cpu=Array.from(cpuTimes.subarray(0,n)).reduce((a,b)=>a+b,0);
+        return {samples:n,fps:n?Math.round(n*10000/sum)/10:0,p95Ms:n?times[Math.floor(n*.95)]:0,mainThreadMs:n?cpu/n:0,glowCached:document.querySelectorAll('.glow-cached').length};
+    };
     function frame(timestamp) {
+        const frameStarted=performance.now();
         rafId = 0;
         if (document.hidden)
             return;
@@ -5519,6 +5583,8 @@ body.reduced .mobile-history-intro{transition:none!important}
         if ((!reduced && (motionVisible || window.LiquidPortfolio?.needsFrame() || window.NocturneMotion?.needsFrame() || window.Nocturne?.needsFrame())) || userAnim || window.NocturneScroll?.active() || window.NocturneLab?.needsFrame())
             requestTick();
         window.NocturneFrame=null;
+        if(previousFrame&&timestamp-previousFrame<2000){frameTimes[frameSample]=timestamp-previousFrame;cpuTimes[frameSample]=performance.now()-frameStarted;frameSample=(frameSample+1)%frameTimes.length;frameCount++;}
+        previousFrame=timestamp;
     }
     function requestTick() { if (!rafId && !document.hidden)
         rafId = requestAnimationFrame(frame); }
@@ -5620,7 +5686,7 @@ body.reduced .mobile-history-intro{transition:none!important}
     const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
     const escape = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const data = JSON.parse($('#portfolio-data').textContent), root = document.documentElement, body = document.body;
-    const attachedGlass=!!window.NocturnePlatform?.attachedGlass;
+    const touchViewport=matchMedia('(pointer: coarse)').matches;
     let canvas = $('#worldCanvas');
     let riverPoints = [], riverStops = [], followedRiverHead=null;
     let reduced = matchMedia('(prefers-reduced-motion:reduce)').matches, quality = 'full', started = performance.now(), introSkip = !!location.hash || scrollY > 50;
@@ -5633,8 +5699,8 @@ body.reduced .mobile-history-intro{transition:none!important}
     const travelSpring={value:0,velocity:0};
     const rowMetrics=new Map();
     const W8 = { dir: 0, vel: 0, lastY: 0, surgeT: 9, power: 0, flare: 0 };
-    const state = window.Nocturne = { pulse: (p = 1) => { pulseReq = Math.max(pulseReq, p); window.portfolioWake?.(); }, windState: () => W8, tick, needsFrame: () => !reduced, diagnostics: () => ({ ...report, embedded: window.self !== window.top, navigationHistory: window.portfolioHistoryFallback ? 'in-memory (opaque preview)' : 'browser' }), restartIntro, riverStops:()=>riverStops.map(v=>({...v})), layout: () => { layoutDirty = true; window.portfolioWake?.(); }, showCompany, quality: setQuality, pauseRendering: false, surfaces, registerSurface, shaderSources:()=>({...GLSL}), forceTime: null, retryRenderer: restartRenderer, graphics: openGraphics };
-    report.glassComposition=attachedGlass?'attached-dom':'world-webgl';
+    const state = window.Nocturne = { pulse: (p = 1) => { pulseReq = Math.max(pulseReq, p); window.portfolioWake?.(); }, windState: () => W8, tick, needsFrame: () => !reduced, diagnostics: () => ({ ...report, cadence:window.portfolioFrameStats?.(), embedded: window.self !== window.top, navigationHistory: window.portfolioHistoryFallback ? 'in-memory (opaque preview)' : 'browser' }), restartIntro, riverStops:()=>riverStops.map(v=>({...v})), layout: () => { layoutDirty = true; window.portfolioWake?.(); }, showCompany, quality: setQuality, pauseRendering: false, surfaces, registerSurface, shaderSources:()=>({...GLSL}), forceTime: null, retryRenderer: restartRenderer, graphics: openGraphics };
+    report.glassComposition='world-webgl';
     // GLSL pow has an undefined result for negative bases, even with exponent 2.
     // abs preserves the authored squared falloff on every GPU (including Metal).
     const GLSL = {
@@ -5680,30 +5746,40 @@ precision highp float;
 layout(location=0) in vec2 aShape;layout(location=1) in vec4 iOffset;layout(location=2) in vec4 iShape;layout(location=3) in vec4 iFlex;
 uniform mat4 vp;uniform vec3 camera;uniform float time;uniform float windBoost;uniform float windDir;uniform float surge;uniform float surgeR;uniform float travel;uniform float part;uniform float partDir;uniform vec2 cursorUV;uniform float cursorEnergy;
 out vec3 world;out vec3 normal;out float depth;out float height;out float tone;
-vec3 surface(float h,float side){
- // Where this blade actually stands, resolved first so its height and lean can
- // depend on how close to the viewer it is.
- vec3 base=iOffset.xyz;
+// Blade-wide terms are shared by the five differential surface samples.
+vec3 base;vec2 delta;float closeness,stalk,wind,away,lean,swish,brush;
+void prepareBlade(){
+ base=iOffset.xyz;
  base.z=12.-mod(12.-iOffset.z-travel,184.);
  float oldDepth=(12.-iOffset.z)/196.,newDepth=(12.-base.z)/196.;
  float oldEdge=.45+oldDepth*.85,newEdge=.45+newDepth*.85;
  base.x=sign(iOffset.x)*(newEdge+(abs(iOffset.x)-oldEdge)*(14.+newDepth*66.)/(14.+oldDepth*66.));
  // Foreground blades are ground cover, not towers: nothing blocks the view and
  // no lane has to be carved out of the field to keep it clear.
- float closeness=smoothstep(-22.,4.,base.z);
+ closeness=smoothstep(-22.,4.,base.z);
  float middle=1.-smoothstep(1.0,9.0,abs(base.x));
  float low=1.-closeness*middle*.78;
- float stalk=iOffset.w*low;
- float taper=pow(max(0.,1.-h),.72)*(1.+iFlex.y*sin(h*5.4));
- float angle=iShape.w+h*iFlex.z;
- float width=iShape.x*taper;vec3 p=vec3(side*width,h*stalk,(1.-abs(side))*.23*width);
- float wind=sin(time*.55+iOffset.x*.26+iOffset.z*.16)*.6+sin(time*.31+iOffset.z*.08)*.4;
+ stalk=iOffset.w*low;
+ wind=sin(time*.55+iOffset.x*.26+iOffset.z*.16)*.6+sin(time*.31+iOffset.z*.08)*.4;
  float front=sin(time*.21-iOffset.x*.022+iOffset.z*.014)*.65+sin(time*.093+iOffset.z*.021)*.45;float gust=pow(max(0.,front),2.6)*5.4;
  float shiver=sin(time*3.1+iOffset.x*.31+iOffset.z*.12)*.28+sin(time*5.3+iOffset.z*.2)*.14;
  wind=wind*(1.4+gust*windBoost)+gust*windBoost*(.85+shiver)+shiver*.9;
  wind+=windDir*(1.9+gust*.55)*(1.+shiver*.25);
  float rad=length(iOffset.xz);float front2=exp(-pow(abs((rad-surgeR)/17.),2.))*surge;
  wind+=front2*7.5*sign(iOffset.x+.001);
+ away=sign(base.x+.0001);
+ float ripple=.72+.34*sin(base.z*.47+base.x*.31+iOffset.w*.6);
+ lean=closeness*(.10+part*2.1)*ripple;
+ swish=closeness*partDir*ripple;
+ vec4 projected=vp*vec4(base+vec3(0.,stalk*.65,0.),1.);
+ vec2 screen=projected.xy/max(.01,projected.w)*.5+.5;
+ delta=screen-cursorUV;
+ brush=exp(-dot(delta*vec2(1.7,1.),delta*vec2(1.7,1.))*38.)*cursorEnergy*step(.01,projected.w);
+}
+vec3 surface(float h,float side){
+ float taper=pow(max(0.,1.-h),.72)*(1.+iFlex.y*sin(h*5.4));
+ float angle=iShape.w+h*iFlex.z;
+ float width=iShape.x*taper;vec3 p=vec3(side*width,h*stalk,(1.-abs(side))*.23*width);
  float arc=h*h;float curl=sin(h*2.8)*h*iFlex.x;
  p.x+=iShape.y*arc+curl+wind*arc*(.09+iOffset.w*.021);
  p.z+=iShape.z*arc+sin(h*3.14159)*h*iFlex.x*.28+wind*arc*.065;
@@ -5714,15 +5790,7 @@ vec3 surface(float h,float side){
  // no gap is left behind us. The bend is strongest at the tip, carries a
  // sideways swish in the direction of travel, and breaks up along the field so
  // the whole front does not move as one wall.
- float away=sign(base.x+.0001);
- float ripple=.72+.34*sin(base.z*.47+base.x*.31+iOffset.w*.6);
- float lean=closeness*(.10+part*2.1)*ripple;
- float swish=closeness*partDir*ripple;
  float tip=h*h;
- vec4 projected=vp*vec4(base+vec3(0.,stalk*.65,0.),1.);
- vec2 screen=projected.xy/max(.01,projected.w)*.5+.5;
- vec2 delta=screen-cursorUV;
- float brush=exp(-dot(delta*vec2(1.7,1.),delta*vec2(1.7,1.))*38.)*cursorEnergy*step(.01,projected.w);
  p.x+=(delta.x/sqrt(delta.x*delta.x+.012))*brush*tip*.85;
  p.z-=brush*tip*.18;
  p.x+=away*lean*tip*3.4+swish*tip*1.35;
@@ -5734,7 +5802,7 @@ vec3 surface(float h,float side){
  p.xz=mat2(cos(turn),-sin(turn),sin(turn),cos(turn))*p.xz;
  return p+base;
 }
-void main(){height=aShape.y;world=surface(aShape.y,aShape.x);float nh=min(aShape.y,.985);vec3 t=surface(nh+.008,aShape.x)-surface(max(0.,nh-.008),aShape.x);
+void main(){prepareBlade();height=aShape.y;world=surface(aShape.y,aShape.x);float nh=min(aShape.y,.985);vec3 t=surface(nh+.008,aShape.x)-surface(max(0.,nh-.008),aShape.x);
  vec3 w=surface(nh,.9)-surface(nh,-.9);normal=normalize(cross(w,t));
  depth=length(camera-world);tone=iFlex.w;gl_Position=vp*vec4(world,1.);}`,
         bladeFragment: `#version 300 es
@@ -6530,11 +6598,15 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         }
         return new Float32Array(out);
     }
+    const surfaceVisibility=new IntersectionObserver(entries=>{
+        for(const entry of entries){const surface=surfaces.get(entry.target);if(surface)surface.inViewport=entry.isIntersecting;}
+    },{rootMargin:'240px'});
     function registerSurface(el, anchor = el, kind = 'career') {
         if(!el)return null;
         if(surfaces.has(el))return surfaces.get(el);
         const s = { el, anchor, kind, x: 0, y: 0, dx: 0, dy: 0, tx: 0, ty: 0, rx: 0, ry: 0, rz: 0, hover: 0, hoverTo: 0, pressed: false, scale: 1, sv: 0, click: [0, 0], clickTime: -100, rect: { top: 0, bottom: 0, left: 0, width: 1, height: 1 }, width: 1, height: 1, radius: 32, alpha: 1 };
         surfaces.set(el, s);
+        surfaceVisibility.observe(el);
         el.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch')
             s.hoverTo = 1; window.portfolioWake?.(); });
         el.addEventListener('pointermove', e => { if (e.pointerType === 'touch')
@@ -6588,7 +6660,10 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         const visible=[],batch=[],modal=$('#dialog').open;
         // Read all bounds before changing transforms. Avoid read/write ping-pong.
         for(const [el,s] of surfaces){
-            if(!el.isConnected){surfaces.delete(el);continue;}
+            if(!el.isConnected){surfaceVisibility.unobserve(el);surfaces.delete(el);continue;}
+            // Offscreen media need no pointer spring, style writes or layout
+            // reads. Career glass keeps its exact per-frame projected bounds.
+            if(s.kind!=='career'&&s.inViewport===false)continue;
             // The sheet is translucent now, so the page's own glass has to keep
             // rendering behind it; only the sheet's own surfaces are gated.
             if(!modal&&el.closest('#dialog'))continue;
@@ -6596,8 +6671,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             // Read the transformed anchor in this frame, including the story gate and focus.
             // The former hand-built box omitted ancestor transforms and summary offsets.
             const analytic=s.kind==='career'?null:s.box;
-            const cached=attachedGlass&&s.kind==='career'&&!s.el.closest('.mx-expanded')?rowMetrics.get(s.el.closest('.exp')):null;
-            const bounds=cached?{top:cached.top-scrollY,bottom:cached.top-scrollY+cached.height,left:cached.left,width:cached.bw,height:cached.bh}:analytic||s.anchor.getBoundingClientRect();
+            const bounds=analytic||s.anchor.getBoundingClientRect();
             if(bounds.bottom < -120||bounds.top > innerHeight+120||bounds.width<1||bounds.height<1)continue;
             // Self-healing: a pointer sequence swallowed by a modal, a rail
             // re-render or a focus change can never leave a card stuck in its
@@ -6615,7 +6689,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
               s.hoverTo=on?1:0;s.dx=on?clamp((railPointer.x-r.left)/r.width*2-1,-1,1):0;s.dy=on?clamp((railPointer.y-r.top)/r.height*2-1,-1,1):0;
             }
             const opacityRow=s.kind==='career'?s.el.closest('.exp'):null;
-            batch.push([s,bounds,cached?cached.bw:analytic?s.boxW:s.el.offsetWidth,cached?cached.bh:analytic?s.boxH:s.el.offsetHeight,opacityRow&&!attachedGlass?Number(getComputedStyle(opacityRow).opacity):1]);
+            batch.push([s,bounds,analytic?s.boxW:s.el.offsetWidth,analytic?s.boxH:s.el.offsetHeight,opacityRow?Number(getComputedStyle(opacityRow).opacity):1]);
         }
         for(const [s,bounds,width,height,rowOpacity] of batch){
             const expandedRow=s.el.closest('.mx-expanded');
@@ -6685,7 +6759,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             s.apertureEntry=reduced?1:Number(s.anchor.dataset.arcEntry??1);s.apertureExit=reduced?0:Number(s.anchor.dataset.arcExit??0);
             if(s.el.closest('.mx-expanded')){const p=Number(s.el.closest('.mx-expanded').dataset.mxProgress||0);s.apertureEntry=lerp(s.apertureEntry,1,p);s.apertureExit*=1-p;}
             if(s.anchor._returnPose){const from=s.anchor._returnPose,k=s.anchor._returnBlend||0;s.alpha=lerp(from.gpuAlpha,s.alpha,k);s.apertureEntry=lerp(from.entry,s.apertureEntry,k);s.apertureExit=lerp(from.exit,s.apertureExit,k);}
-            if(!attachedGlass)visible.push(s);
+            visible.push(s);
         }
         return visible;
     }
@@ -6740,7 +6814,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         layoutDirty = false;
     }
     function fitName() { const name = $('.name-sculpture'), parent = $('.hero-center'); if (!name || !parent)
-        return; const max = parent.clientWidth; root.style.setProperty('--name-size', '100px'); const natural = name.scrollWidth; let size = Math.min(innerWidth < 761 ? 100 : Math.min(320, innerHeight * .30), 100 * max / Math.max(1, natural)); size = Math.max(28, size * .96); root.style.setProperty('--name-size', size.toFixed(2) + 'px'); report.nameFontSize = size; report.nameWidth = name.getBoundingClientRect().width; report.viewport = innerWidth; layoutDirty = true; window.NocturneMotion?.measure(); }
+        return; const max = parent.clientWidth; root.style.setProperty('--name-size', '100px'); const glowLayers=[...name.querySelectorAll('.glyph-cached-glow')];glowLayers.forEach(el=>el.style.display='none');const natural=name.scrollWidth;glowLayers.forEach(el=>el.style.display=''); let size = Math.min(innerWidth < 761 ? 100 : Math.min(320, innerHeight * .30), 100 * max / Math.max(1, natural)); size = Math.max(28, size * .96); root.style.setProperty('--name-size', size.toFixed(2) + 'px'); report.nameFontSize = size; report.nameWidth = name.getBoundingClientRect().width; report.viewport = innerWidth; layoutDirty = true; window.NocturneMotion?.measure(); }
     let fontTimer;
     function loadFonts() { const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = 'https://fonts.googleapis.com/css2?family=Pirata+One&family=Syne:wght@500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap'; link.onload = () => { document.fonts.load('100px "Pirata One"').then(f => { if (f.length) {
         body.classList.add('webfont-ready');
@@ -6770,7 +6844,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             const p = skip ? 1 : clamp((age - .65 - order * .15) / 2.0), ease = 1 - Math.pow(1 - p, 4);
             el.style.opacity = smooth(0, .4, p);
             el.style.transform = `translate3d(${(1 - ease) * (i < 4 ? -13 : 13)}px,${(1 - ease) * (45 + (i % 3) * 7)}px,0) rotateX(${(1 - ease) * -74}deg) rotateY(${(1 - ease) * (i % 2 ? 16 : -16)}deg)`;
-            el.style.filter = `blur(${((1 - ease) * 14).toFixed(2)}px)`;
+            el.style.filter = ease===1?'none':`blur(${((1 - ease) * 14).toFixed(2)}px)`;
             el.style.setProperty('--glyph-flare', (Math.sin(Math.PI * p) * .70).toFixed(3));
             el.style.setProperty('--ab-boot', ((1 - ease) * 11).toFixed(2) + 'px');
         }
@@ -6783,11 +6857,12 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             const depart=reduced||el.classList.contains('floating-ui')?0:smooth(innerHeight*.02,innerHeight*(.53+delay*.12),scrollY);
             el.style.opacity = (raw * raw * (3 - 2 * raw)*(1-depart)).toFixed(3);
             el.style.transform = `translate3d(${((1 - back) * dx+depart*(dir===1?55:dir===-1?-55:0)).toFixed(2)}px,${((1 - back) * dy-depart*(105+delay*38)).toFixed(2)}px,0) scale(${(1 - (1 - back) * .035).toFixed(4)})`;
-            el.style.filter = `blur(${((1 - raw) * 7+depart*13).toFixed(2)}px)`;
+            el.style.filter = raw===1&&depart===0?'none':`blur(${((1 - raw) * 7+depart*13).toFixed(2)}px)`;
             if (dir)
                 el.style.letterSpacing = (.15 + (1 - back) * .34).toFixed(3) + 'em';
         }
-        $('.boot-veil')?.style.setProperty('--boot', (skip ? 0 : 1 - smooth(.12, 2.75, age)).toFixed(4));
+        const bootVeil=$('.boot-veil'),bootPower=skip?0:1-smooth(.12,2.75,age);
+        if(bootVeil){bootVeil.style.setProperty('--boot',bootPower.toFixed(4));bootVeil.hidden=bootPower===0;}
         const sweepEl = $('.hero-center');
         if (sweepEl)
             sweepEl.style.setProperty('--sweep', (skip ? 0 : Math.max(0, smooth(1.55, 2.05, age) * (1 - smooth(2.15, 3.1, age)))).toFixed(3));
@@ -7019,7 +7094,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     window.addEventListener('resize', () => {
         const widthChanged=resizeWidth!==innerWidth||resizeDpr!==devicePixelRatio;
         resizeWidth=innerWidth;resizeDpr=devicePixelRatio;clearTimeout(resizeTimer);
-        if(!attachedGlass||widthChanged){fitName();resizeRenderer();}
+        if(!touchViewport||widthChanged){fitName();resizeRenderer();}
         else resizeTimer=setTimeout(resizeRenderer,160);
         layoutDirty=true;window.portfolioWake?.();
     });

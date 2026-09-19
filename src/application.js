@@ -891,7 +891,14 @@
     let colorIndex = 0;
     const palettes = [['#252823', '#c8d4ba', '#d2fc59'], ['#2d2533', '#c3b6d6', '#896ac2'], ['#492e26', '#efbba2', '#ed7654'], ['#1f3839', '#a9cccc', '#79bcc0']];
     $('#swapColor').addEventListener('click', () => { colorIndex = (colorIndex + 1) % palettes.length; $$('.specimen').forEach((n, i) => n.style.background = palettes[colorIndex][i]); toast('Colour family ' + (colorIndex + 1) + ' / ' + palettes.length); });
+    const frameTimes=new Float64Array(120),cpuTimes=new Float64Array(120);let frameSample=0,frameCount=0,previousFrame=0;
+    window.portfolioFrameStats=()=>{
+        const n=Math.min(frameCount,frameTimes.length),times=Array.from(frameTimes.subarray(0,n)).sort((a,b)=>a-b);
+        const sum=times.reduce((a,b)=>a+b,0),cpu=Array.from(cpuTimes.subarray(0,n)).reduce((a,b)=>a+b,0);
+        return {samples:n,fps:n?Math.round(n*10000/sum)/10:0,p95Ms:n?times[Math.floor(n*.95)]:0,mainThreadMs:n?cpu/n:0,glowCached:document.querySelectorAll('.glow-cached').length};
+    };
     function frame(timestamp) {
+        const frameStarted=performance.now();
         rafId = 0;
         if (document.hidden)
             return;
@@ -928,6 +935,8 @@
         if ((!reduced && (motionVisible || window.LiquidPortfolio?.needsFrame() || window.NocturneMotion?.needsFrame() || window.Nocturne?.needsFrame())) || userAnim || window.NocturneScroll?.active() || window.NocturneLab?.needsFrame())
             requestTick();
         window.NocturneFrame=null;
+        if(previousFrame&&timestamp-previousFrame<2000){frameTimes[frameSample]=timestamp-previousFrame;cpuTimes[frameSample]=performance.now()-frameStarted;frameSample=(frameSample+1)%frameTimes.length;frameCount++;}
+        previousFrame=timestamp;
     }
     function requestTick() { if (!rafId && !document.hidden)
         rafId = requestAnimationFrame(frame); }

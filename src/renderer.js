@@ -10,7 +10,7 @@
     const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
     const escape = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const data = JSON.parse($('#portfolio-data').textContent), root = document.documentElement, body = document.body;
-    const attachedGlass=!!window.NocturnePlatform?.attachedGlass;
+    const touchViewport=matchMedia('(pointer: coarse)').matches;
     let canvas = $('#worldCanvas');
     let riverPoints = [], riverStops = [], followedRiverHead=null;
     let reduced = matchMedia('(prefers-reduced-motion:reduce)').matches, quality = 'full', started = performance.now(), introSkip = !!location.hash || scrollY > 50;
@@ -23,8 +23,8 @@
     const travelSpring={value:0,velocity:0};
     const rowMetrics=new Map();
     const W8 = { dir: 0, vel: 0, lastY: 0, surgeT: 9, power: 0, flare: 0 };
-    const state = window.Nocturne = { pulse: (p = 1) => { pulseReq = Math.max(pulseReq, p); window.portfolioWake?.(); }, windState: () => W8, tick, needsFrame: () => !reduced, diagnostics: () => ({ ...report, embedded: window.self !== window.top, navigationHistory: window.portfolioHistoryFallback ? 'in-memory (opaque preview)' : 'browser' }), restartIntro, riverStops:()=>riverStops.map(v=>({...v})), layout: () => { layoutDirty = true; window.portfolioWake?.(); }, showCompany, quality: setQuality, pauseRendering: false, surfaces, registerSurface, shaderSources:()=>({...GLSL}), forceTime: null, retryRenderer: restartRenderer, graphics: openGraphics };
-    report.glassComposition=attachedGlass?'attached-dom':'world-webgl';
+    const state = window.Nocturne = { pulse: (p = 1) => { pulseReq = Math.max(pulseReq, p); window.portfolioWake?.(); }, windState: () => W8, tick, needsFrame: () => !reduced, diagnostics: () => ({ ...report, cadence:window.portfolioFrameStats?.(), embedded: window.self !== window.top, navigationHistory: window.portfolioHistoryFallback ? 'in-memory (opaque preview)' : 'browser' }), restartIntro, riverStops:()=>riverStops.map(v=>({...v})), layout: () => { layoutDirty = true; window.portfolioWake?.(); }, showCompany, quality: setQuality, pauseRendering: false, surfaces, registerSurface, shaderSources:()=>({...GLSL}), forceTime: null, retryRenderer: restartRenderer, graphics: openGraphics };
+    report.glassComposition='world-webgl';
     // GLSL pow has an undefined result for negative bases, even with exponent 2.
     // abs preserves the authored squared falloff on every GPU (including Metal).
     const GLSL = {
@@ -70,30 +70,40 @@ precision highp float;
 layout(location=0) in vec2 aShape;layout(location=1) in vec4 iOffset;layout(location=2) in vec4 iShape;layout(location=3) in vec4 iFlex;
 uniform mat4 vp;uniform vec3 camera;uniform float time;uniform float windBoost;uniform float windDir;uniform float surge;uniform float surgeR;uniform float travel;uniform float part;uniform float partDir;uniform vec2 cursorUV;uniform float cursorEnergy;
 out vec3 world;out vec3 normal;out float depth;out float height;out float tone;
-vec3 surface(float h,float side){
- // Where this blade actually stands, resolved first so its height and lean can
- // depend on how close to the viewer it is.
- vec3 base=iOffset.xyz;
+// Blade-wide terms are shared by the five differential surface samples.
+vec3 base;vec2 delta;float closeness,stalk,wind,away,lean,swish,brush;
+void prepareBlade(){
+ base=iOffset.xyz;
  base.z=12.-mod(12.-iOffset.z-travel,184.);
  float oldDepth=(12.-iOffset.z)/196.,newDepth=(12.-base.z)/196.;
  float oldEdge=.45+oldDepth*.85,newEdge=.45+newDepth*.85;
  base.x=sign(iOffset.x)*(newEdge+(abs(iOffset.x)-oldEdge)*(14.+newDepth*66.)/(14.+oldDepth*66.));
  // Foreground blades are ground cover, not towers: nothing blocks the view and
  // no lane has to be carved out of the field to keep it clear.
- float closeness=smoothstep(-22.,4.,base.z);
+ closeness=smoothstep(-22.,4.,base.z);
  float middle=1.-smoothstep(1.0,9.0,abs(base.x));
  float low=1.-closeness*middle*.78;
- float stalk=iOffset.w*low;
- float taper=pow(max(0.,1.-h),.72)*(1.+iFlex.y*sin(h*5.4));
- float angle=iShape.w+h*iFlex.z;
- float width=iShape.x*taper;vec3 p=vec3(side*width,h*stalk,(1.-abs(side))*.23*width);
- float wind=sin(time*.55+iOffset.x*.26+iOffset.z*.16)*.6+sin(time*.31+iOffset.z*.08)*.4;
+ stalk=iOffset.w*low;
+ wind=sin(time*.55+iOffset.x*.26+iOffset.z*.16)*.6+sin(time*.31+iOffset.z*.08)*.4;
  float front=sin(time*.21-iOffset.x*.022+iOffset.z*.014)*.65+sin(time*.093+iOffset.z*.021)*.45;float gust=pow(max(0.,front),2.6)*5.4;
  float shiver=sin(time*3.1+iOffset.x*.31+iOffset.z*.12)*.28+sin(time*5.3+iOffset.z*.2)*.14;
  wind=wind*(1.4+gust*windBoost)+gust*windBoost*(.85+shiver)+shiver*.9;
  wind+=windDir*(1.9+gust*.55)*(1.+shiver*.25);
  float rad=length(iOffset.xz);float front2=exp(-pow(abs((rad-surgeR)/17.),2.))*surge;
  wind+=front2*7.5*sign(iOffset.x+.001);
+ away=sign(base.x+.0001);
+ float ripple=.72+.34*sin(base.z*.47+base.x*.31+iOffset.w*.6);
+ lean=closeness*(.10+part*2.1)*ripple;
+ swish=closeness*partDir*ripple;
+ vec4 projected=vp*vec4(base+vec3(0.,stalk*.65,0.),1.);
+ vec2 screen=projected.xy/max(.01,projected.w)*.5+.5;
+ delta=screen-cursorUV;
+ brush=exp(-dot(delta*vec2(1.7,1.),delta*vec2(1.7,1.))*38.)*cursorEnergy*step(.01,projected.w);
+}
+vec3 surface(float h,float side){
+ float taper=pow(max(0.,1.-h),.72)*(1.+iFlex.y*sin(h*5.4));
+ float angle=iShape.w+h*iFlex.z;
+ float width=iShape.x*taper;vec3 p=vec3(side*width,h*stalk,(1.-abs(side))*.23*width);
  float arc=h*h;float curl=sin(h*2.8)*h*iFlex.x;
  p.x+=iShape.y*arc+curl+wind*arc*(.09+iOffset.w*.021);
  p.z+=iShape.z*arc+sin(h*3.14159)*h*iFlex.x*.28+wind*arc*.065;
@@ -104,15 +114,7 @@ vec3 surface(float h,float side){
  // no gap is left behind us. The bend is strongest at the tip, carries a
  // sideways swish in the direction of travel, and breaks up along the field so
  // the whole front does not move as one wall.
- float away=sign(base.x+.0001);
- float ripple=.72+.34*sin(base.z*.47+base.x*.31+iOffset.w*.6);
- float lean=closeness*(.10+part*2.1)*ripple;
- float swish=closeness*partDir*ripple;
  float tip=h*h;
- vec4 projected=vp*vec4(base+vec3(0.,stalk*.65,0.),1.);
- vec2 screen=projected.xy/max(.01,projected.w)*.5+.5;
- vec2 delta=screen-cursorUV;
- float brush=exp(-dot(delta*vec2(1.7,1.),delta*vec2(1.7,1.))*38.)*cursorEnergy*step(.01,projected.w);
  p.x+=(delta.x/sqrt(delta.x*delta.x+.012))*brush*tip*.85;
  p.z-=brush*tip*.18;
  p.x+=away*lean*tip*3.4+swish*tip*1.35;
@@ -124,7 +126,7 @@ vec3 surface(float h,float side){
  p.xz=mat2(cos(turn),-sin(turn),sin(turn),cos(turn))*p.xz;
  return p+base;
 }
-void main(){height=aShape.y;world=surface(aShape.y,aShape.x);float nh=min(aShape.y,.985);vec3 t=surface(nh+.008,aShape.x)-surface(max(0.,nh-.008),aShape.x);
+void main(){prepareBlade();height=aShape.y;world=surface(aShape.y,aShape.x);float nh=min(aShape.y,.985);vec3 t=surface(nh+.008,aShape.x)-surface(max(0.,nh-.008),aShape.x);
  vec3 w=surface(nh,.9)-surface(nh,-.9);normal=normalize(cross(w,t));
  depth=length(camera-world);tone=iFlex.w;gl_Position=vp*vec4(world,1.);}`,
         bladeFragment: `#version 300 es
@@ -920,11 +922,15 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         }
         return new Float32Array(out);
     }
+    const surfaceVisibility=new IntersectionObserver(entries=>{
+        for(const entry of entries){const surface=surfaces.get(entry.target);if(surface)surface.inViewport=entry.isIntersecting;}
+    },{rootMargin:'240px'});
     function registerSurface(el, anchor = el, kind = 'career') {
         if(!el)return null;
         if(surfaces.has(el))return surfaces.get(el);
         const s = { el, anchor, kind, x: 0, y: 0, dx: 0, dy: 0, tx: 0, ty: 0, rx: 0, ry: 0, rz: 0, hover: 0, hoverTo: 0, pressed: false, scale: 1, sv: 0, click: [0, 0], clickTime: -100, rect: { top: 0, bottom: 0, left: 0, width: 1, height: 1 }, width: 1, height: 1, radius: 32, alpha: 1 };
         surfaces.set(el, s);
+        surfaceVisibility.observe(el);
         el.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch')
             s.hoverTo = 1; window.portfolioWake?.(); });
         el.addEventListener('pointermove', e => { if (e.pointerType === 'touch')
@@ -978,7 +984,10 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         const visible=[],batch=[],modal=$('#dialog').open;
         // Read all bounds before changing transforms. Avoid read/write ping-pong.
         for(const [el,s] of surfaces){
-            if(!el.isConnected){surfaces.delete(el);continue;}
+            if(!el.isConnected){surfaceVisibility.unobserve(el);surfaces.delete(el);continue;}
+            // Offscreen media need no pointer spring, style writes or layout
+            // reads. Career glass keeps its exact per-frame projected bounds.
+            if(s.kind!=='career'&&s.inViewport===false)continue;
             // The sheet is translucent now, so the page's own glass has to keep
             // rendering behind it; only the sheet's own surfaces are gated.
             if(!modal&&el.closest('#dialog'))continue;
@@ -986,8 +995,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             // Read the transformed anchor in this frame, including the story gate and focus.
             // The former hand-built box omitted ancestor transforms and summary offsets.
             const analytic=s.kind==='career'?null:s.box;
-            const cached=attachedGlass&&s.kind==='career'&&!s.el.closest('.mx-expanded')?rowMetrics.get(s.el.closest('.exp')):null;
-            const bounds=cached?{top:cached.top-scrollY,bottom:cached.top-scrollY+cached.height,left:cached.left,width:cached.bw,height:cached.bh}:analytic||s.anchor.getBoundingClientRect();
+            const bounds=analytic||s.anchor.getBoundingClientRect();
             if(bounds.bottom < -120||bounds.top > innerHeight+120||bounds.width<1||bounds.height<1)continue;
             // Self-healing: a pointer sequence swallowed by a modal, a rail
             // re-render or a focus change can never leave a card stuck in its
@@ -1005,7 +1013,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
               s.hoverTo=on?1:0;s.dx=on?clamp((railPointer.x-r.left)/r.width*2-1,-1,1):0;s.dy=on?clamp((railPointer.y-r.top)/r.height*2-1,-1,1):0;
             }
             const opacityRow=s.kind==='career'?s.el.closest('.exp'):null;
-            batch.push([s,bounds,cached?cached.bw:analytic?s.boxW:s.el.offsetWidth,cached?cached.bh:analytic?s.boxH:s.el.offsetHeight,opacityRow&&!attachedGlass?Number(getComputedStyle(opacityRow).opacity):1]);
+            batch.push([s,bounds,analytic?s.boxW:s.el.offsetWidth,analytic?s.boxH:s.el.offsetHeight,opacityRow?Number(getComputedStyle(opacityRow).opacity):1]);
         }
         for(const [s,bounds,width,height,rowOpacity] of batch){
             const expandedRow=s.el.closest('.mx-expanded');
@@ -1075,7 +1083,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             s.apertureEntry=reduced?1:Number(s.anchor.dataset.arcEntry??1);s.apertureExit=reduced?0:Number(s.anchor.dataset.arcExit??0);
             if(s.el.closest('.mx-expanded')){const p=Number(s.el.closest('.mx-expanded').dataset.mxProgress||0);s.apertureEntry=lerp(s.apertureEntry,1,p);s.apertureExit*=1-p;}
             if(s.anchor._returnPose){const from=s.anchor._returnPose,k=s.anchor._returnBlend||0;s.alpha=lerp(from.gpuAlpha,s.alpha,k);s.apertureEntry=lerp(from.entry,s.apertureEntry,k);s.apertureExit=lerp(from.exit,s.apertureExit,k);}
-            if(!attachedGlass)visible.push(s);
+            visible.push(s);
         }
         return visible;
     }
@@ -1130,7 +1138,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         layoutDirty = false;
     }
     function fitName() { const name = $('.name-sculpture'), parent = $('.hero-center'); if (!name || !parent)
-        return; const max = parent.clientWidth; root.style.setProperty('--name-size', '100px'); const natural = name.scrollWidth; let size = Math.min(innerWidth < 761 ? 100 : Math.min(320, innerHeight * .30), 100 * max / Math.max(1, natural)); size = Math.max(28, size * .96); root.style.setProperty('--name-size', size.toFixed(2) + 'px'); report.nameFontSize = size; report.nameWidth = name.getBoundingClientRect().width; report.viewport = innerWidth; layoutDirty = true; window.NocturneMotion?.measure(); }
+        return; const max = parent.clientWidth; root.style.setProperty('--name-size', '100px'); const glowLayers=[...name.querySelectorAll('.glyph-cached-glow')];glowLayers.forEach(el=>el.style.display='none');const natural=name.scrollWidth;glowLayers.forEach(el=>el.style.display=''); let size = Math.min(innerWidth < 761 ? 100 : Math.min(320, innerHeight * .30), 100 * max / Math.max(1, natural)); size = Math.max(28, size * .96); root.style.setProperty('--name-size', size.toFixed(2) + 'px'); report.nameFontSize = size; report.nameWidth = name.getBoundingClientRect().width; report.viewport = innerWidth; layoutDirty = true; window.NocturneMotion?.measure(); }
     let fontTimer;
     function loadFonts() { const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = 'https://fonts.googleapis.com/css2?family=Pirata+One&family=Syne:wght@500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap'; link.onload = () => { document.fonts.load('100px "Pirata One"').then(f => { if (f.length) {
         body.classList.add('webfont-ready');
@@ -1160,7 +1168,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             const p = skip ? 1 : clamp((age - .65 - order * .15) / 2.0), ease = 1 - Math.pow(1 - p, 4);
             el.style.opacity = smooth(0, .4, p);
             el.style.transform = `translate3d(${(1 - ease) * (i < 4 ? -13 : 13)}px,${(1 - ease) * (45 + (i % 3) * 7)}px,0) rotateX(${(1 - ease) * -74}deg) rotateY(${(1 - ease) * (i % 2 ? 16 : -16)}deg)`;
-            el.style.filter = `blur(${((1 - ease) * 14).toFixed(2)}px)`;
+            el.style.filter = ease===1?'none':`blur(${((1 - ease) * 14).toFixed(2)}px)`;
             el.style.setProperty('--glyph-flare', (Math.sin(Math.PI * p) * .70).toFixed(3));
             el.style.setProperty('--ab-boot', ((1 - ease) * 11).toFixed(2) + 'px');
         }
@@ -1173,11 +1181,12 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             const depart=reduced||el.classList.contains('floating-ui')?0:smooth(innerHeight*.02,innerHeight*(.53+delay*.12),scrollY);
             el.style.opacity = (raw * raw * (3 - 2 * raw)*(1-depart)).toFixed(3);
             el.style.transform = `translate3d(${((1 - back) * dx+depart*(dir===1?55:dir===-1?-55:0)).toFixed(2)}px,${((1 - back) * dy-depart*(105+delay*38)).toFixed(2)}px,0) scale(${(1 - (1 - back) * .035).toFixed(4)})`;
-            el.style.filter = `blur(${((1 - raw) * 7+depart*13).toFixed(2)}px)`;
+            el.style.filter = raw===1&&depart===0?'none':`blur(${((1 - raw) * 7+depart*13).toFixed(2)}px)`;
             if (dir)
                 el.style.letterSpacing = (.15 + (1 - back) * .34).toFixed(3) + 'em';
         }
-        $('.boot-veil')?.style.setProperty('--boot', (skip ? 0 : 1 - smooth(.12, 2.75, age)).toFixed(4));
+        const bootVeil=$('.boot-veil'),bootPower=skip?0:1-smooth(.12,2.75,age);
+        if(bootVeil){bootVeil.style.setProperty('--boot',bootPower.toFixed(4));bootVeil.hidden=bootPower===0;}
         const sweepEl = $('.hero-center');
         if (sweepEl)
             sweepEl.style.setProperty('--sweep', (skip ? 0 : Math.max(0, smooth(1.55, 2.05, age) * (1 - smooth(2.15, 3.1, age)))).toFixed(3));
@@ -1409,7 +1418,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     window.addEventListener('resize', () => {
         const widthChanged=resizeWidth!==innerWidth||resizeDpr!==devicePixelRatio;
         resizeWidth=innerWidth;resizeDpr=devicePixelRatio;clearTimeout(resizeTimer);
-        if(!attachedGlass||widthChanged){fitName();resizeRenderer();}
+        if(!touchViewport||widthChanged){fitName();resizeRenderer();}
         else resizeTimer=setTimeout(resizeRenderer,160);
         layoutDirty=true;window.portfolioWake?.();
     });

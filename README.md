@@ -4,7 +4,7 @@ An experimental single-page portfolio built around cinematic scroll choreography
 
 **Live site:** https://lomatoq.github.io/Portfolio-Website/
 
-Touch scrolling and Safari composition fixes: [FLOW63](docs/FLOW63_SAFARI_RU.md). Career glass now moves with its DOM text on touch screens; 3D resolution and MSAA are unchanged. Project entrances and nested media viewer: [FLOW62](docs/FLOW62_PERFORMANCE_RU.md). Earlier measurements: [FLOW61](docs/FLOW61_PERFORMANCE_RU.md).
+Mobile rendering: [FLOW64](docs/FLOW64_RENDERING_RU.md). Original GPU glass is restored on touch screens; name glow is cached, with Worker preparation where supported. 3D resolution and MSAA are unchanged. Project entrances and nested media viewer: [FLOW62](docs/FLOW62_PERFORMANCE_RU.md). Earlier measurements: [FLOW61](docs/FLOW61_PERFORMANCE_RU.md).
 
 ## What is inside
 

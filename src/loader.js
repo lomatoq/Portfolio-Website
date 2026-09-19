@@ -6,10 +6,8 @@
 (() => {
   'use strict';
   const root = document.documentElement;
-  // Native touch scroll is composited independently of WebGL presentation.
-  // Keep moving card materials in the same DOM layer as their live text.
-  window.NocturnePlatform=Object.freeze({attachedGlass:matchMedia('(pointer: coarse)').matches});
-  root.classList.toggle('touch-compositor',window.NocturnePlatform.attachedGlass);
+  // Touch-specific raster caching and viewport allocation policy.
+  root.classList.toggle('touch-compositor',matchMedia('(pointer: coarse)').matches);
   const host = document.getElementById('bootLoader');
   if (!host) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;

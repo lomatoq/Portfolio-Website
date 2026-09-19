@@ -3028,9 +3028,14 @@ body .exp.mx-hover-ready .career-date :is(b,span){transition:color 1.8s,text-sha
 
 
 /* Blend the composited hero text layer with the passing image stamps. */
-.intro .hero-center{mix-blend-mode:normal}
+.intro .hero-center{mix-blend-mode:normal;z-index:auto}
+.intro .hero-center:after{z-index:2}
+.intro .name-sculpture{position:relative;z-index:3}
+.intro :is(.hero-eyebrow,.hero-tagline){position:relative;z-index:3;mix-blend-mode:difference}
+.intro>.mx-fluid{z-index:2}
 .intro .hero-side,.intro .hero-bottom>.mono,.intro .mx-marquee{mix-blend-mode:difference}
-.intro .hero-bottom{mix-blend-mode:normal}
+.intro .hero-bottom{mix-blend-mode:difference}
+.intro .hero-bottom>.mono{mix-blend-mode:normal}
 body .intro .mx-marquee>div>span{color:#fff!important;background:none!important;-webkit-text-fill-color:#fff;text-shadow:none!important;filter:none!important}
 body .intro .mx-marquee:after{display:none}
 .intro :is(.hero-eyebrow,.hero-tagline,.hero-side,.hero-bottom .mono){color:#fff!important;text-shadow:none!important}
@@ -3149,6 +3154,28 @@ body.reduced :is(.glass-nav a,.chapter-rail a,.chapter-rail i,.chapter-rail a sp
  body .floating-ui .contact-pair .contact-cv{right:12px}
  body .exp:not(.mx-expanded) .career-bubble{padding-right:20px}
 }
+/* Contact controls become one primary action group in the mobile footer.
+   The same scroll spring centers the remaining navigation in both directions. */
+@media(max-width:760px){
+ body .floating-ui .contact-pair{--dock-inset:max(22px,calc((100vw - 358px)/2));--dock-cta-width:min(280px,calc(100vw - 122px))}
+ body .floating-ui .glass-nav{translate:calc(-21px * var(--contact-dock,0)) 0}
+ body .floating-ui .contact-pair .contact-cta{
+  left:calc(12px + (var(--dock-inset) - 12px) * var(--contact-growth,0));
+  width:calc(86px + (var(--dock-cta-width) - 86px) * var(--contact-growth,0));
+  height:calc(44px + 24px * var(--contact-growth,0))!important;
+  min-height:44px!important;max-height:68px!important;
+  font-size:calc(10px + 6px * var(--contact-growth,0))!important;
+  padding-inline:calc(6px + 10px * var(--contact-growth,0));
+ }
+ body .floating-ui .contact-pair .contact-cv{
+  right:calc(12px + (var(--dock-inset) - 12px) * var(--contact-growth,0));
+  width:calc(44px + 24px * var(--contact-growth,0));
+  height:calc(44px + 24px * var(--contact-growth,0))!important;
+  min-height:44px!important;max-height:68px!important;
+  font-size:calc(10px + 5px * var(--contact-growth,0));
+ }
+ body .contact-slot{height:100px;margin-top:24px}
+}
 /* Shared lower-left controls with one feathered blur/colour aperture. */
 body .mx-lab{display:none!important}
 body>.mx-tools{position:fixed;left:16px;right:auto;top:auto;bottom:max(14px,env(safe-area-inset-bottom));transform:none;z-index:10000;display:flex;gap:6px;padding:4px;background:none;border:0;isolation:isolate}
@@ -3161,7 +3188,8 @@ body .lab-index>:not(#labRows){margin-inline:var(--gutter)}
 body #labRows .project-row{border-radius:0;box-shadow:none!important;padding-inline:var(--gutter)}
 body #labRows .project-row::before{border-radius:0;background:linear-gradient(90deg,#d9e8ff18,#c8b4ef0d);inset:0}
 @media(max-width:760px){
- body .floating-ui .glass-nav,body .floating-ui .contact-pair .contact-cta,body .floating-ui .contact-pair .contact-cv{height:44px!important;min-height:44px!important;max-height:44px;box-sizing:border-box;top:0}
+ body .floating-ui .glass-nav{height:44px!important;min-height:44px!important;max-height:44px}
+ body .floating-ui .glass-nav,body .floating-ui .contact-pair .contact-cta,body .floating-ui .contact-pair .contact-cv{box-sizing:border-box;top:0}
  body .floating-ui .contact-pair .cta-arrow{display:none!important}
  body #labRows .project-row{grid-template-columns:24px minmax(0,1fr) 22px;gap:6px 12px;padding:20px 20px;min-height:94px}
  body #labRows .project-row .num{grid-column:1;grid-row:1 / 3}
@@ -3181,6 +3209,16 @@ body #labRows .project-row::before{border-radius:0;background:linear-gradient(90
  body .project-chapter .scene-foot,body.reduced .project-chapter .scene-foot{bottom:66px;left:20px;right:20px;min-height:78px;display:flex;flex-direction:column;gap:4px;justify-content:center}
  body .project-chapter .scene-note{max-width:100%!important;line-height:1.45!important;font-size:9px!important;text-align:center}
  body .project-chapter .chapter-skip{margin:0;min-height:32px;padding:6px 10px}
+}
+
+/* Reserve separate mobile bands for the Elemental scene, its controls and
+   the chapter footer. The canvas scales inside its own remaining space. */
+@media(max-width:760px){
+ body #elemental .stage-study .rock-art{top:calc(var(--content-top,294px) + 12px)!important;bottom:164px!important}
+ body #elemental #rockCanvas{height:calc(100% - 52px)!important;top:0;bottom:auto}
+ body #elemental .rock-ui{bottom:0;gap:10px}
+ body #elemental .rock-ui .pill{min-height:40px}
+ body #elemental .rock-caption{top:8%;font-size:6px}
 }
 
 /* A deliberate handoff from the landing page into the timeline. */
@@ -3619,6 +3657,49 @@ body.reduced .mobile-history-intro{transition:none!important}
  .mv-layout{display:block;padding:10px}.mv-media{border-radius:16px}
  .mv-notes{padding:32px 16px}.mv-description{font-size:28px}
 }
+
+/* FLOW62: a readable visual story, with a persistent way back to its parent. */
+.mv-shell{inset:clamp(12px,3vh,30px) max(20px,calc((100vw - 1420px)/2));border-radius:30px;will-change:auto}
+.mv-head{min-height:84px;padding:18px 26px;gap:16px}
+.mv-title{font-size:clamp(25px,2.6vw,36px);line-height:1.12;white-space:normal;overflow-wrap:anywhere}
+.mv-eyebrow{font-size:9px;line-height:1.6;margin-bottom:5px}
+.mv-hint{font-size:9px;white-space:nowrap}
+.mv-layout{grid-template-columns:minmax(0,1fr) clamp(270px,25%,330px);gap:24px;padding:20px 24px 0}
+.mv-media{border-radius:18px;background:#10172255;isolation:isolate}
+.mv-notes{padding:10px 8px 28px 0}
+.mv-description{font-size:clamp(22px,1.85vw,28px);line-height:1.35;letter-spacing:-.035em;margin-bottom:28px;text-wrap:pretty}
+.mv-text-section{padding-top:18px;margin-bottom:24px}
+.mv-text-section p{font-size:13px;line-height:1.8;text-wrap:pretty}
+.mv-foot{flex:none;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 26px;min-height:56px;box-sizing:border-box}
+.mv-foot button{border:0;background:none;color:#c9d6e7;padding:8px 0;min-height:36px;font:500 11px/1.4 'Space Grotesk',Arial,sans-serif;cursor:pointer;transition:color .2s}
+.mv-foot button:hover{color:#fff}
+.mv-back{max-width:55%;text-align:left;overflow-wrap:anywhere}
+.mv-position{margin-left:auto;font:400 9px/1.4 var(--mono,monospace);letter-spacing:.1em;color:#95abc3;font-variant-numeric:tabular-nums}
+.mv-details{white-space:nowrap}
+.mv-story{padding:24px clamp(16px,3vw,36px) 8px}
+.mv-story-label{margin:0 0 22px;font:400 9px/1.6 var(--mono,monospace);letter-spacing:.16em;color:#a8bdd3}
+.mv-media .mv-story-panel{margin:0 0 34px;content-visibility:auto;contain-intrinsic-size:auto 520px}
+.mv-story-art{aspect-ratio:400/260;overflow:hidden;border-radius:10px;background:#101823}
+.mv-story-art>svg{display:block;width:100%;height:100%}
+.mv-story-panel figcaption{display:flex;align-items:baseline;gap:14px;padding:15px 0 0}
+.mv-story-panel figcaption>span{font:400 9px/1.4 var(--mono,monospace);letter-spacing:.1em;color:#91a8c0}
+.mv-story-panel h3{margin:0;font:400 15px/1.4 'Space Grotesk',Arial,sans-serif;letter-spacing:-.02em;color:#e1e9f4}
+.mv-story>.mv-demo-caption{padding:0 0 20px;background:none;font-size:9px;letter-spacing:.04em;color:#91a8c0}
+.mv-video-wrap{padding-bottom:46px}
+@media(max-width:760px){
+ .mv-shell{inset:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom));border-radius:23px}
+ .mv-head{min-height:80px;padding:17px 18px;gap:12px}.mv-title{font-size:26px}.mv-eyebrow{font-size:8px;letter-spacing:.13em}
+ .mv-layout{padding:8px 8px 0}.mv-media{border-radius:14px}.mv-notes{padding:32px 18px 22px}
+ .mv-description{font-size:26px;max-width:25ch}.mv-text-section p{font-size:14px}
+ .mv-story{padding:20px 14px 0}.mv-story-label{font-size:8px;margin-bottom:18px}.mv-media .mv-story-panel{margin-bottom:28px;contain-intrinsic-size:auto 265px}
+ .mv-story-panel h3{font-size:14px}.mv-story-panel figcaption{padding-top:12px;gap:10px}
+ .mv-foot{padding:8px 18px;gap:10px;min-height:54px}.mv-foot button{font-size:10px}.mv-position{font-size:8px}
+}
+@media(max-height:520px) and (min-width:761px){
+ .mv-shell{inset:8px 12px;border-radius:22px}.mv-head{min-height:64px;padding:10px 20px}.mv-title{font-size:24px}.mv-eyebrow{font-size:8px;margin-bottom:3px}
+ .mv-layout{padding:12px 16px 0;gap:18px;grid-template-columns:minmax(0,1fr) 260px}.mv-foot{padding:5px 20px;min-height:42px}
+ .mv-description{font-size:22px}.mv-story{padding:18px}.mv-hint{display:none}
+}
 </style>
 </head>
 <body class="opening">
@@ -3983,7 +4064,7 @@ body.reduced .mobile-history-intro{transition:none!important}
   function animateName(t,dt){
     if(!heroVisible||dialog.open)return;
     const active=fine.matches&&pointerInside&&!dialog.open&&!reduced;
-    const pageY=scrollY; // one read before all glyph writes, not one forced flush per letter
+    const pageY=window.NocturneFrame?.scrollY??scrollY;
     glyphs.forEach(g=>{
       const gy=g.y-pageY,dx=mx-g.x,dy=my-gy;
       const radius=Math.max(82,Math.min(185,g.h*.7));
@@ -4165,7 +4246,8 @@ body.reduced .mobile-history-intro{transition:none!important}
   const api=window.LiquidPortfolio={hasGlass:false,update,tick,seek,invalidate,
     checkpoints:()=>{measureLayout();return states.flatMap(s=>{
       const top=s.top,span=s.span;
-      const points=[{id:s.id,y:top+span*TIMELINE.study,progress:TIMELINE.study}];
+      const points=[{id:s.id,y:top+span*TIMELINE.study,progress:TIMELINE.study,
+        trigger:s.index===0?orbitTop+H*.10:top-H*.72}];
       s.rails.forEach((rs,k)=>rs.cards.forEach((card,i)=>{const progress=slideProgress(s,k,i);points.push({id:s.id+':'+k+':'+i,y:top+span*progress,progress});}));
       return points;
     });},glass:()=>!glassOff,
@@ -5387,11 +5469,15 @@ body.reduced .mobile-history-intro{transition:none!important}
         const t = timestamp / 1000, uiDt = lastTime ? clamp(t - lastTime, 0, .2) : .016, dt = Math.min(uiDt,.04);
         lastTime = t;
         if(window.NocturneScroll?.active()){window.NocturneScroll.tick(timestamp);dirty=true;}
+        // One layout snapshot per presented frame. Reading window.scrollY
+        // between modules' style writes forces a synchronous style flush.
+        window.NocturneFrame={scrollY:window.scrollY,innerWidth,innerHeight};
         if (dirty)
             updateScroll();
-        window.NocturneLab?.tick(t,uiDt);
         window.NocturneR14?.read(t);
         window.NocturneFX?.read();
+        window.Nocturne?.read?.();
+        window.NocturneLab?.tick(t,uiDt);
         window.LiquidPortfolio?.tick(t, uiDt, reduced);
         window.NocturneMotion?.tick(t,uiDt,reduced);
         window.NocturneR14?.tick(t,uiDt,reduced);
@@ -5412,6 +5498,7 @@ body.reduced .mobile-history-intro{transition:none!important}
         const userAnim = (race.running && scenes.party.visible) || (!reduced && ((scenes.companion.visible && t - petActionAt < 2.8) || (scenes.elemental.visible && (Math.abs(lift - liftTarget) > .005 || t - breakAt < 2.5))));
         if ((!reduced && (motionVisible || window.LiquidPortfolio?.needsFrame() || window.NocturneMotion?.needsFrame() || window.Nocturne?.needsFrame())) || userAnim || window.NocturneScroll?.active() || window.NocturneLab?.needsFrame())
             requestTick();
+        window.NocturneFrame=null;
     }
     function requestTick() { if (!rafId && !document.hidden)
         rafId = requestAnimationFrame(frame); }
@@ -5841,10 +5928,15 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             out[c * 4 + r] = a;
         } return out; }
     function project(p, m) { const w = m[3] * p[0] + m[7] * p[1] + m[11] * p[2] + m[15]; return [(m[0] * p[0] + m[4] * p[1] + m[8] * p[2] + m[12]) / w * .5 + .5, (m[1] * p[0] + m[5] * p[1] + m[9] * p[2] + m[13]) / w * .5 + .5]; }
-    function geometry() { let seed = 38271; const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) | 0; return (seed >>> 0) / 4294967296; }; const pos = []; const segments = 14; for (let s = 0; s < segments; s++)
+    function geometry() { let seed = 38271; const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) | 0; return (seed >>> 0) / 4294967296; }; const pos = [], indices = []; const segments = 14;
+        // Same triangles and winding, with 45 unique vertices per blade
+        // instead of 168 vertex records. The five differential samples in the
+        // vertex shader now benefit from the GPU's post-transform cache.
+        for (let s = 0; s <= segments; s++)for(let side = -1; side <= 1; side++)pos.push(side,s/segments);
+        for (let s = 0; s < segments; s++)
         for (let side = 0; side < 2; side++) {
-            const a = side - 1, b = side, t = s / segments, u = (s + 1) / segments;
-            pos.push(a, t, b, t, a, u, b, t, b, u, a, u);
+            const a = s*3+side, b = a+1;
+            indices.push(a,b,a+3,b,b+3,a+3);
         } const offset = [], shape = [], flex = [], count = innerWidth < 761 ? 640 : 1150; for (let i = 0; i < count; i++) {
         const side = rnd() > .5 ? 1 : -1, z = 8 - Math.pow(rnd(), .82) * 184, depth = (12 - z) / 196;
         // The field is continuous. The empty lane down the middle used to be
@@ -5859,7 +5951,8 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         offset.push(x, -3.5 + rnd() * .5, z, h);
         shape.push(w, (rnd() - .60) * h * .85, (rnd() - .5) * h * .58, (rnd() - .5) * 1.65);
         flex.push((rnd() - .5) * h * .39, .35 * rnd(), (rnd() - .5) * .65, .55 + rnd() * .85);
-    } report.instances = count; return { position: new Float32Array(pos), offset: new Float32Array(offset), shape: new Float32Array(shape), flex: new Float32Array(flex), count, vertices: pos.length / 2 }; }
+    } report.instances = count; report.bladeVertices = pos.length/2; report.bladeIndices = indices.length;
+      return { position: new Float32Array(pos), indices: new Uint16Array(indices), offset: new Float32Array(offset), shape: new Float32Array(shape), flex: new Float32Array(flex), count, vertices: pos.length / 2 }; }
     // R6.1: shared radiance and meshes in WebGL 2 and WebGL 1.
     // No remote renderer dependency. A failed context never silently selects unrelated artwork.
     function newCanvas() { const c = document.createElement('canvas'); c.id = 'worldCanvas'; c.setAttribute('aria-hidden', 'true'); return c; }
@@ -5931,7 +6024,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             gl.bindAttribLocation(p, Number(m[1]), m[2]); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS))
             throw Error(name + ': ' + gl.getProgramInfoLog(p)); const loc = new Map(); return { p, u(n) { if (!loc.has(n))
                 loc.set(n, gl.getUniformLocation(p, n)); return loc.get(n); } }; }
-        function buffer(a) { const b = make('buffer'); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, a, gl.STATIC_DRAW); return b; }
+        function buffer(a, target = gl.ARRAY_BUFFER) { const b = make('buffer'); gl.bindBuffer(target, b); gl.bufferData(target, a, gl.STATIC_DRAW); return b; }
         function divisor(index, n) { if (is2)
             gl.vertexAttribDivisor(index, n);
         else
@@ -5958,7 +6051,9 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             gl.enableVertexAttribArray(l);
             gl.vertexAttribPointer(l, n, gl.FLOAT, false, stride, offset);
             divisor(l, div);
-        } }
+        }
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,spec.indices||null);
+        }
         function dropTarget(t) { if (!t)
             return; free('texture', t.tex); free('rb', t.col); free('rb', t.depth); free('fb', t.fb); }
         function target(samples = 0, withDepth = false) { const t = { fb: make('fb') }; gl.bindFramebuffer(gl.FRAMEBUFFER, t.fb); try {
@@ -6001,6 +6096,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             const q = buffer(new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1])), quad = [[0, q, 2]], g = geometry();
             const ground = [[0, buffer(new Float32Array([-220, -3.3, 25, 220, -3.3, 25, -220, -3.3, -230, -220, -3.3, -230, 220, -3.3, 25, 220, -3.3, -230])), 3]];
             const blades = [[0, buffer(g.position), 2], [1, buffer(g.offset), 4, 0, 0, 1], [2, buffer(g.shape), 4, 0, 0, 1], [3, buffer(g.flex), 4, 0, 0, 1]];
+            blades.indices=buffer(g.indices,gl.ELEMENT_ARRAY_BUFFER);
             const riverBuffer = buffer(new Float32Array(5)), riverSpec = [[0, riverBuffer, 2, 20, 0], [1, riverBuffer, 3, 20, 8]];
             let riverN = 0, themeBlue=body.classList.contains('mx-blue')?1:0, themeAt=performance.now();
             let samples = [];
@@ -6128,9 +6224,9 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
                 f(pBlade, 'surgeR', u.surgeR || 0);
                 f(pBlade, 'flare', u.flare || 0);
                 if (is2)
-                    gl.drawArraysInstanced(gl.TRIANGLES, 0, g.vertices, g.count);
+                    gl.drawElementsInstanced(gl.TRIANGLES, g.indices.length, gl.UNSIGNED_SHORT, 0, g.count);
                 else
-                    inst.drawArraysInstancedANGLE(gl.TRIANGLES, 0, g.vertices, g.count);
+                    inst.drawElementsInstancedANGLE(gl.TRIANGLES, g.indices.length, gl.UNSIGNED_SHORT, 0, g.count);
                 if (multiTarget) {
                     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, multiTarget.fb);
                     gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, sceneTarget.fb);
@@ -6631,10 +6727,12 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     } }).catch(() => { }); }; document.head.append(link); fontTimer = setTimeout(() => { fitName(); window.portfolioWake?.(); }, 1800); }
     const titleGlow={x:.5,y:.5,power:0};
     const titleElement=$('#intro-title');
+    let titleRect=null;
+    state.read=()=>{if((window.NocturneFrame?.scrollY??scrollY)<innerHeight&&titleElement)titleRect=titleElement.getBoundingClientRect();};
     let introSettled=false,lastIntroScroll=-1;
     const settledIntro={rise:1,riverReveal:1,world:1,burst:0,descend:1};
     function updateIntro(t) {
-        const {scrollY,innerWidth,innerHeight}=window;
+        const {scrollY,innerWidth,innerHeight}=window.NocturneFrame||window;
         if(introSettled&&lastIntroScroll===scrollY)return settledIntro;
         lastIntroScroll=scrollY;
         
@@ -6688,7 +6786,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     }
     function restartIntro() { introSettled=false; introSkip = false; started = performance.now(); window.scrollTo({ top: 0, behavior: 'instant' }); window.portfolioWake?.(); }
     function tick(ts, dt, isReduced) {
-        const {scrollY,innerWidth,innerHeight}=window;
+        const {scrollY,innerWidth,innerHeight}=window.NocturneFrame||window;
         reduced = !!isReduced;
         dt = clamp(dt, .001, .08);
         clock = state.forceTime ?? ts * .001;
@@ -6696,7 +6794,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         const lightTarget=intro.world*(1-smooth(innerHeight*.02,innerHeight*.70,scrollY));
         titleGlow.power+=(lightTarget-titleGlow.power)*(1-Math.exp(-dt*3));
         if(titleElement&&scrollY<innerHeight){
-            const r=titleElement.getBoundingClientRect();
+            const r=titleRect||titleElement.getBoundingClientRect();
             titleGlow.x=(r.left+r.width*.5)/innerWidth;
             titleGlow.y=1-(r.top+r.height*.70)/innerHeight;
         }
@@ -6760,7 +6858,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         const skins = updateSurfaces(clock, dt);
         mouseSoft[0] = lerp(mouseSoft[0], (mouse[0] / innerWidth - .5) * 2, 1 - Math.exp(-dt * 3));
         mouseSoft[1] = lerp(mouseSoft[1], (mouse[1] / innerHeight - .5) * 2, 1 - Math.exp(-dt * 3));
-        const scroll=window.scrollY,drift=Math.min(1,scroll/Math.max(1,riverEnd));
+        const scroll=scrollY,drift=Math.min(1,scroll/Math.max(1,riverEnd));
         const travelTarget=reduced?0:scroll/Math.max(1,riverEnd)*4*2.6;
         const travel=window.NocturneMotion.spring(travelSpring,travelTarget,7,dt);
         // How hard the near blades are pushed aside: the viewer's own speed.
@@ -6905,15 +7003,15 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     window.portfolioWake?.();
 })();
 </script><script data-nocturne-source="src/scroll.js">
-/* FLOW59 — one critically damped playhead and fully revealed presentation stops.
- * Arrival protection drops residual momentum, never queues it. Reversal is immediate.
+/* FLOW62 — automatic chapter entrances, interruptible by deliberate input.
+ * One playhead for words, flight and cards. Native touch keeps its own inertia.
  */
 (() => {
   'use strict';
   const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
   const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
   const root=document.documentElement, STORAGE='nocturne-scroll-flow58';
-  const DEFAULTS=Object.freeze({response:300,sensitivity:1,entranceResistance:.48,magnet:1});
+  const DEFAULTS=Object.freeze({response:240,sensitivity:1,entranceResistance:.48,magnet:1});
   const settings={...DEFAULTS};let storageAvailable=true;
   function sanitize(v){const out={};for(const [k,lo,hi] of [['response',200,450],['sensitivity',.65,1.6],['entranceResistance',.25,.8],['magnet',0,1]])if(Number.isFinite(Number(v?.[k])))out[k]=clamp(Number(v[k]),lo,hi);return out;}
   try{Object.assign(settings,sanitize(JSON.parse(localStorage.getItem(STORAGE)||'{}')));}catch{storageAvailable=false;}
@@ -6926,6 +7024,13 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
   let lastFrame=0,lastInputAt=-Infinity,inputDirection=0,mode='idle',done=null;
   let touch=null,scrollbarHeld=false,settleTimer=0,resizeTimer=0,lastCaptured=null;
   let departure=null, arrival=null;
+  let inputMagnitude=0,burstStarted=0,burstDistance=0,fastUntil=0;
+  let gestureSpeed=0;
+  function entranceResponse(speed,distance){
+    const pace=speed/Math.max(1,innerHeight),travel=clamp(Math.sqrt(Math.abs(distance)/Math.max(1,innerHeight)),.85,1.3);
+    return clamp(1450*travel/(1+pace*.8),Math.max(400,settings.response),1500);
+  }
+  let fingerDown=false,nativeY=scrollY,nativeDirection=0,nativeTimer=0,nativePending=false;
   // Touch scrolling belongs to the browser/compositor, in both orientations.
   // Never feed finger movement into the wheel spring or its presentation gates.
   let touchDriven=matchMedia('(pointer: coarse)').matches;
@@ -6950,7 +7055,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
   function sync(){position=target=scrollY;lastWritten=scrollY;}
   function clearSettle(){clearTimeout(settleTimer);settleTimer=0;}
   function cancel(reason='external'){
-    clearSettle();moving=false;velocity=0;owned=false;lastFrame=0;done=null;touch=null;lastCaptured=null;departure=null;arrival=null;sync();mode='idle';writing(false);
+    clearSettle();clearTimeout(nativeTimer);nativePending=false;moving=false;velocity=0;owned=false;lastFrame=0;done=null;touch=null;lastCaptured=null;departure=null;arrival=null;sync();nativeY=scrollY;mode='idle';writing(false);
     if(reason!=='external')record('cancel',{reason});wake();
   }
   // Exact solution of x'' + 2*w*x' + w*w*(x-target) = 0; stable for any dt.
@@ -6969,13 +7074,17 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     start(to,options.menu?'navigation':options.source==='gallery-drag'?'free':'navigation');record('navigation',{to});return true;
   }
   function tick(now){
-    if(suspended()){if(moving||settleTimer)cancel('suspended');return;}
-    if(reduced()){if(moving||settleTimer)cancel('reduced-motion');return;}
-    if(arrival&&Math.abs(position-arrival.point.y)<1&&window.LiquidPortfolio?.presentationReady(arrival.point))arrival.readyAt??=now;
+    if(suspended()){if(moving||arrival||settleTimer)cancel('suspended');return;}
+    if(reduced()){if(moving||arrival||settleTimer)cancel('reduced-motion');return;}
+    if(arrival&&Math.abs(position-arrival.point.y)<1&&window.LiquidPortfolio?.presentationReady(arrival.point)){
+      record('presented',{id:arrival.point.id});departure={id:arrival.point.id,dir:arrival.dir};arrival=null;
+    }
     if(!moving)return;
     if(Math.abs(scrollY-lastWritten)>2){cancel('native-scroll');return;}
-    const dt=clamp((now-(lastFrame||now-16.667))/1000,0,.064);lastFrame=now;
-    const response=mode==='entry'?Math.max(settings.response,420):mode==='navigation'?Math.max(settings.response,380):settings.response;
+    // Analytic spring: use elapsed time, even when a slow frame took >64 ms.
+    const dt=clamp((now-(lastFrame||now-16.667))/1000,0,.2);lastFrame=now;
+    if(arrival)arrival.response+=(arrival.responseTarget-arrival.response)*(1-Math.exp(-dt/0.14));
+    const response=mode==='entry'?(arrival?.response||800):mode==='navigation'?Math.max(settings.response,320):mode==='gallery'?settings.response*.58:settings.response;
     const s=springStep(position,velocity,target,4.75/(response/1000),dt);velocity=s.v;write(s.x);
     if((position<=0&&target===0)||(position>=maxY&&target===maxY)){velocity=0;}
     if(Math.abs(position-target)<.22&&Math.abs(velocity)<5){
@@ -6988,47 +7097,82 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     settleTimer=0;if(suspended()||reduced()||touch||scrollbarHeld||arrival||!owned||!settings.magnet)return;measure();
     let p=null,limit=0;
     // Finish a half-revealed chapter, but only inside its entrance region.
-    for(const a of entrances){if(a.id!==departure?.id&&target>a.y-innerHeight*.46&&target<a.y+innerHeight*.13){p=a;limit=innerHeight*.46;break;}}
+    for(const a of entrances){if(inputDirection>0&&a.id!==departure?.id&&target>=a.trigger&&target<a.y&&performance.now()>fastUntil){p=a;limit=a.y-a.trigger;break;}}
     if(!p){
       const g=points.filter(a=>a.kind==='gallery'),close=nearest(g,target);
       if(close){const sib=g.filter(a=>a.chapter===close.chapter&&a.rail===close.rail),i=sib.indexOf(close),step=Math.min(sib[i+1]?.y-close.y||Infinity,close.y-sib[i-1]?.y||Infinity);if(Math.abs(close.y-target)<Math.min(165,step*.34)){p=close;limit=Math.min(165,step*.34);}}
     }
     if(!p){const c=nearest(points.filter(a=>a.kind==='career'||a.kind==='orbit'),target);if(c&&Math.abs(c.y-target)<innerHeight*.13){p=c;limit=innerHeight*.13;}}
     if(!p||p.id===departure?.id||Math.abs(p.y-target)<.5||Math.abs(p.y-target)>limit)return;
-    start(p.y,p.kind==='chapter'?'entry':'settling');record('soft-settle',{id:p.id,to:p.y});
+    // A short wheel gesture must keep its progress, not spring backwards to
+    // the previous card when the input stream pauses.
+    if(p.kind==='gallery'&&innerWidth>760&&Math.sign(p.y-target)!==inputDirection)return;
+    if(p.kind==='chapter')enter(p.id);else start(p.y,'settling');record('soft-settle',{id:p.id,to:p.y});
   }
   function scheduleSettle(){clearSettle();if(settings.magnet)settleTimer=setTimeout(settle,135);}
+  function enter(id,source='entrance'){
+    measure();const point=entrances.find(p=>p.id===id);
+    if(!point||suspended()||reduced())return false;
+    const speed=source==='hover'?innerHeight*.55:source==='native-settle'?innerHeight*.35:performance.now()-lastInputAt<400?gestureSpeed:innerHeight*.4;
+    const response=entranceResponse(speed,point.y-(owned?position:scrollY));
+    clearSettle();done=null;arrival={point,dir:1,at:performance.now(),effort:0,response,responseTarget:response};
+    inputDirection=1;start(point.y,'entry');record('arrival',{id,source,response:Math.round(response)});return true;
+  }
+  // Hovering the first orbit seed starts its authored flight. A small dwell
+  // avoids activation when the pointer merely crosses an icon during scrolling.
+  const seed=$('.orbit-icon');let hoverTimer=0;
+  seed?.addEventListener('pointerenter',e=>{
+    if(e.pointerType==='touch'||!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+    clearTimeout(hoverTimer);hoverTimer=setTimeout(()=>{
+      measure();const first=entrances[0];
+      if(first&&scrollY<first.y&&!moving&&seed.matches(':hover'))enter(first.id,'hover');
+    },160);
+  });
+  seed?.addEventListener('pointerleave',()=>clearTimeout(hoverTimer));
   function consume(delta,source='wheel'){
     if(!Number.isFinite(delta)||!delta||scrollbarHeld||suspended())return;
     measure();if(!owned||Math.abs(scrollY-lastWritten)>2){sync();velocity=0;}
     clearSettle();done=null;const dir=Math.sign(delta),now=performance.now();
-    // Keep a captured composition intact until it is actually revealed. Discard
-    // residual wheel momentum instead of queuing it behind the entrance.
-    const inputGap=now-lastInputAt;lastInputAt=now;acceptedInputs++;
+    const inputGap=now-lastInputAt,magnitude=Math.abs(delta),previousMagnitude=inputMagnitude;
+    const sample=magnitude/((inputGap>180||dir!==inputDirection) ? .09 : clamp(inputGap/1000,.008,.18));
+    gestureSpeed=inputGap>180||dir!==inputDirection?sample:gestureSpeed+(sample-gestureSpeed)*.3;
+    lastInputAt=now;inputMagnitude=magnitude;acceptedInputs++;
+    if(inputGap>160||dir!==inputDirection||now-burstStarted>160){burstStarted=now;burstDistance=0;}
+    burstDistance+=magnitude;
+    const fast=magnitude>innerHeight*.80||burstDistance>innerHeight*.95;
+    if(fast)fastUntil=now+240;
     if(arrival){
-      if(dir!==arrival.dir)arrival=null;
-      else {
-        const readyFor=arrival.readyAt==null?0:now-arrival.readyAt;
-        if(!(readyFor>=360&&(inputGap>150||readyFor>950))){wake();return;}
-        departure={id:arrival.point.id,dir};arrival=null;
-      }
+      arrival.effort+=magnitude;
+      arrival.responseTarget=entranceResponse(gestureSpeed,arrival.point.y-arrival.point.trigger);
+      const renewed=magnitude>previousMagnitude*1.65+24||source==='keyboard';
+      const interrupt=dir!==arrival.dir||fast||renewed||arrival.effort>innerHeight*(1.04-settings.entranceResistance*.65);
+      if(!interrupt){wake();return;}
+      departure={id:arrival.point.id,dir};arrival=null;target=position;
+      if(dir!==inputDirection)velocity=0;
     }
     // Reversal takes control now, not after the old target/animation completes.
     let base=inputDirection&&dir!==inputDirection?position:target;
-    if(inputDirection&&dir!==inputDirection)departure=null;
+    if(inputDirection&&dir!==inputDirection){departure=null;velocity=0;}
     const left=nearest(points,base);if(left&&Math.abs(left.y-base)<3)departure={id:left.id,dir};
     inputDirection=dir;
     let amount=delta*settings.sensitivity;
-    const entry=nearest(entrances,base);
-    if(entry){const d=Math.abs(base-entry.y),r=innerHeight*.15;
-      if(d<r){const t=1-d/r;amount*=1-(1-settings.entranceResistance)*t*t*(3-2*t);}
+    let sourceMode='free';
+    // Desktop chapters can allocate a very long vertical span to each card.
+    // Normalize wheel travel to ~180 input pixels per card, only within a rail.
+    // Native touch and project entrance timing remain independent of this gain.
+    if(source==='wheel'&&innerWidth>760){
+      const gallery=points.filter(p=>p.kind==='gallery');
+      const a=gallery.find((p,i)=>{const q=gallery[i+1];return q&&p.chapter===q.chapter&&p.rail===q.rail&&base>=p.y-1&&base<=q.y+1;});
+      if(a){const rail=gallery.filter(p=>p.chapter===a.chapter&&p.rail===a.rail),i=rail.indexOf(a),step=rail[i+1].y-a.y;
+        const gain=clamp(step/180,1.5,4),remaining=dir>0?rail.at(-1).y-base:base-rail[0].y;
+        amount=dir*Math.min(Math.abs(amount)*gain,Math.max(Math.abs(amount),remaining));sourceMode='gallery';
+      }
     }
-    let to=clamp(clamp(base+amount,0,maxY),position-innerHeight*2.3,position+innerHeight*2.3),sourceMode='free';
-    // Chapter and gallery anchors are authored fully visible poses, shared with
-    // rendering. Catch the next pose in either direction, including fast bursts.
-    const stops=points.filter(p=>p.kind==='chapter'||p.kind==='gallery');
-    const crossed=dir>0?stops.find(p=>p.y>base+1&&p.y<=to):[...stops].reverse().find(p=>p.y<base-1&&p.y>=to);
-    if(crossed){to=crossed.y;arrival={point:crossed,dir,readyAt:null};sourceMode='entry';record('arrival',{id:crossed.id});}
+    let to=clamp(clamp(base+amount,0,maxY),position-innerHeight*2.3,position+innerHeight*2.3);
+    // Only project entrances capture normal forward gestures. Gallery cards
+    // settle after input ends; they never gate a continuous trackpad stream.
+    const crossed=dir>0&&now>fastUntil&&settings.magnet?entrances.find(p=>p.id!==departure?.id&&base<p.y-1&&to>=p.trigger&&to<p.y+innerHeight*.3):null;
+    if(crossed){enter(crossed.id,source);return;}
     // Bounded inertia: no stale queue extending over several projects.
     to=clamp(to,position-innerHeight*2.3,position+innerHeight*2.3);
     start(to,sourceMode);scheduleSettle();record('input',{source,delta:+delta.toFixed(2),to:+target.toFixed(2)});
@@ -7060,11 +7204,29 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     touchDriven=true;
     // Interrupt an anchor/button animation at the current position on contact.
     // Nested scrollers retain their own native gesture and background lock.
-    if(!suspended()&&!freeNode(e.target))cancel('native-touch');
+    if(!suspended()&&!freeNode(e.target)){cancel('native-touch');fingerDown=true;nativeDirection=0;}
   },{capture:true,passive:true});
+  function settleNative(){
+    clearTimeout(nativeTimer);
+    if(!nativePending||fingerDown||owned||suspended()||reduced()||!settings.magnet)return;
+    nativePending=false;measure();
+    // Complete an unfinished entrance only after native momentum has ended.
+    // A fling that passed the composition is never pulled backwards.
+    const point=nativeDirection>0&&entrances.find(p=>scrollY>=p.trigger&&scrollY<p.y-2);
+    if(point)enter(point.id,'native-settle');
+  }
+  function endTouch(){fingerDown=false;if(nativePending){clearTimeout(nativeTimer);nativeTimer=setTimeout(settleNative,180);}}
+  addEventListener('touchend',endTouch,{passive:true});addEventListener('touchcancel',endTouch,{passive:true});
   addEventListener('pointerdown',e=>{if((e.clientX>=root.clientWidth&&innerWidth>root.clientWidth)||e.button===1){cancel('scrollbar');scrollbarHeld=true;}},{passive:true});
   addEventListener('pointerup',()=>{if(scrollbarHeld){scrollbarHeld=false;cancel('scrollbar-release');}},{passive:true});
-  addEventListener('scroll',()=>{if(owned&&Math.abs(scrollY-lastWritten)>2)cancel('native-scroll');},{passive:true});
+  addEventListener('scroll',()=>{
+    if(owned&&Math.abs(scrollY-lastWritten)>2)cancel('native-scroll');
+    if(touchDriven&&!owned&&!suspended()){
+      const y=scrollY;if(Math.abs(y-nativeY)>.5){nativeDirection=Math.sign(y-nativeY);nativePending=true;}nativeY=y;
+      clearTimeout(nativeTimer);nativeTimer=setTimeout(settleNative,180);
+    }
+  },{passive:true});
+  addEventListener('scrollend',settleNative,{passive:true});
   addEventListener('blur',()=>{scrollbarHeld=false;cancel('blur');});
   addEventListener('resize',()=>{
     // Mobile browser bars resize the viewport during a swipe. Never snap back
@@ -7082,11 +7244,11 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
   $('#motionToggle')?.addEventListener('click',()=>{cancel('motion-toggle');invalidate();});
   function configure(values,persist=true){Object.assign(settings,sanitize(values));if(persist)try{localStorage.setItem(STORAGE,JSON.stringify(settings));storageAvailable=true;}catch{storageAvailable=false;}updateSettingsUI();return {...settings};}
   const api=window.NocturneScroll={
-    to:begin,cancel,tick,invalidate,managesInput,next(dir){consume(Math.sign(dir)*innerHeight*.75,'next');},
-    active:()=>moving,synchronized:()=>owned||touchDriven,playhead:()=>owned?position:scrollY,
+    to:begin,enter,cancel,tick,invalidate,managesInput,next(dir){consume(Math.sign(dir)*innerHeight*.75,'next');},
+    active:()=>moving||!!arrival,synchronized:()=>owned||touchDriven,playhead:()=>owned?position:(window.NocturneFrame?.scrollY??scrollY),
     checkpoints:()=>{measure();return points.map(p=>({...p}));},configure,reset:()=>configure(DEFAULTS),
     get settings(){return {...settings};},
-    diagnostics:()=>{measure();return {version:'flow60',mode,nativeTouch:touchDriven,position:owned?position:scrollY,actual:scrollY,target,velocity,active:moving,synchronized:owned||touchDriven,gate:arrival?{id:arrival.point.id,readyAt:arrival.readyAt}:null,locked:!!arrival,acceptedInputs,settleSerial,pointCount:points.length,settings:{...settings},trace:trace.map(e=>({...e}))};}
+    diagnostics:()=>{measure();return {version:'flow62',mode,nativeTouch:touchDriven,position:owned?position:scrollY,actual:scrollY,target,velocity,active:moving,synchronized:owned||touchDriven,gate:arrival?{id:arrival.point.id,since:arrival.at}:null,locked:false,acceptedInputs,settleSerial,pointCount:points.length,settings:{...settings},trace:trace.map(e=>({...e}))};}
   };
   root.classList.add('nocturne-scroll');
   const options=$('#utilityOptions');let panel=null;
@@ -7095,7 +7257,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     const toggle=document.createElement('button');toggle.type='button';toggle.id='scrollTuningToggle';toggle.textContent='Scroll feel';toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-controls','scrollTuningPanel');options.append(toggle);
     panel=document.createElement('section');panel.id='scrollTuningPanel';panel.className='scroll-tuning-panel';panel.hidden=true;panel.dataset.freeScroll='';panel.setAttribute('aria-labelledby','scrollTuningTitle');
     const fields=[['response','Softness',200,450,10],['sensitivity','Scroll speed',.65,1.6,.05],['entranceResistance','Entrance pass-through',.25,.8,.05]];
-    panel.innerHTML='<div class="scroll-tuning-head"><div><small>CONTINUOUS / FLOW 58</small><h3 id="scrollTuningTitle">Scroll feel</h3></div><button type="button" data-scroll-close aria-label="Close scroll settings">×</button></div><p>Soft project entrances. Free movement inside. Each composition settles fully into view. Scroll again to continue.</p>'+fields.map(([k,label,min,max,step])=>`<label class="scroll-tuning-field" for="scroll-${k}"><span>${label}<output id="scroll-${k}Value" for="scroll-${k}"></output></span><input id="scroll-${k}" data-scroll-setting="${k}" type="range" min="${min}" max="${max}" step="${step}"></label>`).join('')+'<div class="scroll-tuning-foot"><span data-scroll-storage></span><button type="button" data-scroll-reset>Reset defaults ↺</button></div>';
+    panel.innerHTML='<div class="scroll-tuning-head"><div><small>CONTINUOUS SCROLL</small><h3 id="scrollTuningTitle">Scroll feel</h3></div><button type="button" data-scroll-close aria-label="Close scroll settings">×</button></div><p>Each project settles into view. Scroll faster to pass through, or reverse at any time. Move freely between the cards.</p>'+fields.map(([k,label,min,max,step])=>`<label class="scroll-tuning-field" for="scroll-${k}"><span>${label}<output id="scroll-${k}Value" for="scroll-${k}"></output></span><input id="scroll-${k}" data-scroll-setting="${k}" type="range" min="${min}" max="${max}" step="${step}"></label>`).join('')+'<div class="scroll-tuning-foot"><span data-scroll-storage></span><button type="button" data-scroll-reset>Reset defaults ↺</button></div>';
     document.body.append(panel);updateSettingsUI();
     function close(restore=false){panel.hidden=true;toggle.setAttribute('aria-expanded','false');if(restore)(options.hidden?$('#utilityToggle'):toggle)?.focus({preventScroll:true});}
     toggle.addEventListener('click',()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden){cancel('settings');options.hidden=true;$('#utilityToggle')?.setAttribute('aria-expanded','false');$('[data-scroll-setting]',panel).focus({preventScroll:true});}});
@@ -7186,7 +7348,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     measureWall();frameStoryRect=story.getBoundingClientRect();frameWallRect=wall.getBoundingClientRect();
   }
   function energy(t,dt){
-    const scrollY=window.scrollY;
+    const scrollY=window.NocturneFrame?.scrollY??window.scrollY;
     // Read first, then paint. Geometry for the glowing rim is the same box as
     // the actual card, never a separate viewport-sized displacement overlay.
     const sr=frameStoryRect||story.getBoundingClientRect();if(sr.top>height||sr.bottom<0)return;
@@ -7848,7 +8010,7 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
 
   function tick(t,dt,isReduced){
     clock=t;reduced=!!isReduced;measure();
-    const H=innerHeight,Y=scrollY;
+    const {innerHeight:H,scrollY:Y}=window.NocturneFrame||window;
     if(storyNode){
       // Mobile cards already have their own viewport entrance. A second gate
       // based only on scroll distance hid cards visible below the short hero.
@@ -8261,7 +8423,7 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
   v.addEventListener('waiting',()=>host.classList.add('mx-buffering'));v.addEventListener('playing',()=>host.classList.remove('mx-buffering'));v.addEventListener('error',()=>{clock.textContent='Preview unavailable';host.classList.remove('mx-buffering');});
  }}upgradePlayers();document.addEventListener('portfolio-player-ready',upgradePlayers);new MutationObserver(upgradePlayers).observe($('main'),{childList:true,subtree:true});
  const api=window.NocturneLab={flags,fast,markFast,openInline,closeInline,upgradePlayers,get caseProgress(){return clamp(expansion?.p||0)},get caseShift(){return caseShift},get inlineOpen(){return !!inline},get pointer(){return ptr},needsFrame:()=>!!inline||ptr.inside||scrollY<innerHeight,diagnostics:()=>({flags:{...flags},fast:fast(),inline:!!inline,trail:cards.filter(c=>performance.now()-c.born<1100).length,flowAvailable:!!gl,flowReady}),tick};
- function tick(t,dt){updateExpansion(t*1000,dt);const {scrollY,innerWidth,innerHeight}=window;const now=t*1000,dy=scrollY-lastY;for(let i=retiringPreviews.length-1;i>=0;i--){if(now-retiringPreviews[i].at>950){retiringPreviews[i].el.remove();retiringPreviews.splice(i,1);}}const speed=Math.abs(dy)/Math.max(.008,dt);if(!window.NocturneScroll?.synchronized?.()&&(Math.abs(dy)>innerHeight*.6||speed>innerHeight*2.5))markFast();lastY=scrollY;lastTick=t;
+ function tick(t,dt){updateExpansion(t*1000,dt);const {scrollY,innerWidth,innerHeight}=window.NocturneFrame||window;const now=t*1000,dy=scrollY-lastY;for(let i=retiringPreviews.length-1;i>=0;i--){if(now-retiringPreviews[i].at>950){retiringPreviews[i].el.remove();retiringPreviews.splice(i,1);}}const speed=Math.abs(dy)/Math.max(.008,dt);if(!window.NocturneScroll?.synchronized?.()&&(Math.abs(dy)>innerHeight*.6||speed>innerHeight*2.5))markFast();lastY=scrollY;lastTick=t;
   const reduced=isReduced(),active=fine.matches&&!reduced;body.classList.toggle('mx-fast',fast());body.classList.toggle('mx-cursor-ready',flags.contextCursor&&active&&ptr.inside);
   const grassStep=1-Math.exp(-Math.min(dt,.05)*3.5);
   ptr.gx=mix(ptr.gx,ptr.x,grassStep);ptr.gy=mix(ptr.gy,ptr.y,grassStep);
@@ -8302,10 +8464,13 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
   const track=marqueeTrack;marqueeSpeed=mix(marqueeSpeed,marqueePaused?0:1,1-Math.exp(-dt*4));if(flags.heroMarquee&&scrollY<innerHeight&&!reduced){marqueeX=(marqueeX+dt*32*marqueeSpeed)%marqueeWidth;track.style.transform=`translateX(${-marqueeX}px)`;}const mq=clamp((scrollY/innerHeight-.025)/.59),depart=mq*mq*mq*(10-15*mq+6*mq*mq);
   marquee.style.opacity=String(1-depart);marquee.style.transform=reduced?'none':`translate3d(${-depart*38}px,${-depart*115}px,0) scale(${1+depart*.035})`;marquee.style.filter=reduced?'none':`blur(${depart*11}px)`;
   const fluidOn=flags.fluidPointer&&active&&ptr.inside&&!fast()&&!inline&&scrollY<innerHeight;
+  // The ribbon belongs below the hero lettering so difference blending can
+  // sample it. Keep fixed viewport coordinates; no duplicate text or canvas.
+  if(fluid.parentNode===body)$('.intro').append(fluid);
   points[0].x=ptr.rx;points[0].y=ptr.ry;for(let i=1;i<points.length;i++){points[i].x=mix(points[i].x,points[i-1].x,1-Math.exp(-dt*20));points[i].y=mix(points[i].y,points[i-1].y,1-Math.exp(-dt*20));}fluid.style.opacity=String(fluidOn?clamp(ptr.brush*2.8):0);const path=$('path',fluid);
-  // Touch has no visible pointer ribbon. Keep its spring state up to date,
-  // but do not rebuild an invisible SVG path (and invalidate styles) per frame.
-  if(fine.matches){
+  // Keep the spring state above up to date, but build the SVG outline only
+  // while the ribbon is actually visible. This also avoids idle desktop work.
+  if(fine.matches&&fluidOn&&ptr.brush>0){
   const outline=[];for(const side of [1,-1]){const edge=[];for(let i=0;i<points.length;i++){const a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],len=Math.max(1,Math.hypot(b.x-a.x,b.y-a.y)),w=(5+ptr.brush*32)*Math.pow(1-i/(points.length-1),1.65);edge.push({x:points[i].x-(b.y-a.y)/len*w*side,y:points[i].y+(b.x-a.x)/len*w*side});}outline.push(...(side===1?edge:edge.reverse()));}
   let d=`M${outline[0].x},${outline[0].y}`;for(let i=1;i<=outline.length;i++){const a=outline[i%outline.length],b=outline[(i+1)%outline.length];d+=` Q${a.x},${a.y} ${(a.x+b.x)/2},${(a.y+b.y)/2}`;}path.setAttribute('d',d+' Z');
   }
@@ -8358,9 +8523,15 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
  const slot=document.createElement('div');slot.className='contact-slot';slot.setAttribute('aria-hidden','true');$('.footer-links')?.after(slot);const group=document.createElement('div');group.className='contact-pair';contact.before(group);group.append(contact);
  contact.innerHTML='<span class="cta-dot" aria-hidden="true"></span><span class="cta-title">Discuss a role</span><span class="cta-arrow" aria-hidden="true">↗</span>';
  const cv=document.createElement('button');cv.className='contact-cv';cv.textContent='CV';cv.type='button';cv.disabled=true;cv.title='CV coming soon';cv.setAttribute('aria-label','CV — coming soon');group.append(cv);
- let progress=0,frame=0,last=0;
- const draw=t=>{frame=0;const footerTop=$('.footer-note').getBoundingClientRect().top;const distance=document.documentElement.scrollHeight-innerHeight-scrollY;let goal=clamp(1-distance/Math.min(480,innerHeight*.6));goal=goal*goal*(3-2*goal);const dt=Math.min(.05,(t-last)/1000||.016);last=t;progress+=(goal-progress)*(1-Math.exp(-dt/0.22));if(Math.abs(goal-progress)<.0001)progress=goal;
- const top=innerWidth<761?17:25,target=innerWidth<761?slot.getBoundingClientRect().top:Math.max(180,Math.min(innerHeight-115,footerTop-95));
+ let progress=0,frame=0,last=0,docked=false;
+ const draw=t=>{frame=0;const footerTop=$('.footer-note').getBoundingClientRect().top,slotTop=slot.getBoundingClientRect().top;
+ // Two resting positions, with hysteresis near the viewport edge. Stopping
+ // the scroll never leaves the controls suspended over the footer heading.
+ if(slotTop<innerHeight-110)docked=true;else if(slotTop>innerHeight-60)docked=false;
+ const goal=docked?1:0,dt=Math.min(.2,(t-last)/1000||.016);last=t;progress+=(goal-progress)*(1-Math.exp(-dt/0.18));if(Math.abs(goal-progress)<.0001)progress=goal;
+ const top=innerWidth<761?group.parentElement.getBoundingClientRect().top:25,target=innerWidth<761?slotTop:Math.max(180,Math.min(innerHeight-115,footerTop-95));
+ if(isReduced())progress=goal;
+ group.parentElement.style.setProperty('--contact-dock',progress);
  group.style.setProperty('--contact-y',((target-top)*progress)+'px');group.style.setProperty('--contact-growth',progress);contact.classList.toggle('is-docked',progress>.85);contact.href=progress>.85?'https://www.linkedin.com/in/gleblomatoq/':'#contact';if(Math.abs(goal-progress)>.0001)frame=requestAnimationFrame(draw);};
  const wake=()=>{if(!frame){last=performance.now();frame=requestAnimationFrame(draw)}};addEventListener('scroll',wake,{passive:true});addEventListener('resize',wake,{passive:true});wake();
  }
@@ -8443,7 +8614,7 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
  const root=document.documentElement,body=document.body;
  let registry={};try{registry=JSON.parse($('#portfolio-media')?.textContent||'{}').items||{};}catch(e){console.warn('Media config could not be read.',e);}
  let viewer=null,shell=null,layout=null,media=null,notes=null,progress=null,opener=null,activeId=null,current=null,animation=null,closing=false,token=0,lock=null,observer=null;
- const replacements=new Map(),demoCache=new Map();let pauseList=[],scrollFrame=0;
+ const replacements=new Map();let pauseList=[],scrollFrame=0;
  const reduced=()=>body.classList.contains('reduced')||matchMedia('(prefers-reduced-motion: reduce)').matches;
  const mobile=()=>matchMedia('(max-width:760px)').matches;
  function safeURL(value,type='image'){
@@ -8453,20 +8624,26 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
   if(/^blob:/i.test(url))return url;
   try{const u=new URL(url,location.href);return ['http:','https:','file:'].includes(u.protocol)?url:'';}catch{return /^(?![a-z][\w+.-]*:|\/\/)[\w.\-/ %]+$/i.test(url)?url:'';}
  }
- function demoImage(item){
-  const key=item.demoArt||'poly';if(demoCache.has(key))return demoCache.get(key);
-  const original=window.portfolioArt?.(key)||'<svg viewBox="0 0 400 260"><rect width="400" height="260" fill="#9aadbe"/></svg>';
-  const inner=original.replace(/^<svg[^>]*>/,'').replace(/<\/svg>\s*$/,'');
-  const panels=[['01','Opening frame'],['02','Form & detail'],['03','Interface studies'],['04','Sequence & rhythm']];
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="4480" viewBox="0 0 1200 4480"><rect width="1200" height="4480" fill="#111827" fill-opacity=".22"/><g font-family="Arial,sans-serif" fill="#edf2fa"><text x="72" y="90" font-size="17" letter-spacing="4">VERTICAL CASE STUDY / LAYOUT DEMO</text><text x="72" y="240" font-size="86" letter-spacing="-5">${esc(item.title)}</text><text x="76" y="300" font-size="21" fill="#b0bed1">Existing placeholder art. Replace with your approved work.</text>${panels.map(([n,label],i)=>{const y=410+i*910;return `<g transform="translate(0 ${y})"><text x="72" y="0" font-size="17" fill="#a7b7cd">${n} / ${esc(label.toUpperCase())}</text><svg x="72" y="36" width="1056" height="690" viewBox="0 0 400 260">${inner}</svg><text x="72" y="788" font-size="21">${esc(label)}</text><text x="72" y="829" font-size="16" fill="#a7b7cd">SCHEMATIC CONTENT — NOT ORIGINAL PRODUCT CAPTURES</text></g>`;}).join('')}<text x="72" y="4260" font-size="48" letter-spacing="-2">The details live below.</text><text x="72" y="4330" font-size="22" fill="#b0bed1">On mobile, keep scrolling for the project context.</text></g></svg>`;
-  const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);demoCache.set(key,src);return src;
+ function demoStory(item){
+  const artwork=window.portfolioArt?.(item.demoArt||'poly')||'';
+  const panels=['Opening frame','Form & detail','Interface studies','Sequence & rhythm'];
+  // Responsive HTML typography, not a 4480px bitmap with scaled-up text.
+  return '<div class="mv-story"><p class="mv-story-label">ILLUSTRATIVE VISUAL STUDY</p>'+panels.map((label,i)=>
+   `<figure class="mv-story-panel"><div class="mv-story-art" aria-hidden="true">${artwork}</div><figcaption><span>${String(i+1).padStart(2,'0')}</span><h3>${label}</h3></figcaption></figure>`).join('')+'<p class="mv-demo-caption">Illustrative previews · not original product captures</p></div>';
  }
  function ensure(){
   if(viewer)return;
   viewer=document.createElement('dialog');viewer.id='mediaViewer';viewer.className='media-viewer';viewer.dataset.freeScroll='';viewer.setAttribute('aria-labelledby','mediaViewerTitle');viewer.setAttribute('aria-modal','true');
-  viewer.innerHTML='<section class="mv-shell"><header class="mv-head"><div class="mv-heading"><span class="mv-eyebrow"></span><h2 class="mv-title" id="mediaViewerTitle"></h2></div><span class="mv-hint"></span><button type="button" class="mv-close" aria-label="Close media and return to the project">×</button></header><div class="mv-progress" aria-hidden="true"></div><div class="mv-layout" data-free-scroll><div class="mv-media" data-free-scroll tabindex="0" role="region" aria-label="Project media"></div><aside class="mv-notes" data-free-scroll></aside></div></section>';
+  viewer.innerHTML='<section class="mv-shell"><header class="mv-head"><div class="mv-heading"><span class="mv-eyebrow"></span><h2 class="mv-title" id="mediaViewerTitle"></h2></div><span class="mv-hint"></span><button type="button" class="mv-close" aria-label="Close media and return to the project">×</button></header><div class="mv-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div><div class="mv-layout" data-free-scroll><div class="mv-media" data-free-scroll tabindex="0" role="region" aria-label="Project media"></div><aside class="mv-notes" data-free-scroll tabindex="-1" aria-label="Project details"></aside></div><footer class="mv-foot"><button type="button" class="mv-back">↙ Back to project</button><span class="mv-position" aria-hidden="true"></span><button type="button" class="mv-details">Project details ↓</button></footer></section>';
   body.append(viewer);shell=$('.mv-shell',viewer);layout=$('.mv-layout',viewer);media=$('.mv-media',viewer);notes=$('.mv-notes',viewer);progress=$('.mv-progress',viewer);
   $('.mv-close',viewer).addEventListener('click',()=>close());
+  $('.mv-back',viewer).addEventListener('click',()=>close());
+  $('.mv-details',viewer).addEventListener('click',()=>{
+   notes.classList.remove('mv-notes-pending');
+   if(mobile())layout.scrollTo({top:layout.scrollTop+notes.getBoundingClientRect().top-layout.getBoundingClientRect().top,behavior:reduced()?'instant':'smooth'});
+   else notes.scrollTop=0;
+   notes.focus({preventScroll:true});
+  });
   viewer.addEventListener('cancel',e=>{e.preventDefault();close();});
   // Same-target pointer up avoids closing after a drag ends outside the sheet.
   let downOutside=false;viewer.addEventListener('pointerdown',e=>{downOutside=e.target===viewer;});
@@ -8481,7 +8658,7 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
     const first=list[0],last=list.at(-1);if(e.shiftKey&&(document.activeElement===first||!viewer.contains(document.activeElement))){e.preventDefault();last?.focus();}else if(!e.shiftKey&&(document.activeElement===last||!viewer.contains(document.activeElement))){e.preventDefault();first?.focus();}
    }
    if(!e.target.closest('video,input,textarea,select,[contenteditable]')&&!(e.key===' '&&e.target.closest('button'))&&['PageDown','PageUp','ArrowDown','ArrowUp','Home','End',' '].includes(e.key)){
-    const scroller=mobile()?layout:media,dir=['PageUp','ArrowUp'].includes(e.key)||(e.key===' '&&e.shiftKey)?-1:1;e.preventDefault();scroller.scrollTo({top:e.key==='Home'?0:e.key==='End'?scroller.scrollHeight:scroller.scrollTop+dir*(e.key.startsWith('Arrow')?64:scroller.clientHeight*.82),behavior:reduced()?'instant':'smooth'});
+    const scroller=mobile()?layout:e.target.closest('.mv-notes')?notes:media,dir=['PageUp','ArrowUp'].includes(e.key)||(e.key===' '&&e.shiftKey)?-1:1;e.preventDefault();scroller.scrollTo({top:e.key==='Home'?0:e.key==='End'?scroller.scrollHeight:scroller.scrollTop+dir*(e.key.startsWith('Arrow')?64:scroller.clientHeight*.82),behavior:reduced()?'instant':'smooth'});
    }
   });
  }
@@ -8501,6 +8678,7 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
   scrollFrame=0;if(!viewer?.open)return;
   const scroller=mobile()?layout:media,max=scroller.scrollHeight-scroller.clientHeight;
   const ratio=max>1?Math.min(1,Math.max(0,scroller.scrollTop/max)):1;progress.style.setProperty('--mv-progress',ratio.toFixed(4));
+  const percent=String(Math.round(ratio*100));if(progress.getAttribute('aria-valuenow')!==percent){progress.setAttribute('aria-valuenow',percent);$('.mv-position',viewer).textContent=current?.type==='video'?'MOTION STUDY':percent+'%';}
  }
  function observeNotes(){
   observer?.disconnect();notes.classList.remove('mv-notes-pending');if(!mobile()||current.type==='video'||reduced())return;
@@ -8509,13 +8687,15 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
  }
  function status(text){const el=document.createElement('p');el.className='mv-status';el.setAttribute('role','status');el.textContent=text;return el;}
  function paint(item){
-  current=item;media.replaceChildren();notes.replaceChildren();layout.scrollTop=media.scrollTop=0;
+  current=item;media.replaceChildren();notes.replaceChildren();layout.scrollTop=media.scrollTop=notes.scrollTop=0;progress.removeAttribute('aria-valuenow');
   viewer.dataset.mediaType=item.type;$('.mv-title',viewer).textContent=item.title||'Project media';$('.mv-eyebrow',viewer).textContent=item.eyebrow||'SELECTED WORK';$('.mv-hint',viewer).textContent=item.type==='video'?'PLAY / PAUSE / EXPLORE':'SCROLL TO EXPLORE ↓';
   notes.innerHTML=`<p class="mv-description">${esc(item.description||'')}</p>${(item.sections||[]).map(s=>`<section class="mv-text-section"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></section>`).join('')}${item.tags?.length?`<div class="mv-tags">${item.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}${item.note?`<p class="mv-note">${esc(item.note)}</p>`:''}`;
   const replacement=replacements.get(activeId);
-  if(item.type==='long-image'){
+  if(item.type==='long-image'&&item.demo&&!replacement&&!item.src&&!item.images?.length){
+   media.innerHTML=demoStory(item);
+  }else if(item.type==='long-image'){
    const loading=document.createElement('span');loading.className='mv-loading';loading.textContent='LOADING IMAGE';loading.setAttribute('role','status');media.append(loading);
-   const sources=replacement?[{src:replacement.url}]:Array.isArray(item.images)&&item.images.length?item.images:[{src:safeURL(item.src)|| (item.demo?demoImage(item):''),width:item.width,height:item.height,alt:item.alt}];
+   const sources=replacement?[{src:replacement.url}]:Array.isArray(item.images)&&item.images.length?item.images:[{src:safeURL(item.src),width:item.width,height:item.height,alt:item.alt}];
    let remaining=sources.length;
    for(const [i,part] of sources.entries()){
     const data=typeof part==='string'?{src:part}:part,src=safeURL(data.src);if(!src){loading.remove();media.append(status('Image space is ready. Add a source in content/media.json or choose a local file.'));continue;}
@@ -8540,7 +8720,7 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
    }else wrap.append(status('Video space is ready. Add a video source in content/media.json or choose a local file.'));
    if(item.demo&&!replacement){const label=document.createElement('div');label.className='mv-demo-caption';label.textContent=item.note||'PLAYBACK DEMO';wrap.append(label);}
   }
-  if(item.demo||body.classList.contains('author')){
+  if(body.classList.contains('author-mode')){
    const input=document.createElement('input');input.className='mv-file';input.type='file';input.accept=item.type==='video'?'video/*':'image/*';input.setAttribute('aria-label','Choose local media');
    const replace=document.createElement('button');replace.type='button';replace.className='mv-replace';replace.textContent=replacement?'Change local preview ↗':'Replace demo locally ↗';replace.onclick=()=>input.click();
    input.onchange=()=>{const file=input.files?.[0];if(!file)return;if(!file.type.startsWith(item.type==='video'?'video/':'image/')){replace.textContent='Choose a matching image or video file';return;}
@@ -8556,15 +8736,18 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
   if(!already){opener=source;freezeBackground();}
   activeId=id;body.classList.add('media-viewer-open');if(!already)viewer.showModal();
   paint(item);$('.mv-close',viewer).focus({preventScroll:true});
-  animation=shell.animate([{opacity:0,transform:'translate3d(0,42px,0) scale(.90)',filter:'blur(18px)'},{opacity:1,transform:'translate3d(0,0,0) scale(1)',filter:'blur(0px)'}],{duration:reduced()?1:760,easing:'cubic-bezier(.2,1,.3,1)',fill:'both'});
-  const serial=token;animation.finished.then(()=>{if(serial===token&&!closing){animation.cancel();animation=null;}}).catch(()=>{});
+  const parentTitle=source?.closest?.('.exp')?.querySelector('h3')?.textContent;
+  $('.mv-back',viewer).textContent='↙ Back to '+(parentTitle||((window.NocturneLab?.inlineOpen||$('#dialog')?.open)?'project':'portfolio'));
+  shell.style.willChange='transform,opacity';
+  animation=shell.animate([{opacity:0,transform:'translate3d(0,28px,0) scale(.965)'},{opacity:1,transform:'translate3d(0,0,0) scale(1)'}],{duration:reduced()?1:560,easing:'cubic-bezier(.2,1,.3,1)',fill:'both'});
+  const serial=token;animation.finished.then(()=>{if(serial===token&&!closing){animation.cancel();animation=null;shell.style.willChange='auto';}}).catch(()=>{});
   window.portfolioWake?.();return true;
  }
  function close(){
   if(!viewer?.open||closing)return Promise.resolve();closing=true;const serial=++token;
   $$('video',viewer).forEach(v=>v.pause());observer?.disconnect();
-  const style=getComputedStyle(shell),from={opacity:style.opacity,transform:style.transform,filter:style.filter};animation?.cancel();viewer.classList.add('is-closing');body.classList.remove('media-viewer-open');
-  animation=shell.animate([from,{opacity:0,transform:'translate3d(0,24px,0) scale(.94)',filter:'blur(14px)'}],{duration:reduced()?1:480,easing:'cubic-bezier(.4,0,.2,1)',fill:'both'});
+  const style=getComputedStyle(shell),from={opacity:style.opacity,transform:style.transform};animation?.cancel();viewer.classList.add('is-closing');body.classList.remove('media-viewer-open');shell.style.willChange='transform,opacity';
+  animation=shell.animate([from,{opacity:0,transform:'translate3d(0,18px,0) scale(.975)'}],{duration:reduced()?1:360,easing:'cubic-bezier(.4,0,.2,1)',fill:'both'});
   return animation.finished.catch(()=>{}).then(()=>{
    if(serial!==token)return;viewer.close();animation?.cancel();animation=null;viewer.classList.remove('is-closing');media.replaceChildren();notes.replaceChildren();activeId=null;current=null;closing=false;restoreBackground();
    if(opener?.isConnected)opener.focus?.({preventScroll:true});opener=null;window.portfolioWake?.();

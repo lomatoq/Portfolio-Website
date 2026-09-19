@@ -68,7 +68,8 @@
   const api=window.LiquidPortfolio={hasGlass:false,update,tick,seek,invalidate,
     checkpoints:()=>{measureLayout();return states.flatMap(s=>{
       const top=s.top,span=s.span;
-      const points=[{id:s.id,y:top+span*TIMELINE.study,progress:TIMELINE.study}];
+      const points=[{id:s.id,y:top+span*TIMELINE.study,progress:TIMELINE.study,
+        trigger:s.index===0?orbitTop+H*.10:top-H*.72}];
       s.rails.forEach((rs,k)=>rs.cards.forEach((card,i)=>{const progress=slideProgress(s,k,i);points.push({id:s.id+':'+k+':'+i,y:top+span*progress,progress});}));
       return points;
     });},glass:()=>!glassOff,

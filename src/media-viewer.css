@@ -93,3 +93,46 @@ body.reduced .mobile-history-intro{transition:none!important}
  .mv-layout{display:block;padding:10px}.mv-media{border-radius:16px}
  .mv-notes{padding:32px 16px}.mv-description{font-size:28px}
 }
+
+/* FLOW62: a readable visual story, with a persistent way back to its parent. */
+.mv-shell{inset:clamp(12px,3vh,30px) max(20px,calc((100vw - 1420px)/2));border-radius:30px;will-change:auto}
+.mv-head{min-height:84px;padding:18px 26px;gap:16px}
+.mv-title{font-size:clamp(25px,2.6vw,36px);line-height:1.12;white-space:normal;overflow-wrap:anywhere}
+.mv-eyebrow{font-size:9px;line-height:1.6;margin-bottom:5px}
+.mv-hint{font-size:9px;white-space:nowrap}
+.mv-layout{grid-template-columns:minmax(0,1fr) clamp(270px,25%,330px);gap:24px;padding:20px 24px 0}
+.mv-media{border-radius:18px;background:#10172255;isolation:isolate}
+.mv-notes{padding:10px 8px 28px 0}
+.mv-description{font-size:clamp(22px,1.85vw,28px);line-height:1.35;letter-spacing:-.035em;margin-bottom:28px;text-wrap:pretty}
+.mv-text-section{padding-top:18px;margin-bottom:24px}
+.mv-text-section p{font-size:13px;line-height:1.8;text-wrap:pretty}
+.mv-foot{flex:none;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 26px;min-height:56px;box-sizing:border-box}
+.mv-foot button{border:0;background:none;color:#c9d6e7;padding:8px 0;min-height:36px;font:500 11px/1.4 'Space Grotesk',Arial,sans-serif;cursor:pointer;transition:color .2s}
+.mv-foot button:hover{color:#fff}
+.mv-back{max-width:55%;text-align:left;overflow-wrap:anywhere}
+.mv-position{margin-left:auto;font:400 9px/1.4 var(--mono,monospace);letter-spacing:.1em;color:#95abc3;font-variant-numeric:tabular-nums}
+.mv-details{white-space:nowrap}
+.mv-story{padding:24px clamp(16px,3vw,36px) 8px}
+.mv-story-label{margin:0 0 22px;font:400 9px/1.6 var(--mono,monospace);letter-spacing:.16em;color:#a8bdd3}
+.mv-media .mv-story-panel{margin:0 0 34px;content-visibility:auto;contain-intrinsic-size:auto 520px}
+.mv-story-art{aspect-ratio:400/260;overflow:hidden;border-radius:10px;background:#101823}
+.mv-story-art>svg{display:block;width:100%;height:100%}
+.mv-story-panel figcaption{display:flex;align-items:baseline;gap:14px;padding:15px 0 0}
+.mv-story-panel figcaption>span{font:400 9px/1.4 var(--mono,monospace);letter-spacing:.1em;color:#91a8c0}
+.mv-story-panel h3{margin:0;font:400 15px/1.4 'Space Grotesk',Arial,sans-serif;letter-spacing:-.02em;color:#e1e9f4}
+.mv-story>.mv-demo-caption{padding:0 0 20px;background:none;font-size:9px;letter-spacing:.04em;color:#91a8c0}
+.mv-video-wrap{padding-bottom:46px}
+@media(max-width:760px){
+ .mv-shell{inset:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom));border-radius:23px}
+ .mv-head{min-height:80px;padding:17px 18px;gap:12px}.mv-title{font-size:26px}.mv-eyebrow{font-size:8px;letter-spacing:.13em}
+ .mv-layout{padding:8px 8px 0}.mv-media{border-radius:14px}.mv-notes{padding:32px 18px 22px}
+ .mv-description{font-size:26px;max-width:25ch}.mv-text-section p{font-size:14px}
+ .mv-story{padding:20px 14px 0}.mv-story-label{font-size:8px;margin-bottom:18px}.mv-media .mv-story-panel{margin-bottom:28px;contain-intrinsic-size:auto 265px}
+ .mv-story-panel h3{font-size:14px}.mv-story-panel figcaption{padding-top:12px;gap:10px}
+ .mv-foot{padding:8px 18px;gap:10px;min-height:54px}.mv-foot button{font-size:10px}.mv-position{font-size:8px}
+}
+@media(max-height:520px) and (min-width:761px){
+ .mv-shell{inset:8px 12px;border-radius:22px}.mv-head{min-height:64px;padding:10px 20px}.mv-title{font-size:24px}.mv-eyebrow{font-size:8px;margin-bottom:3px}
+ .mv-layout{padding:12px 16px 0;gap:18px;grid-template-columns:minmax(0,1fr) 260px}.mv-foot{padding:5px 20px;min-height:42px}
+ .mv-description{font-size:22px}.mv-story{padding:18px}.mv-hint{display:none}
+}

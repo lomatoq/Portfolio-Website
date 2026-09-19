@@ -338,10 +338,15 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             out[c * 4 + r] = a;
         } return out; }
     function project(p, m) { const w = m[3] * p[0] + m[7] * p[1] + m[11] * p[2] + m[15]; return [(m[0] * p[0] + m[4] * p[1] + m[8] * p[2] + m[12]) / w * .5 + .5, (m[1] * p[0] + m[5] * p[1] + m[9] * p[2] + m[13]) / w * .5 + .5]; }
-    function geometry() { let seed = 38271; const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) | 0; return (seed >>> 0) / 4294967296; }; const pos = []; const segments = 14; for (let s = 0; s < segments; s++)
+    function geometry() { let seed = 38271; const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) | 0; return (seed >>> 0) / 4294967296; }; const pos = [], indices = []; const segments = 14;
+        // Same triangles and winding, with 45 unique vertices per blade
+        // instead of 168 vertex records. The five differential samples in the
+        // vertex shader now benefit from the GPU's post-transform cache.
+        for (let s = 0; s <= segments; s++)for(let side = -1; side <= 1; side++)pos.push(side,s/segments);
+        for (let s = 0; s < segments; s++)
         for (let side = 0; side < 2; side++) {
-            const a = side - 1, b = side, t = s / segments, u = (s + 1) / segments;
-            pos.push(a, t, b, t, a, u, b, t, b, u, a, u);
+            const a = s*3+side, b = a+1;
+            indices.push(a,b,a+3,b,b+3,a+3);
         } const offset = [], shape = [], flex = [], count = innerWidth < 761 ? 640 : 1150; for (let i = 0; i < count; i++) {
         const side = rnd() > .5 ? 1 : -1, z = 8 - Math.pow(rnd(), .82) * 184, depth = (12 - z) / 196;
         // The field is continuous. The empty lane down the middle used to be
@@ -356,7 +361,8 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         offset.push(x, -3.5 + rnd() * .5, z, h);
         shape.push(w, (rnd() - .60) * h * .85, (rnd() - .5) * h * .58, (rnd() - .5) * 1.65);
         flex.push((rnd() - .5) * h * .39, .35 * rnd(), (rnd() - .5) * .65, .55 + rnd() * .85);
-    } report.instances = count; return { position: new Float32Array(pos), offset: new Float32Array(offset), shape: new Float32Array(shape), flex: new Float32Array(flex), count, vertices: pos.length / 2 }; }
+    } report.instances = count; report.bladeVertices = pos.length/2; report.bladeIndices = indices.length;
+      return { position: new Float32Array(pos), indices: new Uint16Array(indices), offset: new Float32Array(offset), shape: new Float32Array(shape), flex: new Float32Array(flex), count, vertices: pos.length / 2 }; }
     // R6.1: shared radiance and meshes in WebGL 2 and WebGL 1.
     // No remote renderer dependency. A failed context never silently selects unrelated artwork.
     function newCanvas() { const c = document.createElement('canvas'); c.id = 'worldCanvas'; c.setAttribute('aria-hidden', 'true'); return c; }
@@ -428,7 +434,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             gl.bindAttribLocation(p, Number(m[1]), m[2]); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS))
             throw Error(name + ': ' + gl.getProgramInfoLog(p)); const loc = new Map(); return { p, u(n) { if (!loc.has(n))
                 loc.set(n, gl.getUniformLocation(p, n)); return loc.get(n); } }; }
-        function buffer(a) { const b = make('buffer'); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, a, gl.STATIC_DRAW); return b; }
+        function buffer(a, target = gl.ARRAY_BUFFER) { const b = make('buffer'); gl.bindBuffer(target, b); gl.bufferData(target, a, gl.STATIC_DRAW); return b; }
         function divisor(index, n) { if (is2)
             gl.vertexAttribDivisor(index, n);
         else
@@ -455,7 +461,9 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             gl.enableVertexAttribArray(l);
             gl.vertexAttribPointer(l, n, gl.FLOAT, false, stride, offset);
             divisor(l, div);
-        } }
+        }
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,spec.indices||null);
+        }
         function dropTarget(t) { if (!t)
             return; free('texture', t.tex); free('rb', t.col); free('rb', t.depth); free('fb', t.fb); }
         function target(samples = 0, withDepth = false) { const t = { fb: make('fb') }; gl.bindFramebuffer(gl.FRAMEBUFFER, t.fb); try {
@@ -498,6 +506,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             const q = buffer(new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1])), quad = [[0, q, 2]], g = geometry();
             const ground = [[0, buffer(new Float32Array([-220, -3.3, 25, 220, -3.3, 25, -220, -3.3, -230, -220, -3.3, -230, 220, -3.3, 25, 220, -3.3, -230])), 3]];
             const blades = [[0, buffer(g.position), 2], [1, buffer(g.offset), 4, 0, 0, 1], [2, buffer(g.shape), 4, 0, 0, 1], [3, buffer(g.flex), 4, 0, 0, 1]];
+            blades.indices=buffer(g.indices,gl.ELEMENT_ARRAY_BUFFER);
             const riverBuffer = buffer(new Float32Array(5)), riverSpec = [[0, riverBuffer, 2, 20, 0], [1, riverBuffer, 3, 20, 8]];
             let riverN = 0, themeBlue=body.classList.contains('mx-blue')?1:0, themeAt=performance.now();
             let samples = [];
@@ -625,9 +634,9 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
                 f(pBlade, 'surgeR', u.surgeR || 0);
                 f(pBlade, 'flare', u.flare || 0);
                 if (is2)
-                    gl.drawArraysInstanced(gl.TRIANGLES, 0, g.vertices, g.count);
+                    gl.drawElementsInstanced(gl.TRIANGLES, g.indices.length, gl.UNSIGNED_SHORT, 0, g.count);
                 else
-                    inst.drawArraysInstancedANGLE(gl.TRIANGLES, 0, g.vertices, g.count);
+                    inst.drawElementsInstancedANGLE(gl.TRIANGLES, g.indices.length, gl.UNSIGNED_SHORT, 0, g.count);
                 if (multiTarget) {
                     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, multiTarget.fb);
                     gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, sceneTarget.fb);
@@ -1128,10 +1137,12 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     } }).catch(() => { }); }; document.head.append(link); fontTimer = setTimeout(() => { fitName(); window.portfolioWake?.(); }, 1800); }
     const titleGlow={x:.5,y:.5,power:0};
     const titleElement=$('#intro-title');
+    let titleRect=null;
+    state.read=()=>{if((window.NocturneFrame?.scrollY??scrollY)<innerHeight&&titleElement)titleRect=titleElement.getBoundingClientRect();};
     let introSettled=false,lastIntroScroll=-1;
     const settledIntro={rise:1,riverReveal:1,world:1,burst:0,descend:1};
     function updateIntro(t) {
-        const {scrollY,innerWidth,innerHeight}=window;
+        const {scrollY,innerWidth,innerHeight}=window.NocturneFrame||window;
         if(introSettled&&lastIntroScroll===scrollY)return settledIntro;
         lastIntroScroll=scrollY;
         
@@ -1185,7 +1196,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
     }
     function restartIntro() { introSettled=false; introSkip = false; started = performance.now(); window.scrollTo({ top: 0, behavior: 'instant' }); window.portfolioWake?.(); }
     function tick(ts, dt, isReduced) {
-        const {scrollY,innerWidth,innerHeight}=window;
+        const {scrollY,innerWidth,innerHeight}=window.NocturneFrame||window;
         reduced = !!isReduced;
         dt = clamp(dt, .001, .08);
         clock = state.forceTime ?? ts * .001;
@@ -1193,7 +1204,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         const lightTarget=intro.world*(1-smooth(innerHeight*.02,innerHeight*.70,scrollY));
         titleGlow.power+=(lightTarget-titleGlow.power)*(1-Math.exp(-dt*3));
         if(titleElement&&scrollY<innerHeight){
-            const r=titleElement.getBoundingClientRect();
+            const r=titleRect||titleElement.getBoundingClientRect();
             titleGlow.x=(r.left+r.width*.5)/innerWidth;
             titleGlow.y=1-(r.top+r.height*.70)/innerHeight;
         }
@@ -1257,7 +1268,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         const skins = updateSurfaces(clock, dt);
         mouseSoft[0] = lerp(mouseSoft[0], (mouse[0] / innerWidth - .5) * 2, 1 - Math.exp(-dt * 3));
         mouseSoft[1] = lerp(mouseSoft[1], (mouse[1] / innerHeight - .5) * 2, 1 - Math.exp(-dt * 3));
-        const scroll=window.scrollY,drift=Math.min(1,scroll/Math.max(1,riverEnd));
+        const scroll=scrollY,drift=Math.min(1,scroll/Math.max(1,riverEnd));
         const travelTarget=reduced?0:scroll/Math.max(1,riverEnd)*4*2.6;
         const travel=window.NocturneMotion.spring(travelSpring,travelTarget,7,dt);
         // How hard the near blades are pushed aside: the viewer's own speed.

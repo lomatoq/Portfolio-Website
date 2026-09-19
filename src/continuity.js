@@ -503,7 +503,7 @@
 
   function tick(t,dt,isReduced){
     clock=t;reduced=!!isReduced;measure();
-    const H=innerHeight,Y=scrollY;
+    const {innerHeight:H,scrollY:Y}=window.NocturneFrame||window;
     if(storyNode){
       // Mobile cards already have their own viewport entrance. A second gate
       // based only on scroll distance hid cards visible below the short hero.

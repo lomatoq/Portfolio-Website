@@ -4,7 +4,7 @@ An experimental single-page portfolio built around cinematic scroll choreography
 
 **Live site:** https://lomatoq.github.io/Portfolio-Website/
 
-Mobile rendering optimizations and measured results: [FLOW61](docs/FLOW61_PERFORMANCE_RU.md). Native swipes retain the full visual effects and render resolution.
+Current rendering, continuous project entrances and nested media viewer: [FLOW62](docs/FLOW62_PERFORMANCE_RU.md). Native swipes retain the full visual effects and render resolution. Earlier measurements: [FLOW61](docs/FLOW61_PERFORMANCE_RU.md).
 
 ## What is inside
 
@@ -47,6 +47,6 @@ Every push to `main` deploys the repository to GitHub Pages through `.github/wor
 
 Текущие изображения и видео используются как демонстрационные материалы и подписаны внутри интерфейса. Инструкция по замене контента находится в `docs/MEDIA_SCHEMA_RU.md`.
 
-На телефоне вертикальные свайпы используют штатную прокрутку браузера и его инерцию в обеих ориентациях. На компьютере сохранены плавная прокрутка колесом и остановки на раскрытых карточках.
+На телефоне вертикальные свайпы используют штатную прокрутку браузера и его инерцию в обеих ориентациях. Незавершённый вход в проект доводится до полной композиции после отпускания пальца. На компьютере обычный скролл плавно раскрывает проект; быстрый ввод и разворот сразу принимают управление. Внутренние карточки можно листать непрерывно.
 
-Подробности последнего обновления и проверки: `docs/FLOW60_TOUCH_RU.md`. Проверки предыдущей версии: `docs/FLOW59_QA_RU.md`.
+Подробности последнего обновления и проверки: [FLOW62](docs/FLOW62_PERFORMANCE_RU.md). Предыдущие изменения: `docs/FLOW60_TOUCH_RU.md`, `docs/FLOW59_QA_RU.md`.

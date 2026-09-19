@@ -19,13 +19,13 @@ await p.goto(url);await p.waitForTimeout(600);
 await p.evaluate(()=>qaStep(360));await p.waitForTimeout(1800);
 await p.evaluate(()=>qaStep(360));await p.waitForTimeout(1600);
 await p.waitForFunction(()=>!document.documentElement.classList.contains('booting'));
-for(const id of ['playgendary','vice','vice:0:0','elemental']){
+for(const id of (process.env.SCENES||'playgendary,vice,vice:0:0,elemental').split(',')){
  await p.evaluate(id=>{NocturneScroll.to(NocturneScroll.checkpoints().find(p=>p.id===id).y,{instant:true});qaStep(180)},id);
  // IntersectionObserver delivery is asynchronous: settle the resulting nav
  // scrim spring before comparing, rather than taking one stale observer frame.
  await p.waitForTimeout(50);await p.evaluate(()=>qaStep(180));
  await p.waitForTimeout(50);await p.evaluate(()=>qaStep(180));
- await p.waitForTimeout(50);await p.evaluate(()=>{qaStep(1);document.getAnimations().forEach(a=>{a.pause();a.currentTime=1000});document.querySelectorAll('video').forEach(v=>{v.dataset.userPaused='true';v.pause();if(Number.isFinite(v.duration)&&v.duration>0)v.currentTime=Math.min(.5,v.duration/2)})});
+ await p.waitForTimeout(50);await p.evaluate(()=>{qaStep(1);document.getAnimations().forEach(a=>{a.pause();a.currentTime=1000});document.querySelectorAll('svg').forEach(s=>{s.pauseAnimations?.();s.setCurrentTime?.(1)});document.querySelectorAll('video').forEach(v=>{v.dataset.userPaused='true';v.pause();if(Number.isFinite(v.duration)&&v.duration>0)v.currentTime=Math.min(.5,v.duration/2)})});
  await p.waitForTimeout(150);
  const position=await p.evaluate(id=>({actual:scrollY,expected:NocturneScroll.checkpoints().find(p=>p.id===id).y}),id);
  if(Math.abs(position.actual-position.expected)>3)throw Error(`${width}/${id}: scroll reset during capture ${JSON.stringify(position)}`);

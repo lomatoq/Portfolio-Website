@@ -80,9 +80,14 @@ body .exp.mx-hover-ready .career-date :is(b,span){transition:color 1.8s,text-sha
 
 
 /* Blend the composited hero text layer with the passing image stamps. */
-.intro .hero-center{mix-blend-mode:normal}
+.intro .hero-center{mix-blend-mode:normal;z-index:auto}
+.intro .hero-center:after{z-index:2}
+.intro .name-sculpture{position:relative;z-index:3}
+.intro :is(.hero-eyebrow,.hero-tagline){position:relative;z-index:3;mix-blend-mode:difference}
+.intro>.mx-fluid{z-index:2}
 .intro .hero-side,.intro .hero-bottom>.mono,.intro .mx-marquee{mix-blend-mode:difference}
-.intro .hero-bottom{mix-blend-mode:normal}
+.intro .hero-bottom{mix-blend-mode:difference}
+.intro .hero-bottom>.mono{mix-blend-mode:normal}
 body .intro .mx-marquee>div>span{color:#fff!important;background:none!important;-webkit-text-fill-color:#fff;text-shadow:none!important;filter:none!important}
 body .intro .mx-marquee:after{display:none}
 .intro :is(.hero-eyebrow,.hero-tagline,.hero-side,.hero-bottom .mono){color:#fff!important;text-shadow:none!important}
@@ -201,6 +206,28 @@ body.reduced :is(.glass-nav a,.chapter-rail a,.chapter-rail i,.chapter-rail a sp
  body .floating-ui .contact-pair .contact-cv{right:12px}
  body .exp:not(.mx-expanded) .career-bubble{padding-right:20px}
 }
+/* Contact controls become one primary action group in the mobile footer.
+   The same scroll spring centers the remaining navigation in both directions. */
+@media(max-width:760px){
+ body .floating-ui .contact-pair{--dock-inset:max(22px,calc((100vw - 358px)/2));--dock-cta-width:min(280px,calc(100vw - 122px))}
+ body .floating-ui .glass-nav{translate:calc(-21px * var(--contact-dock,0)) 0}
+ body .floating-ui .contact-pair .contact-cta{
+  left:calc(12px + (var(--dock-inset) - 12px) * var(--contact-growth,0));
+  width:calc(86px + (var(--dock-cta-width) - 86px) * var(--contact-growth,0));
+  height:calc(44px + 24px * var(--contact-growth,0))!important;
+  min-height:44px!important;max-height:68px!important;
+  font-size:calc(10px + 6px * var(--contact-growth,0))!important;
+  padding-inline:calc(6px + 10px * var(--contact-growth,0));
+ }
+ body .floating-ui .contact-pair .contact-cv{
+  right:calc(12px + (var(--dock-inset) - 12px) * var(--contact-growth,0));
+  width:calc(44px + 24px * var(--contact-growth,0));
+  height:calc(44px + 24px * var(--contact-growth,0))!important;
+  min-height:44px!important;max-height:68px!important;
+  font-size:calc(10px + 5px * var(--contact-growth,0));
+ }
+ body .contact-slot{height:100px;margin-top:24px}
+}
 /* Shared lower-left controls with one feathered blur/colour aperture. */
 body .mx-lab{display:none!important}
 body>.mx-tools{position:fixed;left:16px;right:auto;top:auto;bottom:max(14px,env(safe-area-inset-bottom));transform:none;z-index:10000;display:flex;gap:6px;padding:4px;background:none;border:0;isolation:isolate}
@@ -213,7 +240,8 @@ body .lab-index>:not(#labRows){margin-inline:var(--gutter)}
 body #labRows .project-row{border-radius:0;box-shadow:none!important;padding-inline:var(--gutter)}
 body #labRows .project-row::before{border-radius:0;background:linear-gradient(90deg,#d9e8ff18,#c8b4ef0d);inset:0}
 @media(max-width:760px){
- body .floating-ui .glass-nav,body .floating-ui .contact-pair .contact-cta,body .floating-ui .contact-pair .contact-cv{height:44px!important;min-height:44px!important;max-height:44px;box-sizing:border-box;top:0}
+ body .floating-ui .glass-nav{height:44px!important;min-height:44px!important;max-height:44px}
+ body .floating-ui .glass-nav,body .floating-ui .contact-pair .contact-cta,body .floating-ui .contact-pair .contact-cv{box-sizing:border-box;top:0}
  body .floating-ui .contact-pair .cta-arrow{display:none!important}
  body #labRows .project-row{grid-template-columns:24px minmax(0,1fr) 22px;gap:6px 12px;padding:20px 20px;min-height:94px}
  body #labRows .project-row .num{grid-column:1;grid-row:1 / 3}
@@ -233,6 +261,16 @@ body #labRows .project-row::before{border-radius:0;background:linear-gradient(90
  body .project-chapter .scene-foot,body.reduced .project-chapter .scene-foot{bottom:66px;left:20px;right:20px;min-height:78px;display:flex;flex-direction:column;gap:4px;justify-content:center}
  body .project-chapter .scene-note{max-width:100%!important;line-height:1.45!important;font-size:9px!important;text-align:center}
  body .project-chapter .chapter-skip{margin:0;min-height:32px;padding:6px 10px}
+}
+
+/* Reserve separate mobile bands for the Elemental scene, its controls and
+   the chapter footer. The canvas scales inside its own remaining space. */
+@media(max-width:760px){
+ body #elemental .stage-study .rock-art{top:calc(var(--content-top,294px) + 12px)!important;bottom:164px!important}
+ body #elemental #rockCanvas{height:calc(100% - 52px)!important;top:0;bottom:auto}
+ body #elemental .rock-ui{bottom:0;gap:10px}
+ body #elemental .rock-ui .pill{min-height:40px}
+ body #elemental .rock-caption{top:8%;font-size:6px}
 }
 
 /* A deliberate handoff from the landing page into the timeline. */

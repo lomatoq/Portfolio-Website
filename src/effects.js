@@ -77,7 +77,7 @@
     measureWall();frameStoryRect=story.getBoundingClientRect();frameWallRect=wall.getBoundingClientRect();
   }
   function energy(t,dt){
-    const scrollY=window.scrollY;
+    const scrollY=window.NocturneFrame?.scrollY??window.scrollY;
     // Read first, then paint. Geometry for the glowing rim is the same box as
     // the actual card, never a separate viewport-sized displacement overlay.
     const sr=frameStoryRect||story.getBoundingClientRect();if(sr.top>height||sr.bottom<0)return;

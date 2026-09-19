@@ -898,11 +898,15 @@
         const t = timestamp / 1000, uiDt = lastTime ? clamp(t - lastTime, 0, .2) : .016, dt = Math.min(uiDt,.04);
         lastTime = t;
         if(window.NocturneScroll?.active()){window.NocturneScroll.tick(timestamp);dirty=true;}
+        // One layout snapshot per presented frame. Reading window.scrollY
+        // between modules' style writes forces a synchronous style flush.
+        window.NocturneFrame={scrollY:window.scrollY,innerWidth,innerHeight};
         if (dirty)
             updateScroll();
-        window.NocturneLab?.tick(t,uiDt);
         window.NocturneR14?.read(t);
         window.NocturneFX?.read();
+        window.Nocturne?.read?.();
+        window.NocturneLab?.tick(t,uiDt);
         window.LiquidPortfolio?.tick(t, uiDt, reduced);
         window.NocturneMotion?.tick(t,uiDt,reduced);
         window.NocturneR14?.tick(t,uiDt,reduced);
@@ -923,6 +927,7 @@
         const userAnim = (race.running && scenes.party.visible) || (!reduced && ((scenes.companion.visible && t - petActionAt < 2.8) || (scenes.elemental.visible && (Math.abs(lift - liftTarget) > .005 || t - breakAt < 2.5))));
         if ((!reduced && (motionVisible || window.LiquidPortfolio?.needsFrame() || window.NocturneMotion?.needsFrame() || window.Nocturne?.needsFrame())) || userAnim || window.NocturneScroll?.active() || window.NocturneLab?.needsFrame())
             requestTick();
+        window.NocturneFrame=null;
     }
     function requestTick() { if (!rafId && !document.hidden)
         rafId = requestAnimationFrame(frame); }

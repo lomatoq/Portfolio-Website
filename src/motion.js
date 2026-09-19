@@ -166,7 +166,7 @@
   function animateName(t,dt){
     if(!heroVisible||dialog.open)return;
     const active=fine.matches&&pointerInside&&!dialog.open&&!reduced;
-    const pageY=scrollY; // one read before all glyph writes, not one forced flush per letter
+    const pageY=window.NocturneFrame?.scrollY??scrollY;
     glyphs.forEach(g=>{
       const gy=g.y-pageY,dx=mx-g.x,dy=my-gy;
       const radius=Math.max(82,Math.min(185,g.h*.7));

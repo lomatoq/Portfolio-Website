@@ -309,7 +309,7 @@
   v.addEventListener('waiting',()=>host.classList.add('mx-buffering'));v.addEventListener('playing',()=>host.classList.remove('mx-buffering'));v.addEventListener('error',()=>{clock.textContent='Preview unavailable';host.classList.remove('mx-buffering');});
  }}upgradePlayers();document.addEventListener('portfolio-player-ready',upgradePlayers);new MutationObserver(upgradePlayers).observe($('main'),{childList:true,subtree:true});
  const api=window.NocturneLab={flags,fast,markFast,openInline,closeInline,upgradePlayers,get caseProgress(){return clamp(expansion?.p||0)},get caseShift(){return caseShift},get inlineOpen(){return !!inline},get pointer(){return ptr},needsFrame:()=>!!inline||ptr.inside||scrollY<innerHeight,diagnostics:()=>({flags:{...flags},fast:fast(),inline:!!inline,trail:cards.filter(c=>performance.now()-c.born<1100).length,flowAvailable:!!gl,flowReady}),tick};
- function tick(t,dt){updateExpansion(t*1000,dt);const {scrollY,innerWidth,innerHeight}=window;const now=t*1000,dy=scrollY-lastY;for(let i=retiringPreviews.length-1;i>=0;i--){if(now-retiringPreviews[i].at>950){retiringPreviews[i].el.remove();retiringPreviews.splice(i,1);}}const speed=Math.abs(dy)/Math.max(.008,dt);if(!window.NocturneScroll?.synchronized?.()&&(Math.abs(dy)>innerHeight*.6||speed>innerHeight*2.5))markFast();lastY=scrollY;lastTick=t;
+ function tick(t,dt){updateExpansion(t*1000,dt);const {scrollY,innerWidth,innerHeight}=window.NocturneFrame||window;const now=t*1000,dy=scrollY-lastY;for(let i=retiringPreviews.length-1;i>=0;i--){if(now-retiringPreviews[i].at>950){retiringPreviews[i].el.remove();retiringPreviews.splice(i,1);}}const speed=Math.abs(dy)/Math.max(.008,dt);if(!window.NocturneScroll?.synchronized?.()&&(Math.abs(dy)>innerHeight*.6||speed>innerHeight*2.5))markFast();lastY=scrollY;lastTick=t;
   const reduced=isReduced(),active=fine.matches&&!reduced;body.classList.toggle('mx-fast',fast());body.classList.toggle('mx-cursor-ready',flags.contextCursor&&active&&ptr.inside);
   const grassStep=1-Math.exp(-Math.min(dt,.05)*3.5);
   ptr.gx=mix(ptr.gx,ptr.x,grassStep);ptr.gy=mix(ptr.gy,ptr.y,grassStep);
@@ -350,10 +350,13 @@
   const track=marqueeTrack;marqueeSpeed=mix(marqueeSpeed,marqueePaused?0:1,1-Math.exp(-dt*4));if(flags.heroMarquee&&scrollY<innerHeight&&!reduced){marqueeX=(marqueeX+dt*32*marqueeSpeed)%marqueeWidth;track.style.transform=`translateX(${-marqueeX}px)`;}const mq=clamp((scrollY/innerHeight-.025)/.59),depart=mq*mq*mq*(10-15*mq+6*mq*mq);
   marquee.style.opacity=String(1-depart);marquee.style.transform=reduced?'none':`translate3d(${-depart*38}px,${-depart*115}px,0) scale(${1+depart*.035})`;marquee.style.filter=reduced?'none':`blur(${depart*11}px)`;
   const fluidOn=flags.fluidPointer&&active&&ptr.inside&&!fast()&&!inline&&scrollY<innerHeight;
+  // The ribbon belongs below the hero lettering so difference blending can
+  // sample it. Keep fixed viewport coordinates; no duplicate text or canvas.
+  if(fluid.parentNode===body)$('.intro').append(fluid);
   points[0].x=ptr.rx;points[0].y=ptr.ry;for(let i=1;i<points.length;i++){points[i].x=mix(points[i].x,points[i-1].x,1-Math.exp(-dt*20));points[i].y=mix(points[i].y,points[i-1].y,1-Math.exp(-dt*20));}fluid.style.opacity=String(fluidOn?clamp(ptr.brush*2.8):0);const path=$('path',fluid);
-  // Touch has no visible pointer ribbon. Keep its spring state up to date,
-  // but do not rebuild an invisible SVG path (and invalidate styles) per frame.
-  if(fine.matches){
+  // Keep the spring state above up to date, but build the SVG outline only
+  // while the ribbon is actually visible. This also avoids idle desktop work.
+  if(fine.matches&&fluidOn&&ptr.brush>0){
   const outline=[];for(const side of [1,-1]){const edge=[];for(let i=0;i<points.length;i++){const a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],len=Math.max(1,Math.hypot(b.x-a.x,b.y-a.y)),w=(5+ptr.brush*32)*Math.pow(1-i/(points.length-1),1.65);edge.push({x:points[i].x-(b.y-a.y)/len*w*side,y:points[i].y+(b.x-a.x)/len*w*side});}outline.push(...(side===1?edge:edge.reverse()));}
   let d=`M${outline[0].x},${outline[0].y}`;for(let i=1;i<=outline.length;i++){const a=outline[i%outline.length],b=outline[(i+1)%outline.length];d+=` Q${a.x},${a.y} ${(a.x+b.x)/2},${(a.y+b.y)/2}`;}path.setAttribute('d',d+' Z');
   }
@@ -406,9 +409,15 @@
  const slot=document.createElement('div');slot.className='contact-slot';slot.setAttribute('aria-hidden','true');$('.footer-links')?.after(slot);const group=document.createElement('div');group.className='contact-pair';contact.before(group);group.append(contact);
  contact.innerHTML='<span class="cta-dot" aria-hidden="true"></span><span class="cta-title">Discuss a role</span><span class="cta-arrow" aria-hidden="true">↗</span>';
  const cv=document.createElement('button');cv.className='contact-cv';cv.textContent='CV';cv.type='button';cv.disabled=true;cv.title='CV coming soon';cv.setAttribute('aria-label','CV — coming soon');group.append(cv);
- let progress=0,frame=0,last=0;
- const draw=t=>{frame=0;const footerTop=$('.footer-note').getBoundingClientRect().top;const distance=document.documentElement.scrollHeight-innerHeight-scrollY;let goal=clamp(1-distance/Math.min(480,innerHeight*.6));goal=goal*goal*(3-2*goal);const dt=Math.min(.05,(t-last)/1000||.016);last=t;progress+=(goal-progress)*(1-Math.exp(-dt/0.22));if(Math.abs(goal-progress)<.0001)progress=goal;
- const top=innerWidth<761?17:25,target=innerWidth<761?slot.getBoundingClientRect().top:Math.max(180,Math.min(innerHeight-115,footerTop-95));
+ let progress=0,frame=0,last=0,docked=false;
+ const draw=t=>{frame=0;const footerTop=$('.footer-note').getBoundingClientRect().top,slotTop=slot.getBoundingClientRect().top;
+ // Two resting positions, with hysteresis near the viewport edge. Stopping
+ // the scroll never leaves the controls suspended over the footer heading.
+ if(slotTop<innerHeight-110)docked=true;else if(slotTop>innerHeight-60)docked=false;
+ const goal=docked?1:0,dt=Math.min(.2,(t-last)/1000||.016);last=t;progress+=(goal-progress)*(1-Math.exp(-dt/0.18));if(Math.abs(goal-progress)<.0001)progress=goal;
+ const top=innerWidth<761?group.parentElement.getBoundingClientRect().top:25,target=innerWidth<761?slotTop:Math.max(180,Math.min(innerHeight-115,footerTop-95));
+ if(isReduced())progress=goal;
+ group.parentElement.style.setProperty('--contact-dock',progress);
  group.style.setProperty('--contact-y',((target-top)*progress)+'px');group.style.setProperty('--contact-growth',progress);contact.classList.toggle('is-docked',progress>.85);contact.href=progress>.85?'https://www.linkedin.com/in/gleblomatoq/':'#contact';if(Math.abs(goal-progress)>.0001)frame=requestAnimationFrame(draw);};
  const wake=()=>{if(!frame){last=performance.now();frame=requestAnimationFrame(draw)}};addEventListener('scroll',wake,{passive:true});addEventListener('resize',wake,{passive:true});wake();
  }

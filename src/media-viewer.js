@@ -10,7 +10,7 @@
  const root=document.documentElement,body=document.body;
  let registry={};try{registry=JSON.parse($('#portfolio-media')?.textContent||'{}').items||{};}catch(e){console.warn('Media config could not be read.',e);}
  let viewer=null,shell=null,layout=null,media=null,notes=null,progress=null,opener=null,activeId=null,current=null,animation=null,closing=false,token=0,lock=null,observer=null;
- const replacements=new Map(),demoCache=new Map();let pauseList=[],scrollFrame=0;
+ const replacements=new Map();let pauseList=[],scrollFrame=0;
  const reduced=()=>body.classList.contains('reduced')||matchMedia('(prefers-reduced-motion: reduce)').matches;
  const mobile=()=>matchMedia('(max-width:760px)').matches;
  function safeURL(value,type='image'){
@@ -20,20 +20,26 @@
   if(/^blob:/i.test(url))return url;
   try{const u=new URL(url,location.href);return ['http:','https:','file:'].includes(u.protocol)?url:'';}catch{return /^(?![a-z][\w+.-]*:|\/\/)[\w.\-/ %]+$/i.test(url)?url:'';}
  }
- function demoImage(item){
-  const key=item.demoArt||'poly';if(demoCache.has(key))return demoCache.get(key);
-  const original=window.portfolioArt?.(key)||'<svg viewBox="0 0 400 260"><rect width="400" height="260" fill="#9aadbe"/></svg>';
-  const inner=original.replace(/^<svg[^>]*>/,'').replace(/<\/svg>\s*$/,'');
-  const panels=[['01','Opening frame'],['02','Form & detail'],['03','Interface studies'],['04','Sequence & rhythm']];
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="4480" viewBox="0 0 1200 4480"><rect width="1200" height="4480" fill="#111827" fill-opacity=".22"/><g font-family="Arial,sans-serif" fill="#edf2fa"><text x="72" y="90" font-size="17" letter-spacing="4">VERTICAL CASE STUDY / LAYOUT DEMO</text><text x="72" y="240" font-size="86" letter-spacing="-5">${esc(item.title)}</text><text x="76" y="300" font-size="21" fill="#b0bed1">Existing placeholder art. Replace with your approved work.</text>${panels.map(([n,label],i)=>{const y=410+i*910;return `<g transform="translate(0 ${y})"><text x="72" y="0" font-size="17" fill="#a7b7cd">${n} / ${esc(label.toUpperCase())}</text><svg x="72" y="36" width="1056" height="690" viewBox="0 0 400 260">${inner}</svg><text x="72" y="788" font-size="21">${esc(label)}</text><text x="72" y="829" font-size="16" fill="#a7b7cd">SCHEMATIC CONTENT — NOT ORIGINAL PRODUCT CAPTURES</text></g>`;}).join('')}<text x="72" y="4260" font-size="48" letter-spacing="-2">The details live below.</text><text x="72" y="4330" font-size="22" fill="#b0bed1">On mobile, keep scrolling for the project context.</text></g></svg>`;
-  const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);demoCache.set(key,src);return src;
+ function demoStory(item){
+  const artwork=window.portfolioArt?.(item.demoArt||'poly')||'';
+  const panels=['Opening frame','Form & detail','Interface studies','Sequence & rhythm'];
+  // Responsive HTML typography, not a 4480px bitmap with scaled-up text.
+  return '<div class="mv-story"><p class="mv-story-label">ILLUSTRATIVE VISUAL STUDY</p>'+panels.map((label,i)=>
+   `<figure class="mv-story-panel"><div class="mv-story-art" aria-hidden="true">${artwork}</div><figcaption><span>${String(i+1).padStart(2,'0')}</span><h3>${label}</h3></figcaption></figure>`).join('')+'<p class="mv-demo-caption">Illustrative previews · not original product captures</p></div>';
  }
  function ensure(){
   if(viewer)return;
   viewer=document.createElement('dialog');viewer.id='mediaViewer';viewer.className='media-viewer';viewer.dataset.freeScroll='';viewer.setAttribute('aria-labelledby','mediaViewerTitle');viewer.setAttribute('aria-modal','true');
-  viewer.innerHTML='<section class="mv-shell"><header class="mv-head"><div class="mv-heading"><span class="mv-eyebrow"></span><h2 class="mv-title" id="mediaViewerTitle"></h2></div><span class="mv-hint"></span><button type="button" class="mv-close" aria-label="Close media and return to the project">×</button></header><div class="mv-progress" aria-hidden="true"></div><div class="mv-layout" data-free-scroll><div class="mv-media" data-free-scroll tabindex="0" role="region" aria-label="Project media"></div><aside class="mv-notes" data-free-scroll></aside></div></section>';
+  viewer.innerHTML='<section class="mv-shell"><header class="mv-head"><div class="mv-heading"><span class="mv-eyebrow"></span><h2 class="mv-title" id="mediaViewerTitle"></h2></div><span class="mv-hint"></span><button type="button" class="mv-close" aria-label="Close media and return to the project">×</button></header><div class="mv-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div><div class="mv-layout" data-free-scroll><div class="mv-media" data-free-scroll tabindex="0" role="region" aria-label="Project media"></div><aside class="mv-notes" data-free-scroll tabindex="-1" aria-label="Project details"></aside></div><footer class="mv-foot"><button type="button" class="mv-back">↙ Back to project</button><span class="mv-position" aria-hidden="true"></span><button type="button" class="mv-details">Project details ↓</button></footer></section>';
   body.append(viewer);shell=$('.mv-shell',viewer);layout=$('.mv-layout',viewer);media=$('.mv-media',viewer);notes=$('.mv-notes',viewer);progress=$('.mv-progress',viewer);
   $('.mv-close',viewer).addEventListener('click',()=>close());
+  $('.mv-back',viewer).addEventListener('click',()=>close());
+  $('.mv-details',viewer).addEventListener('click',()=>{
+   notes.classList.remove('mv-notes-pending');
+   if(mobile())layout.scrollTo({top:layout.scrollTop+notes.getBoundingClientRect().top-layout.getBoundingClientRect().top,behavior:reduced()?'instant':'smooth'});
+   else notes.scrollTop=0;
+   notes.focus({preventScroll:true});
+  });
   viewer.addEventListener('cancel',e=>{e.preventDefault();close();});
   // Same-target pointer up avoids closing after a drag ends outside the sheet.
   let downOutside=false;viewer.addEventListener('pointerdown',e=>{downOutside=e.target===viewer;});
@@ -48,7 +54,7 @@
     const first=list[0],last=list.at(-1);if(e.shiftKey&&(document.activeElement===first||!viewer.contains(document.activeElement))){e.preventDefault();last?.focus();}else if(!e.shiftKey&&(document.activeElement===last||!viewer.contains(document.activeElement))){e.preventDefault();first?.focus();}
    }
    if(!e.target.closest('video,input,textarea,select,[contenteditable]')&&!(e.key===' '&&e.target.closest('button'))&&['PageDown','PageUp','ArrowDown','ArrowUp','Home','End',' '].includes(e.key)){
-    const scroller=mobile()?layout:media,dir=['PageUp','ArrowUp'].includes(e.key)||(e.key===' '&&e.shiftKey)?-1:1;e.preventDefault();scroller.scrollTo({top:e.key==='Home'?0:e.key==='End'?scroller.scrollHeight:scroller.scrollTop+dir*(e.key.startsWith('Arrow')?64:scroller.clientHeight*.82),behavior:reduced()?'instant':'smooth'});
+    const scroller=mobile()?layout:e.target.closest('.mv-notes')?notes:media,dir=['PageUp','ArrowUp'].includes(e.key)||(e.key===' '&&e.shiftKey)?-1:1;e.preventDefault();scroller.scrollTo({top:e.key==='Home'?0:e.key==='End'?scroller.scrollHeight:scroller.scrollTop+dir*(e.key.startsWith('Arrow')?64:scroller.clientHeight*.82),behavior:reduced()?'instant':'smooth'});
    }
   });
  }
@@ -68,6 +74,7 @@
   scrollFrame=0;if(!viewer?.open)return;
   const scroller=mobile()?layout:media,max=scroller.scrollHeight-scroller.clientHeight;
   const ratio=max>1?Math.min(1,Math.max(0,scroller.scrollTop/max)):1;progress.style.setProperty('--mv-progress',ratio.toFixed(4));
+  const percent=String(Math.round(ratio*100));if(progress.getAttribute('aria-valuenow')!==percent){progress.setAttribute('aria-valuenow',percent);$('.mv-position',viewer).textContent=current?.type==='video'?'MOTION STUDY':percent+'%';}
  }
  function observeNotes(){
   observer?.disconnect();notes.classList.remove('mv-notes-pending');if(!mobile()||current.type==='video'||reduced())return;
@@ -76,13 +83,15 @@
  }
  function status(text){const el=document.createElement('p');el.className='mv-status';el.setAttribute('role','status');el.textContent=text;return el;}
  function paint(item){
-  current=item;media.replaceChildren();notes.replaceChildren();layout.scrollTop=media.scrollTop=0;
+  current=item;media.replaceChildren();notes.replaceChildren();layout.scrollTop=media.scrollTop=notes.scrollTop=0;progress.removeAttribute('aria-valuenow');
   viewer.dataset.mediaType=item.type;$('.mv-title',viewer).textContent=item.title||'Project media';$('.mv-eyebrow',viewer).textContent=item.eyebrow||'SELECTED WORK';$('.mv-hint',viewer).textContent=item.type==='video'?'PLAY / PAUSE / EXPLORE':'SCROLL TO EXPLORE ↓';
   notes.innerHTML=`<p class="mv-description">${esc(item.description||'')}</p>${(item.sections||[]).map(s=>`<section class="mv-text-section"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></section>`).join('')}${item.tags?.length?`<div class="mv-tags">${item.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}${item.note?`<p class="mv-note">${esc(item.note)}</p>`:''}`;
   const replacement=replacements.get(activeId);
-  if(item.type==='long-image'){
+  if(item.type==='long-image'&&item.demo&&!replacement&&!item.src&&!item.images?.length){
+   media.innerHTML=demoStory(item);
+  }else if(item.type==='long-image'){
    const loading=document.createElement('span');loading.className='mv-loading';loading.textContent='LOADING IMAGE';loading.setAttribute('role','status');media.append(loading);
-   const sources=replacement?[{src:replacement.url}]:Array.isArray(item.images)&&item.images.length?item.images:[{src:safeURL(item.src)|| (item.demo?demoImage(item):''),width:item.width,height:item.height,alt:item.alt}];
+   const sources=replacement?[{src:replacement.url}]:Array.isArray(item.images)&&item.images.length?item.images:[{src:safeURL(item.src),width:item.width,height:item.height,alt:item.alt}];
    let remaining=sources.length;
    for(const [i,part] of sources.entries()){
     const data=typeof part==='string'?{src:part}:part,src=safeURL(data.src);if(!src){loading.remove();media.append(status('Image space is ready. Add a source in content/media.json or choose a local file.'));continue;}
@@ -107,7 +116,7 @@
    }else wrap.append(status('Video space is ready. Add a video source in content/media.json or choose a local file.'));
    if(item.demo&&!replacement){const label=document.createElement('div');label.className='mv-demo-caption';label.textContent=item.note||'PLAYBACK DEMO';wrap.append(label);}
   }
-  if(item.demo||body.classList.contains('author')){
+  if(body.classList.contains('author-mode')){
    const input=document.createElement('input');input.className='mv-file';input.type='file';input.accept=item.type==='video'?'video/*':'image/*';input.setAttribute('aria-label','Choose local media');
    const replace=document.createElement('button');replace.type='button';replace.className='mv-replace';replace.textContent=replacement?'Change local preview ↗':'Replace demo locally ↗';replace.onclick=()=>input.click();
    input.onchange=()=>{const file=input.files?.[0];if(!file)return;if(!file.type.startsWith(item.type==='video'?'video/':'image/')){replace.textContent='Choose a matching image or video file';return;}
@@ -123,15 +132,18 @@
   if(!already){opener=source;freezeBackground();}
   activeId=id;body.classList.add('media-viewer-open');if(!already)viewer.showModal();
   paint(item);$('.mv-close',viewer).focus({preventScroll:true});
-  animation=shell.animate([{opacity:0,transform:'translate3d(0,42px,0) scale(.90)',filter:'blur(18px)'},{opacity:1,transform:'translate3d(0,0,0) scale(1)',filter:'blur(0px)'}],{duration:reduced()?1:760,easing:'cubic-bezier(.2,1,.3,1)',fill:'both'});
-  const serial=token;animation.finished.then(()=>{if(serial===token&&!closing){animation.cancel();animation=null;}}).catch(()=>{});
+  const parentTitle=source?.closest?.('.exp')?.querySelector('h3')?.textContent;
+  $('.mv-back',viewer).textContent='↙ Back to '+(parentTitle||((window.NocturneLab?.inlineOpen||$('#dialog')?.open)?'project':'portfolio'));
+  shell.style.willChange='transform,opacity';
+  animation=shell.animate([{opacity:0,transform:'translate3d(0,28px,0) scale(.965)'},{opacity:1,transform:'translate3d(0,0,0) scale(1)'}],{duration:reduced()?1:560,easing:'cubic-bezier(.2,1,.3,1)',fill:'both'});
+  const serial=token;animation.finished.then(()=>{if(serial===token&&!closing){animation.cancel();animation=null;shell.style.willChange='auto';}}).catch(()=>{});
   window.portfolioWake?.();return true;
  }
  function close(){
   if(!viewer?.open||closing)return Promise.resolve();closing=true;const serial=++token;
   $$('video',viewer).forEach(v=>v.pause());observer?.disconnect();
-  const style=getComputedStyle(shell),from={opacity:style.opacity,transform:style.transform,filter:style.filter};animation?.cancel();viewer.classList.add('is-closing');body.classList.remove('media-viewer-open');
-  animation=shell.animate([from,{opacity:0,transform:'translate3d(0,24px,0) scale(.94)',filter:'blur(14px)'}],{duration:reduced()?1:480,easing:'cubic-bezier(.4,0,.2,1)',fill:'both'});
+  const style=getComputedStyle(shell),from={opacity:style.opacity,transform:style.transform};animation?.cancel();viewer.classList.add('is-closing');body.classList.remove('media-viewer-open');shell.style.willChange='transform,opacity';
+  animation=shell.animate([from,{opacity:0,transform:'translate3d(0,18px,0) scale(.975)'}],{duration:reduced()?1:360,easing:'cubic-bezier(.4,0,.2,1)',fill:'both'});
   return animation.finished.catch(()=>{}).then(()=>{
    if(serial!==token)return;viewer.close();animation?.cancel();animation=null;viewer.classList.remove('is-closing');media.replaceChildren();notes.replaceChildren();activeId=null;current=null;closing=false;restoreBackground();
    if(opener?.isConnected)opener.focus?.({preventScroll:true});opener=null;window.portfolioWake?.();

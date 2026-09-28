@@ -2,6 +2,7 @@
 """Repack editable sources into the offline, single-file index.html (Python 3.9+)."""
 from pathlib import Path
 import re
+import json
 
 ROOT = Path(__file__).resolve().parent
 
@@ -16,13 +17,15 @@ def main() -> None:
         if ROOT not in source.parents:
             raise ValueError('Source path escapes project directory')
         content = source.read_text(encoding='utf-8')
+        if m.group(2) == 'script' and 'type="application/json"' in m.group(1):
+            content = json.dumps(json.loads(content), ensure_ascii=False).replace('<', '\\u003c')
         if re.search(r'</' + m.group(2) + r'\s*>', content, re.I):
             raise ValueError(f'Unsafe closing tag inside {source.name}')
         count += 1
         return m.group(1) + '\n' + content.rstrip() + '\n' + m.group(5)
     result = pattern.sub(pack, text)
-    if count != 25:
-        raise ValueError(f'Expected 25 source blocks, found {count}; index.html was not overwritten')
+    if count != 28:
+        raise ValueError(f'Expected 28 source blocks, found {count}; index.html was not overwritten')
     tmp = page.with_suffix('.tmp')
     tmp.write_text(result, encoding='utf-8')
     tmp.replace(page)

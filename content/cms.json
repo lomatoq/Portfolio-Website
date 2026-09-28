@@ -1,0 +1,810 @@
+{
+  "version": 1,
+  "copy": {
+    "hero_tagline": "A JOURNEY THROUGH GAMES, ART AND FUN THINGS",
+    "story_title": "Every chapter leaves a trace.",
+    "projects_title": "Not just whatyou see.",
+    "bento_title": "Between the biggerchapters.",
+    "bento_intro": "Side paths worth following. Shaders, tools and playful prototypes. Explore any card.",
+    "lab_title": "An index of curiosities.",
+    "lab_note": "Works at different stages. Each project separates the idea, its current state and the material available to explore.",
+    "footer_title": "Good thingshappen together.",
+    "footer_note": "Looking for a team that values visual craft, technical curiosity and ownership — together."
+  },
+  "companies": [
+    {
+      "id": "freelance",
+      "name": "Freelance"
+    },
+    {
+      "id": "playgendary",
+      "name": "Playgendary"
+    },
+    {
+      "id": "rocketscience",
+      "name": "RocketScience"
+    },
+    {
+      "id": "pandaplay",
+      "name": "PandaPlay"
+    },
+    {
+      "id": "flime",
+      "name": "FLIME"
+    },
+    {
+      "id": "voodoo",
+      "name": "Voodoo"
+    },
+    {
+      "id": "software28",
+      "name": "28software"
+    },
+    {
+      "id": "spribe",
+      "name": "SPRIBE"
+    }
+  ],
+  "chapters": {
+    "vice": {
+      "eyebrow": "01 / RECOVER THE FORM",
+      "title": "Beyond pixels —intent.",
+      "description": "Not just tracing an edge. Restoring structure. Returning control.",
+      "note": "Illustrative study. Not output from the V-ICE algorithm.",
+      "slides": [
+        {
+          "id": "vice-1",
+          "title": "From pixels to intent",
+          "subtitle": "Idea & geometry",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "vice-2",
+          "title": "Clean form. Living points.",
+          "subtitle": "Interactive study",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "vice-3",
+          "title": "Edit. Don’t redraw.",
+          "subtitle": "In use",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "vice-4",
+          "title": "Precision has a beauty of its own",
+          "subtitle": "Space for a real comparison",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        }
+      ]
+    },
+    "companion": {
+      "eyebrow": "02 / FEEL A CONNECTION",
+      "title": "Someone.Not something.",
+      "description": "A little attention. A small gesture. A few shapes become a personality.",
+      "note": "Local interaction study. The Nervous System runtime is not connected.",
+      "slides": [
+        {
+          "id": "companion-1",
+          "title": "You’ve been noticed",
+          "subtitle": "Attention",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "companion-2",
+          "title": "A response, not a random move",
+          "subtitle": "Expressions",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "companion-3",
+          "title": "Character in a small gesture",
+          "subtitle": "Motion",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "companion-4",
+          "title": "Stay a little longer?",
+          "subtitle": "An exchange",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        }
+      ]
+    },
+    "party": {
+      "eyebrow": "03 / BRING EVERYONE TOGETHER",
+      "title": "One screen.Everyone plays.",
+      "description": "Your friends brought controllers. They just call them phones.",
+      "note": "Single-browser mini race. The Wi-Fi server and QR join flow are not running here.",
+      "slides": [
+        {
+          "id": "party-1",
+          "title": "The sofa becomes an arena",
+          "subtitle": "Shared screen",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "party-2",
+          "title": "Your phone. Your part.",
+          "subtitle": "Controllers",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "party-3",
+          "title": "One more round",
+          "subtitle": "Mini race demo",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "party-4",
+          "title": "Different games. One way in.",
+          "subtitle": "Collection",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        }
+      ]
+    },
+    "elemental": {
+      "eyebrow": "04 / GIVE MOTION WEIGHT",
+      "title": "Magic.With weight.",
+      "description": "Action. Inertia. Consequence. Not separate effects — one feeling.",
+      "note": "A study of mass and impulse. Not the project’s Unity build.",
+      "slides": [
+        {
+          "id": "elemental-1",
+          "title": "First, feel the mass",
+          "subtitle": "Physics",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "elemental-2",
+          "title": "Force leaves a trace",
+          "subtitle": "Destruction",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "elemental-3",
+          "title": "A world that responds",
+          "subtitle": "Environment",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "elemental-4",
+          "title": "Every gesture has weight",
+          "subtitle": "Visual system",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        }
+      ]
+    },
+    "tools": {
+      "eyebrow": "05 / MAKE ROOM FOR THE IDEA",
+      "title": "Less routine.More intent.",
+      "description": "Materials, colour families and small tools that get out of the way.",
+      "note": "Illustrative study. Not the add-on interface or a time-saving benchmark.",
+      "slides": [
+        {
+          "id": "tools-1",
+          "title": "One idea. A family of colours.",
+          "subtitle": "Materials",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "tools-2",
+          "title": "Variation without the chaos",
+          "subtitle": "Asset preparation",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        },
+        {
+          "id": "tools-3",
+          "title": "A tool that fits the artist",
+          "subtitle": "Workflow",
+          "type": "legacy",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "alt": "",
+          "width": 16,
+          "height": 9
+        }
+      ]
+    }
+  },
+  "projects": [
+    {
+      "id": "polysphere",
+      "title": "Polysphere",
+      "kind": "Commercial experience / Playgendary · 2018–2019",
+      "group": "work",
+      "companyId": "playgendary",
+      "category": "work",
+      "placement": "work",
+      "featured": false,
+      "legacy": true,
+      "visible": true,
+      "art": "poly",
+      "intro": "A visual language for a game — and responsibility for the product.",
+      "role": "Product ownership, team leadership, visual direction, UI/UX and VFX, as recorded in the original professional history.",
+      "proof": "Original game footage and a project-specific breakdown of visual and product decisions are being prepared.",
+      "scope": [
+        "Visual direction",
+        "Interface & VFX",
+        "Team leadership"
+      ],
+      "status": "The preview is illustrative. No unverified performance or business metrics are presented.",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "",
+          "alt": "Illustrative vertical case-study layout. Original Polysphere images have not been added.",
+          "caption": "",
+          "width": 1200,
+          "height": 4480
+        }
+      ]
+    },
+    {
+      "id": "vice",
+      "title": "V-ICE",
+      "kind": "Independent project / vectorization / R&D",
+      "group": "personal",
+      "companyId": "",
+      "category": "tools",
+      "placement": "index",
+      "featured": true,
+      "legacy": true,
+      "visible": true,
+      "art": "vector",
+      "intro": "Recover the geometry behind a raster image. Not its staircase of pixels.",
+      "role": "Research into primitives, shared boundaries, antialiasing, corner classification, stroke consistency and editable vector output.",
+      "proof": "Raster input → generated SVG → reference comparison. The interactive shape on this site is a synthetic study, not V-ICE output.",
+      "scope": [
+        "Ambiguous edges",
+        "Geometric hypotheses",
+        "Editable output"
+      ],
+      "status": "In development. Low-resolution detail and shape idealization remain active research areas. No production-readiness or competitor-parity claim.",
+      "blocks": []
+    },
+    {
+      "id": "companion",
+      "title": "Companion / Nervous System",
+      "kind": "Independent project / behavioural prototype",
+      "group": "personal",
+      "companyId": "",
+      "category": "interaction",
+      "placement": "index",
+      "featured": true,
+      "legacy": true,
+      "visible": true,
+      "art": "pet",
+      "intro": "A character to connect with. Not a collection of random animations.",
+      "role": "Expressive eyes, brows, body language and readable links between your actions and the character’s state.",
+      "proof": "The intended case study follows an actual session: action → state → expression → response. This site offers a small, locally scripted interaction study.",
+      "scope": [
+        "Attention & expression",
+        "Cause & readable response",
+        "Behaviour into movement"
+      ],
+      "status": "This showcase does not run the Nervous System runtime, long-term memory or learning.",
+      "blocks": []
+    },
+    {
+      "id": "party",
+      "title": "Local Party",
+      "kind": "Independent collection / Wi-Fi party games",
+      "group": "personal",
+      "companyId": "",
+      "category": "games",
+      "placement": "index",
+      "featured": true,
+      "legacy": true,
+      "visible": true,
+      "art": "party",
+      "intro": "One shared screen. Phones as controllers. No extra gamepads.",
+      "role": "Exploring QR joining, personal controllers, shared-screen UI, left- and right-handed layouts, scoring and rounds.",
+      "proof": "The project case will show a real multi-phone session. This site’s mini race is a single-browser demo against bots.",
+      "scope": [
+        "A shared joining flow",
+        "Personal & shared screens",
+        "A collection of party games"
+      ],
+      "status": "Games are at different stages of development. The network server and QR joining flow are not running in this showcase.",
+      "blocks": []
+    },
+    {
+      "id": "elemental",
+      "title": "El Emental",
+      "kind": "Independent game / Unity / in development",
+      "group": "personal",
+      "companyId": "",
+      "category": "games",
+      "placement": "index",
+      "featured": true,
+      "legacy": true,
+      "visible": true,
+      "art": "rock",
+      "intro": "Visuals, animation, physics and VFX working toward one feeling: magic with weight.",
+      "role": "Game-feel studies around lifting and throwing stones, destruction, character movement, interfaces and stylized environments.",
+      "proof": "Original Unity footage will show the action and its layers. The rock here is a separate Canvas interaction study.",
+      "scope": [
+        "Weight & inertia",
+        "Feedback & destruction",
+        "Animation, UI & VFX"
+      ],
+      "status": "The original Unity build is not embedded. Build-level performance requires testing in Unity on the target device.",
+      "blocks": []
+    },
+    {
+      "id": "color",
+      "title": "Color Prime",
+      "kind": "Independent Blender tool / in development",
+      "group": "personal",
+      "companyId": "",
+      "category": "tools",
+      "placement": "bento",
+      "featured": true,
+      "legacy": true,
+      "visible": true,
+      "art": "poly2",
+      "intro": "Material families, main and accent colours, and a shorter path to an icon.",
+      "role": "Exploring material inheritance, colour workflows, studio lighting, camera setup and scene preparation for icons.",
+      "proof": "A repeatable add-on workflow will show one input asset, the artist’s choices and the exported result. The colour study here illustrates the idea.",
+      "scope": [
+        "Materials & colour families",
+        "Icon preparation",
+        "Artist-focused tooling"
+      ],
+      "status": "This is not the add-on interface. Time savings have not been measured in this showcase.",
+      "blocks": []
+    },
+    {
+      "id": "hex",
+      "title": "HexWords",
+      "kind": "Independent mobile prototype",
+      "group": "personal",
+      "companyId": "",
+      "category": "games",
+      "placement": "bento",
+      "featured": false,
+      "legacy": true,
+      "visible": true,
+      "art": "tiles",
+      "intro": "Words on a hexagonal grid. A considered response to every gesture.",
+      "role": "Swipe interaction, word validation, scoring, hints, DOTween animation and responsive UI.",
+      "proof": "The case study will show a real swipe, accepted and rejected words, and score feedback. The original build is not embedded here.",
+      "scope": [
+        "Swipe interaction",
+        "UI feedback",
+        "Result animation"
+      ],
+      "status": "HexWords / Hex_Module is a separate personal prototype, not Hex Defense.",
+      "blocks": []
+    },
+    {
+      "id": "painterly",
+      "title": "Painterly Rocks",
+      "kind": "Visual research / shader",
+      "group": "personal",
+      "companyId": "",
+      "category": "tools",
+      "placement": "bento",
+      "featured": false,
+      "legacy": true,
+      "visible": true,
+      "art": "rock",
+      "intro": "A painted surface that holds its facets, light and sense of volume.",
+      "role": "Exploring silhouettes, volumetric brush marks and how stylized materials respond to light.",
+      "proof": "Actual material versions, from the same camera and under the same light, will document the progression.",
+      "scope": [
+        "Surface & silhouette",
+        "Volumetric marks",
+        "Light & performance"
+      ],
+      "status": "An independent visual study, not a claim to reproduce the original Dreams technology.",
+      "blocks": []
+    },
+    {
+      "id": "fire",
+      "title": "Fire & Motion",
+      "kind": "VFX / research & implementation",
+      "group": "personal",
+      "companyId": "",
+      "category": "interaction",
+      "placement": "bento",
+      "featured": false,
+      "legacy": true,
+      "visible": true,
+      "art": "poly2",
+      "intro": "Fire, impact and small particles as one expressive gesture.",
+      "role": "Stylized fire, evolving volume dissolution, glow and environmental feedback.",
+      "proof": "Original effect footage and a breakdown of its layers and constraints will be added.",
+      "scope": [
+        "Shape & dissolution",
+        "Glow",
+        "Small particles"
+      ],
+      "status": "Independent research. No claim to use the original Zelda technology.",
+      "blocks": []
+    },
+    {
+      "id": "pipeline",
+      "title": "AI Asset Workflows",
+      "kind": "Workflow experiments / ComfyUI",
+      "group": "personal",
+      "companyId": "",
+      "category": "tools",
+      "placement": "bento",
+      "featured": false,
+      "legacy": true,
+      "visible": true,
+      "art": "vector",
+      "intro": "There is important craft between an AI image and a usable game asset.",
+      "role": "Generation and editing, background removal, segmentation, part preparation and visual quality control.",
+      "proof": "A reproducible workflow will show inputs, intermediate stages, manual decisions and final export.",
+      "scope": [
+        "Style control",
+        "Asset preparation",
+        "Repeatability"
+      ],
+      "status": "Individual experiments, not a claim of a completed production platform.",
+      "blocks": []
+    },
+    {
+      "id": "fluid",
+      "title": "Fluid Experiments",
+      "kind": "Research direction / visualization",
+      "group": "personal",
+      "companyId": "",
+      "category": "interaction",
+      "placement": "bento",
+      "featured": false,
+      "legacy": true,
+      "visible": true,
+      "art": "type",
+      "intro": "Making complex movement understandable through interaction.",
+      "role": "Exploring interactive ways to explain the dynamics of fluids.",
+      "proof": "A focused demonstration will state its mathematical assumptions and what it actually computes.",
+      "scope": [
+        "Visualization",
+        "Interaction",
+        "Explanation"
+      ],
+      "status": "Research in progress. No standalone finished solver or new mathematical result is claimed.",
+      "blocks": []
+    },
+    {
+      "id": "dragon",
+      "title": "Dragon Heist",
+      "kind": "Work project / publication approval pending",
+      "group": "work",
+      "companyId": "spribe",
+      "category": "work",
+      "placement": "work",
+      "featured": false,
+      "legacy": true,
+      "visible": true,
+      "art": "dragon",
+      "intro": "Character, action and a game outcome you can read through motion.",
+      "role": "Dragon reactions, button presses, platform and gold-bar movement, wheel states and bonus transitions.",
+      "proof": "Approved footage will be accompanied by a clear breakdown of personal contributions.",
+      "scope": [
+        "Action direction",
+        "Character reactions",
+        "States & transitions"
+      ],
+      "status": "Schematic preview only. Original artwork and commercial results require separate approval.",
+      "blocks": [
+        {
+          "type": "video",
+          "src": "",
+          "mp4": "",
+          "poster": "",
+          "caption": "",
+          "width": 16,
+          "height": 9
+        }
+      ]
+    },
+    {
+      "id": "chick",
+      "title": "Chick Fiesta",
+      "kind": "Work concept / publication approval pending",
+      "group": "work",
+      "companyId": "spribe",
+      "category": "work",
+      "placement": "work",
+      "featured": false,
+      "legacy": true,
+      "visible": true,
+      "art": "chick",
+      "intro": "A character and interface inspired by a Filipino festival setting.",
+      "role": "Mobile UI clarity, simpler backgrounds, readable character design, harmless round endings and animation-ready parts.",
+      "proof": "Approved concept iterations and changes informed by partner feedback will document the work.",
+      "scope": [
+        "Visual concept",
+        "Mobile UI",
+        "Character & animation"
+      ],
+      "status": "The preview is not original project art. Release and conversion claims are not made here.",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "",
+          "alt": "Illustrative tall-image placeholder for Chick Fiesta. Original project art is not included.",
+          "caption": "",
+          "width": 1200,
+          "height": 4480
+        }
+      ]
+    },
+    {
+      "id": "bonus",
+      "title": "Bonus flows",
+      "kind": "Work direction / UI & animation",
+      "group": "work",
+      "companyId": "spribe",
+      "category": "work",
+      "placement": "work",
+      "featured": false,
+      "legacy": true,
+      "visible": true,
+      "art": "reels",
+      "intro": "A bonus mechanic that explains itself through timing and sequence.",
+      "role": "Entry banners, three-window reveals, staggered stops, scale and alpha accents, and the return to the main game.",
+      "proof": "Original footage and a state diagram will identify the specific contribution.",
+      "scope": [
+        "Sequence",
+        "Attention hierarchy",
+        "Return transition"
+      ],
+      "status": "Illustrative preview. No public-release or business-metric claims.",
+      "blocks": []
+    },
+    {
+      "id": "early",
+      "title": "Early work",
+      "kind": "Freelance / 11.2013 — 10.2018",
+      "group": "work",
+      "companyId": "freelance",
+      "category": "work",
+      "placement": "work",
+      "featured": false,
+      "visible": true,
+      "legacy": true,
+      "art": "type",
+      "intro": "The first chapter in graphic design.",
+      "role": "Graphic Designer",
+      "proof": "Project material is being prepared.",
+      "scope": [
+        "Graphics"
+      ],
+      "status": "Case study in preparation.",
+      "blocks": []
+    },
+    {
+      "id": "poly-diary",
+      "title": "Poly Art Diary",
+      "kind": "Playgendary / 10.2018 — 02.2019",
+      "group": "work",
+      "companyId": "playgendary",
+      "category": "work",
+      "placement": "work",
+      "featured": false,
+      "visible": true,
+      "legacy": true,
+      "art": "poly2",
+      "intro": "Polysphere: visual direction, UI/UX, VFX and team leadership.",
+      "role": "Product Owner",
+      "proof": "Project material is being prepared.",
+      "scope": [
+        "Product",
+        "UI/UX",
+        "VFX",
+        "Team"
+      ],
+      "status": "Case study in preparation.",
+      "blocks": []
+    },
+    {
+      "id": "solitaire",
+      "title": "Solitaire Clash",
+      "kind": "RocketScience / 03.2019 — 10.2021",
+      "group": "work",
+      "companyId": "rocketscience",
+      "category": "work",
+      "placement": "work",
+      "featured": false,
+      "visible": true,
+      "legacy": true,
+      "art": "cards",
+      "intro": "From game interfaces and animation to store assets.",
+      "role": "Art Generalist",
+      "proof": "Project material is being prepared.",
+      "scope": [
+        "2D / 3D",
+        "UI",
+        "Animation",
+        "VFX"
+      ],
+      "status": "Case study in preparation.",
+      "blocks": []
+    },
+    {
+      "id": "mahjong",
+      "title": "Words Mahjong",
+      "kind": "RocketScience / 03.2019 — 10.2021",
+      "group": "work",
+      "companyId": "rocketscience",
+      "category": "work",
+      "placement": "work",
+      "featured": false,
+      "visible": true,
+      "legacy": true,
+      "art": "tiles",
+      "intro": "From game interfaces and animation to store assets.",
+      "role": "Art Generalist",
+      "proof": "Project material is being prepared.",
+      "scope": [
+        "2D / 3D",
+        "UI",
+        "Animation",
+        "VFX"
+      ],
+      "status": "Case study in preparation.",
+      "blocks": []
+    },
+    {
+      "id": "cradle",
+      "title": "Cradle Inc.",
+      "kind": "RocketScience / 03.2019 — 10.2021",
+      "group": "work",
+      "companyId": "rocketscience",
+      "category": "work",
+      "placement": "work",
+      "featured": false,
+      "visible": true,
+      "legacy": true,
+      "art": "story",
+      "intro": "From game interfaces and animation to store assets.",
+      "role": "Art Generalist",
+      "proof": "Project material is being prepared.",
+      "scope": [
+        "2D / 3D",
+        "UI",
+        "Animation",
+        "VFX"
+      ],
+      "status": "Case study in preparation.",
+      "blocks": []
+    },
+    {
+      "id": "hypercasual",
+      "title": "Hypercasual",
+      "kind": "PandaPlay / 12.2020 — 11.2021",
+      "group": "work",
+      "companyId": "pandaplay",
+      "category": "work",
+      "placement": "work",
+      "featured": false,
+      "visible": true,
+      "legacy": true,
+      "art": "world",
+      "intro": "Hypercasual visuals, team leadership and optimization.",
+      "role": "Lead Artist",
+      "proof": "Project material is being prepared.",
+      "scope": [
+        "Art lead",
+        "Prototypes",
+        "Optimization"
+      ],
+      "status": "Case study in preparation.",
+      "blocks": []
+    }
+  ]
+}

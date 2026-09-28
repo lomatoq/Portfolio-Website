@@ -979,8 +979,22 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         return; summary.dataset.opening = '1'; showCompany(r.id,summary); delete summary.dataset.opening; }); });
     // Navigation is a flat CSS glass surface; do not render a second inflated GPU skin.
     $$('.card-glass').forEach(el => registerSurface(el, el, 'media'));
+    // On native touch scroll the DOM card can move on the compositor before a
+    // main-thread WebGL frame is submitted. Project its box from the same
+    // cached layout and scroll snapshot used by the DOM entrance animation.
+    // This also avoids a forced layout read after that animation's style writes.
+    function mobileCareerBox(s, scroll) {
+        if (!touchViewport || innerWidth > 760) return null;
+        const row=s.el.closest('.exp'),m=rowMetrics.get(row),pose=s.anchor._glassPose;
+        if (!m || !pose || row.classList.contains('mx-expanded') || row.classList.contains('mx-return-focus') || s.anchor._returnPose) return null;
+        const width=m.width*pose.sx,height=m.boxH*pose.sy;
+        const left=m.left+pose.x+(m.width-width)*.5;
+        const top=m.summaryTop-scroll+pose.y+(m.boxH-height)*.5;
+        return {left,top,right:left+width,bottom:top+height,width,height};
+    }
+    const setIfChanged=(style,name,value)=>{if(style.getPropertyValue(name)!==value)style.setProperty(name,value);};
     function updateSurfaces(t, dt) {
-        const {innerWidth,innerHeight}=window;
+        const {innerWidth,innerHeight,scrollY:frameScroll}=window.NocturneFrame||window;
         const visible=[],batch=[],modal=$('#dialog').open;
         // Read all bounds before changing transforms. Avoid read/write ping-pong.
         for(const [el,s] of surfaces){
@@ -994,7 +1008,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             if(el.closest('[inert]'))continue;
             // Read the transformed anchor in this frame, including the story gate and focus.
             // The former hand-built box omitted ancestor transforms and summary offsets.
-            const analytic=s.kind==='career'?null:s.box;
+            const analytic=s.kind==='career'?mobileCareerBox(s,frameScroll):s.box;
             const bounds=analytic||s.anchor.getBoundingClientRect();
             if(bounds.bottom < -120||bounds.top > innerHeight+120||bounds.width<1||bounds.height<1)continue;
             // Self-healing: a pointer sequence swallowed by a modal, a rail
@@ -1013,7 +1027,9 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
               s.hoverTo=on?1:0;s.dx=on?clamp((railPointer.x-r.left)/r.width*2-1,-1,1):0;s.dy=on?clamp((railPointer.y-r.top)/r.height*2-1,-1,1):0;
             }
             const opacityRow=s.kind==='career'?s.el.closest('.exp'):null;
-            batch.push([s,bounds,analytic?s.boxW:s.el.offsetWidth,analytic?s.boxH:s.el.offsetHeight,opacityRow?Number(getComputedStyle(opacityRow).opacity):1]);
+            const measured=analytic&&s.kind==='career'?rowMetrics.get(opacityRow):null;
+            const rowOpacity=opacityRow&&!(measured&&!window.NocturneLab?.inlineOpen)?Number(getComputedStyle(opacityRow).opacity):1;
+            batch.push([s,bounds,measured?.bw??(analytic?s.boxW:s.el.offsetWidth),measured?.bh??(analytic?s.boxH:s.el.offsetHeight),rowOpacity]);
         }
         for(const [s,bounds,width,height,rowOpacity] of batch){
             const expandedRow=s.el.closest('.mx-expanded');
@@ -1028,7 +1044,8 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
                 s.bounce*=1-.052*Math.pow(Math.sin(Math.PI*phase),2)*Math.exp(-3*phase);
                 if(phase===1)delete landingRow._landingAt;
             }
-            s.el.style.scale=s.bounce===1?'':s.bounce.toFixed(5);
+            const bounceScale=s.bounce===1?'':s.bounce.toFixed(5);
+            if(s.el.style.scale!==bounceScale)s.el.style.scale=bounceScale;
             s.x=lerp(s.x,s.dx,1-Math.exp(-dt*9));s.y=lerp(s.y,s.dy,1-Math.exp(-dt*9));
             s.hover=lerp(s.hover,reduced?0:s.hoverTo,1-Math.exp(-dt*8));
             // Analytic spring survives slow frames without an unstable scale kick.
@@ -1055,9 +1072,9 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
                 if(elapsed===1)delete returnedRow._hoverReleaseAt;
             }
             const st=s.el.style;
-            st.setProperty('--rx',s.rx.toFixed(3)+'deg');st.setProperty('--ry',s.ry.toFixed(3)+'deg');st.setProperty('--rz',s.rz.toFixed(3)+'deg');
-            st.setProperty('--px',s.tx.toFixed(2)+'px');st.setProperty('--py',s.ty.toFixed(2)+'px');st.setProperty('--ps',s.scale.toFixed(4));
-            st.setProperty('--hover',(.16+s.hover*.74).toFixed(3));st.setProperty('--light-x',((s.x*.5+.5)*100).toFixed(2)+'%');st.setProperty('--light-y',((s.y*.5+.5)*100).toFixed(2)+'%');
+            setIfChanged(st,'--rx',s.rx.toFixed(3)+'deg');setIfChanged(st,'--ry',s.ry.toFixed(3)+'deg');setIfChanged(st,'--rz',s.rz.toFixed(3)+'deg');
+            setIfChanged(st,'--px',s.tx.toFixed(2)+'px');setIfChanged(st,'--py',s.ty.toFixed(2)+'px');setIfChanged(st,'--ps',s.scale.toFixed(4));
+            setIfChanged(st,'--hover',(.16+s.hover*.74).toFixed(3));setIfChanged(st,'--light-x',((s.x*.5+.5)*100).toFixed(2)+'%');setIfChanged(st,'--light-y',((s.y*.5+.5)*100).toFixed(2)+'%');
             if(s.kind!=='career')continue;
             s.radius=innerWidth<=760?34:46;
             // Hand-varied silhouette and a slight yaw of the inner edge toward
@@ -1107,7 +1124,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             // every frame — after the same frame had written its transform —
             // forced a full style/layout pass and was what made the glass trail
             // the text and the scroll feel notched.
-            rowMetrics.set(row,{top:r.top,height:r.height,summary:sm,
+            rowMetrics.set(row,{top:r.top,height:r.height,summary:sm,summaryTop:sb.top,
                 left:sb.left,width:sb.width,boxH:sb.height,
                 bw:bub?bub.offsetWidth:sb.width,bh:bub?bub.offsetHeight:sb.height});
             points.push({ x: W * .5 + (r.left + r.width * .5 - W * .5) * (W<=760?.9:.42), y: r.top + r.height * .50 });
@@ -1266,6 +1283,10 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             }
             const tf='translate3d('+tx.toFixed(3)+'px,'+ty.toFixed(3)+'px,0) scale('+scaleX.toFixed(5)+','+scaleY.toFixed(5)+')';
             if(w.tf!==tf){w.tf=tf;s.style.transform=tf;}
+            // Keep the shader projection in lockstep with the exact CSS pose.
+            const glassPose=s._glassPose||(s._glassPose={x:0,y:0,sx:1,sy:1});
+            glassPose.x=Number(tx.toFixed(3));glassPose.y=Number(ty.toFixed(3));
+            glassPose.sx=Number(scaleX.toFixed(5));glassPose.sy=Number(scaleY.toFixed(5));
             const al=displayAlpha.toFixed(4);
             if(w.al!==al){w.al=al;s.style.opacity=al;s.dataset.visibility=al;}
             const yaw=displayYaw.toFixed(3),rot=displayRot.toFixed(3);

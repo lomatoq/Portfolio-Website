@@ -319,6 +319,11 @@
     "status": "Illustrative preview. No public-release or business-metric claims."
   }
 };
+    // The editor owns project text and any projects added after the original build.
+    for(const project of window.PortfolioCMS?.data?.projects||[]){
+      caseInfo[project.id]={title:project.title,kind:project.kind,art:project.art||'type',intro:project.intro,
+        role:project.role,proof:project.proof,scope:Array.isArray(project.scope)?project.scope:[],status:project.status};
+    }
     // Reuse the original explicitly illustrative art; these are not product captures.
     $$('.bento-tile[data-case]').forEach(el=>{const frame=$('.bento-frame',el),c=caseInfo[el.dataset.case];if(frame&&c){frame.innerHTML=artSvg(c.art);frame.dataset.slot='VISUAL STUDY';}});
     function baseCase(id) { let f; for (const exp of DATA.experience) {
@@ -352,6 +357,7 @@
         </div>
         <div class="case-editorial"><section><div class="case-label">01 / MY FOCUS</div><p>${escapeHtml(c.role)}</p></section><section><div class="case-label">02 / CASE-STUDY MATERIAL</div><p>${escapeHtml(c.proof)}</p></section></div>
         <div class="case-meta">${escapeHtml(c.status)}</div>
+        ${(window.PortfolioCMS?.projects?.[id]?.blocks||[]).length?`<div class="case-actions"><button type="button" data-media-open="${escapeHtml(id)}">Explore project media ↗</button></div>`:''}
         <footer class="case-foot"><span>Details, not just the outcome.</span><div class="case-actions"><button data-close>Back to the story ↙</button><a href="${DATA.person.linkedin}" target="_blank" rel="noopener noreferrer">Let’s talk ↗</a></div></footer>
       </article>`, 'HLEB / PROJECT NOTES', id);
     }
@@ -400,7 +406,7 @@
     }
     window.portfolioNavigate=navigate;
     $$('.exp').forEach(el => el.addEventListener('toggle', () => { dirty = true; requestTick(); }));
-    $$('[data-filter]').forEach(b => b.addEventListener('click', () => { const f = b.dataset.filter; $$('[data-filter]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); $$('.project-row').forEach(x => x.hidden = f !== 'all' && x.dataset.category !== f); dirty = true; requestTick(); }));
+    $$('[data-filter]').forEach(b => b.addEventListener('click', () => { const f = b.dataset.filter; $$('[data-filter]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); $$('.project-row').forEach(x => {const visible=window.PortfolioCMS?.projects?.[x.dataset.case]?.visible!==false;x.hidden = !visible || (f !== 'all' && x.dataset.category !== f && x.dataset.group !== f);}); dirty = true; requestTick(); }));
     $('#utilityToggle').addEventListener('click', () => { const b = $('#utilityToggle'), open = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', String(open)); $('#utilityOptions').hidden = !open; });
     $('#authorToggle').addEventListener('click', () => { author = !author; document.body.classList.toggle('author-mode', author); $('#authorToggle').setAttribute('aria-pressed', String(author)); dirty = true; requestTick(); if (author)
         toast('Local media stays on your device.'); });

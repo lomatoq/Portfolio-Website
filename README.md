@@ -29,6 +29,8 @@ Then visit http://localhost:8000.
 
 ## Editing
 
+Для управления проектами, текстами, блоками медиа и слайдами используйте локальную панель: `python cms_server.py`, затем откройте `http://127.0.0.1:8765/admin/`. Подробности: [docs/CMS_RU.md](docs/CMS_RU.md).
+
 Editable CSS and JavaScript live in `src/`. After changing them, rebuild the embedded single-file version:
 
 ```bash

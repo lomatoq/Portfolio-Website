@@ -16,6 +16,12 @@
 .mv-media{min-width:0;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;scrollbar-width:thin;scrollbar-color:#879fb440 transparent;background:#0c1119;position:relative}
 .mv-image{display:block;width:100%;height:auto;max-width:100%;margin:0;object-fit:contain;vertical-align:top}
 .mv-media figure{margin:0}
+.mv-media .mv-block{margin:0 0 18px;background:#101720;content-visibility:auto;contain-intrinsic-size:auto 420px}
+.mv-block .mv-image,.mv-block .mv-video{display:block;width:100%;height:auto;max-height:none;object-fit:contain;background:#101720}
+.mv-block figcaption{padding:13px 17px 16px;color:#b8c7d0;font-size:11px;line-height:1.5}
+.mv-media .mv-text-block{padding:clamp(25px,5vw,58px);background:#17212b;color:#e9eef2;content-visibility:visible}
+.mv-text-block h3{font-size:clamp(20px,3vw,34px);margin:0 0 14px}
+.mv-text-block p{font-size:clamp(13px,1.5vw,17px);line-height:1.7;white-space:pre-line;margin:0;max-width:65ch}
 .mv-demo-caption{font:400 9px/1.6 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#bcc9d6;padding:13px 18px;background:#101823}
 .mv-notes{box-sizing:border-box;min-width:0;overflow:auto;overscroll-behavior:contain;touch-action:pan-y;padding:32px 28px 30px;background:linear-gradient(145deg,#b8cfee06,transparent);scrollbar-width:thin;scrollbar-color:#879fb440 transparent}
 .mv-description{font-size:clamp(19px,1.75vw,25px);letter-spacing:-.025em;line-height:1.45;color:#e3ebf5;margin:0 0 29px}

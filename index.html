@@ -3592,6 +3592,12 @@ html.nocturne-scroll input[type=range]{touch-action:pan-x}
 .mv-media{min-width:0;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;scrollbar-width:thin;scrollbar-color:#879fb440 transparent;background:#0c1119;position:relative}
 .mv-image{display:block;width:100%;height:auto;max-width:100%;margin:0;object-fit:contain;vertical-align:top}
 .mv-media figure{margin:0}
+.mv-media .mv-block{margin:0 0 18px;background:#101720;content-visibility:auto;contain-intrinsic-size:auto 420px}
+.mv-block .mv-image,.mv-block .mv-video{display:block;width:100%;height:auto;max-height:none;object-fit:contain;background:#101720}
+.mv-block figcaption{padding:13px 17px 16px;color:#b8c7d0;font-size:11px;line-height:1.5}
+.mv-media .mv-text-block{padding:clamp(25px,5vw,58px);background:#17212b;color:#e9eef2;content-visibility:visible}
+.mv-text-block h3{font-size:clamp(20px,3vw,34px);margin:0 0 14px}
+.mv-text-block p{font-size:clamp(13px,1.5vw,17px);line-height:1.7;white-space:pre-line;margin:0;max-width:65ch}
 .mv-demo-caption{font:400 9px/1.6 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#bcc9d6;padding:13px 18px;background:#101823}
 .mv-notes{box-sizing:border-box;min-width:0;overflow:auto;overscroll-behavior:contain;touch-action:pan-y;padding:32px 28px 30px;background:linear-gradient(145deg,#b8cfee06,transparent);scrollbar-width:thin;scrollbar-color:#879fb440 transparent}
 .mv-description{font-size:clamp(19px,1.75vw,25px);letter-spacing:-.025em;line-height:1.45;color:#e3ebf5;margin:0 0 29px}
@@ -3716,7 +3722,24 @@ body.reduced .mobile-history-intro{transition:none!important}
 </head>
 <body class="opening">
 <div class="boot-loader" id="bootLoader" role="status" aria-label="Loading"><div class="boot-stage"><span class="boot-count" aria-hidden="true"><i>0</i><i>0</i><i>0</i><u>%</u></span><span class="boot-rule" aria-hidden="true"><i></i></span><span class="boot-label">NOCTURNE / R14 — <b>LOADING</b></span></div></div>
-<script data-nocturne-source="src/loader.js">
+<style data-nocturne-source="src/cms-runtime.css">
+/* Project cards added through the editor use the site's existing color language. */
+.cms-featured{padding:clamp(80px,11vw,170px) var(--gutter,36px);background:#0b1017;color:#eef3f5}
+.cms-featured-head{max-width:1400px;margin:0 auto 35px}
+.cms-featured-head h2{font-size:clamp(36px,6vw,78px);font-weight:400;letter-spacing:-.05em;margin:12px 0 0}
+.cms-featured-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:20px;max-width:1400px;margin:auto}
+.cms-featured-card{display:block;min-width:0;text-align:left;border:1px solid #ffffff22;border-radius:24px;background:linear-gradient(150deg,#1a2935,#0d151e);overflow:hidden;color:inherit;cursor:pointer;transition:transform .25s,border-color .25s}
+.cms-featured-card:hover{transform:translateY(-5px);border-color:#ffffff7a}
+.cms-featured-card:focus-visible{outline:2px solid #c2e9ff;outline-offset:4px}
+.cms-featured-visual{display:block;aspect-ratio:16/10;background:radial-gradient(circle at 40% 35%,#60748a,#172634 60%,#0c131c)}
+.cms-featured-visual img{width:100%;height:100%;display:block;object-fit:contain}
+.cms-featured-content{display:flex;flex-direction:column;gap:7px;padding:21px 23px 25px}
+.cms-featured-content strong{font-size:clamp(20px,2.2vw,29px);font-weight:500}
+.cms-featured-content small{font-size:11px;color:#afbdc9;line-height:1.4}
+.media-card.cms-media-card .card-glass{background:#0b1117}
+.media-card.cms-media-card .card-glass>img,.media-card.cms-media-card .card-glass>video{object-fit:contain!important}
+[hidden]{display:none!important}
+</style><script data-nocturne-source="src/loader.js">
 /* NOCTURNE R15 — BOOT SEQUENCE
  * Everything is preloaded behind full darkness. The scene is never shown
  * half-built: the counter reports real readiness, then dissolves and the
@@ -4252,7 +4275,133 @@ body.reduced .mobile-history-intro{transition:none!important}
     needsFrame:()=>titleGroups.some(g=>Math.abs(g.p.value-g.target)>.0001)};
 })();
 </script>
-<script data-nocturne-source="src/director.js">
+<script id="portfolio-cms" type="application/json" data-nocturne-source="content/cms.json">
+{"version": 1, "copy": {"hero_tagline": "A JOURNEY THROUGH GAMES, ART AND FUN THINGS", "story_title": "Every chapter leaves a trace.", "projects_title": "Not just whatyou see.", "bento_title": "Between the biggerchapters.", "bento_intro": "Side paths worth following. Shaders, tools and playful prototypes. Explore any card.", "lab_title": "An index of curiosities.", "lab_note": "Works at different stages. Each project separates the idea, its current state and the material available to explore.", "footer_title": "Good thingshappen together.", "footer_note": "Looking for a team that values visual craft, technical curiosity and ownership — together."}, "companies": [{"id": "freelance", "name": "Freelance"}, {"id": "playgendary", "name": "Playgendary"}, {"id": "rocketscience", "name": "RocketScience"}, {"id": "pandaplay", "name": "PandaPlay"}, {"id": "flime", "name": "FLIME"}, {"id": "voodoo", "name": "Voodoo"}, {"id": "software28", "name": "28software"}, {"id": "spribe", "name": "SPRIBE"}], "chapters": {"vice": {"eyebrow": "01 / RECOVER THE FORM", "title": "Beyond pixels —intent.", "description": "Not just tracing an edge. Restoring structure. Returning control.", "note": "Illustrative study. Not output from the V-ICE algorithm.", "slides": [{"id": "vice-1", "title": "From pixels to intent", "subtitle": "Idea & geometry", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "vice-2", "title": "Clean form. Living points.", "subtitle": "Interactive study", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "vice-3", "title": "Edit. Don’t redraw.", "subtitle": "In use", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "vice-4", "title": "Precision has a beauty of its own", "subtitle": "Space for a real comparison", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}]}, "companion": {"eyebrow": "02 / FEEL A CONNECTION", "title": "Someone.Not something.", "description": "A little attention. A small gesture. A few shapes become a personality.", "note": "Local interaction study. The Nervous System runtime is not connected.", "slides": [{"id": "companion-1", "title": "You’ve been noticed", "subtitle": "Attention", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "companion-2", "title": "A response, not a random move", "subtitle": "Expressions", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "companion-3", "title": "Character in a small gesture", "subtitle": "Motion", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "companion-4", "title": "Stay a little longer?", "subtitle": "An exchange", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}]}, "party": {"eyebrow": "03 / BRING EVERYONE TOGETHER", "title": "One screen.Everyone plays.", "description": "Your friends brought controllers. They just call them phones.", "note": "Single-browser mini race. The Wi-Fi server and QR join flow are not running here.", "slides": [{"id": "party-1", "title": "The sofa becomes an arena", "subtitle": "Shared screen", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "party-2", "title": "Your phone. Your part.", "subtitle": "Controllers", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "party-3", "title": "One more round", "subtitle": "Mini race demo", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "party-4", "title": "Different games. One way in.", "subtitle": "Collection", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}]}, "elemental": {"eyebrow": "04 / GIVE MOTION WEIGHT", "title": "Magic.With weight.", "description": "Action. Inertia. Consequence. Not separate effects — one feeling.", "note": "A study of mass and impulse. Not the project’s Unity build.", "slides": [{"id": "elemental-1", "title": "First, feel the mass", "subtitle": "Physics", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "elemental-2", "title": "Force leaves a trace", "subtitle": "Destruction", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "elemental-3", "title": "A world that responds", "subtitle": "Environment", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "elemental-4", "title": "Every gesture has weight", "subtitle": "Visual system", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}]}, "tools": {"eyebrow": "05 / MAKE ROOM FOR THE IDEA", "title": "Less routine.More intent.", "description": "Materials, colour families and small tools that get out of the way.", "note": "Illustrative study. Not the add-on interface or a time-saving benchmark.", "slides": [{"id": "tools-1", "title": "One idea. A family of colours.", "subtitle": "Materials", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "tools-2", "title": "Variation without the chaos", "subtitle": "Asset preparation", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}, {"id": "tools-3", "title": "A tool that fits the artist", "subtitle": "Workflow", "type": "legacy", "src": "", "mp4": "", "poster": "", "alt": "", "width": 16, "height": 9}]}}, "projects": [{"id": "polysphere", "title": "Polysphere", "kind": "Commercial experience / Playgendary · 2018–2019", "group": "work", "companyId": "playgendary", "category": "work", "placement": "work", "featured": false, "legacy": true, "visible": true, "art": "poly", "intro": "A visual language for a game — and responsibility for the product.", "role": "Product ownership, team leadership, visual direction, UI/UX and VFX, as recorded in the original professional history.", "proof": "Original game footage and a project-specific breakdown of visual and product decisions are being prepared.", "scope": ["Visual direction", "Interface & VFX", "Team leadership"], "status": "The preview is illustrative. No unverified performance or business metrics are presented.", "blocks": [{"type": "image", "src": "", "alt": "Illustrative vertical case-study layout. Original Polysphere images have not been added.", "caption": "", "width": 1200, "height": 4480}]}, {"id": "vice", "title": "V-ICE", "kind": "Independent project / vectorization / R&D", "group": "personal", "companyId": "", "category": "tools", "placement": "index", "featured": true, "legacy": true, "visible": true, "art": "vector", "intro": "Recover the geometry behind a raster image. Not its staircase of pixels.", "role": "Research into primitives, shared boundaries, antialiasing, corner classification, stroke consistency and editable vector output.", "proof": "Raster input → generated SVG → reference comparison. The interactive shape on this site is a synthetic study, not V-ICE output.", "scope": ["Ambiguous edges", "Geometric hypotheses", "Editable output"], "status": "In development. Low-resolution detail and shape idealization remain active research areas. No production-readiness or competitor-parity claim.", "blocks": []}, {"id": "companion", "title": "Companion / Nervous System", "kind": "Independent project / behavioural prototype", "group": "personal", "companyId": "", "category": "interaction", "placement": "index", "featured": true, "legacy": true, "visible": true, "art": "pet", "intro": "A character to connect with. Not a collection of random animations.", "role": "Expressive eyes, brows, body language and readable links between your actions and the character’s state.", "proof": "The intended case study follows an actual session: action → state → expression → response. This site offers a small, locally scripted interaction study.", "scope": ["Attention & expression", "Cause & readable response", "Behaviour into movement"], "status": "This showcase does not run the Nervous System runtime, long-term memory or learning.", "blocks": []}, {"id": "party", "title": "Local Party", "kind": "Independent collection / Wi-Fi party games", "group": "personal", "companyId": "", "category": "games", "placement": "index", "featured": true, "legacy": true, "visible": true, "art": "party", "intro": "One shared screen. Phones as controllers. No extra gamepads.", "role": "Exploring QR joining, personal controllers, shared-screen UI, left- and right-handed layouts, scoring and rounds.", "proof": "The project case will show a real multi-phone session. This site’s mini race is a single-browser demo against bots.", "scope": ["A shared joining flow", "Personal & shared screens", "A collection of party games"], "status": "Games are at different stages of development. The network server and QR joining flow are not running in this showcase.", "blocks": []}, {"id": "elemental", "title": "El Emental", "kind": "Independent game / Unity / in development", "group": "personal", "companyId": "", "category": "games", "placement": "index", "featured": true, "legacy": true, "visible": true, "art": "rock", "intro": "Visuals, animation, physics and VFX working toward one feeling: magic with weight.", "role": "Game-feel studies around lifting and throwing stones, destruction, character movement, interfaces and stylized environments.", "proof": "Original Unity footage will show the action and its layers. The rock here is a separate Canvas interaction study.", "scope": ["Weight & inertia", "Feedback & destruction", "Animation, UI & VFX"], "status": "The original Unity build is not embedded. Build-level performance requires testing in Unity on the target device.", "blocks": []}, {"id": "color", "title": "Color Prime", "kind": "Independent Blender tool / in development", "group": "personal", "companyId": "", "category": "tools", "placement": "bento", "featured": true, "legacy": true, "visible": true, "art": "poly2", "intro": "Material families, main and accent colours, and a shorter path to an icon.", "role": "Exploring material inheritance, colour workflows, studio lighting, camera setup and scene preparation for icons.", "proof": "A repeatable add-on workflow will show one input asset, the artist’s choices and the exported result. The colour study here illustrates the idea.", "scope": ["Materials & colour families", "Icon preparation", "Artist-focused tooling"], "status": "This is not the add-on interface. Time savings have not been measured in this showcase.", "blocks": []}, {"id": "hex", "title": "HexWords", "kind": "Independent mobile prototype", "group": "personal", "companyId": "", "category": "games", "placement": "bento", "featured": false, "legacy": true, "visible": true, "art": "tiles", "intro": "Words on a hexagonal grid. A considered response to every gesture.", "role": "Swipe interaction, word validation, scoring, hints, DOTween animation and responsive UI.", "proof": "The case study will show a real swipe, accepted and rejected words, and score feedback. The original build is not embedded here.", "scope": ["Swipe interaction", "UI feedback", "Result animation"], "status": "HexWords / Hex_Module is a separate personal prototype, not Hex Defense.", "blocks": []}, {"id": "painterly", "title": "Painterly Rocks", "kind": "Visual research / shader", "group": "personal", "companyId": "", "category": "tools", "placement": "bento", "featured": false, "legacy": true, "visible": true, "art": "rock", "intro": "A painted surface that holds its facets, light and sense of volume.", "role": "Exploring silhouettes, volumetric brush marks and how stylized materials respond to light.", "proof": "Actual material versions, from the same camera and under the same light, will document the progression.", "scope": ["Surface & silhouette", "Volumetric marks", "Light & performance"], "status": "An independent visual study, not a claim to reproduce the original Dreams technology.", "blocks": []}, {"id": "fire", "title": "Fire & Motion", "kind": "VFX / research & implementation", "group": "personal", "companyId": "", "category": "interaction", "placement": "bento", "featured": false, "legacy": true, "visible": true, "art": "poly2", "intro": "Fire, impact and small particles as one expressive gesture.", "role": "Stylized fire, evolving volume dissolution, glow and environmental feedback.", "proof": "Original effect footage and a breakdown of its layers and constraints will be added.", "scope": ["Shape & dissolution", "Glow", "Small particles"], "status": "Independent research. No claim to use the original Zelda technology.", "blocks": []}, {"id": "pipeline", "title": "AI Asset Workflows", "kind": "Workflow experiments / ComfyUI", "group": "personal", "companyId": "", "category": "tools", "placement": "bento", "featured": false, "legacy": true, "visible": true, "art": "vector", "intro": "There is important craft between an AI image and a usable game asset.", "role": "Generation and editing, background removal, segmentation, part preparation and visual quality control.", "proof": "A reproducible workflow will show inputs, intermediate stages, manual decisions and final export.", "scope": ["Style control", "Asset preparation", "Repeatability"], "status": "Individual experiments, not a claim of a completed production platform.", "blocks": []}, {"id": "fluid", "title": "Fluid Experiments", "kind": "Research direction / visualization", "group": "personal", "companyId": "", "category": "interaction", "placement": "bento", "featured": false, "legacy": true, "visible": true, "art": "type", "intro": "Making complex movement understandable through interaction.", "role": "Exploring interactive ways to explain the dynamics of fluids.", "proof": "A focused demonstration will state its mathematical assumptions and what it actually computes.", "scope": ["Visualization", "Interaction", "Explanation"], "status": "Research in progress. No standalone finished solver or new mathematical result is claimed.", "blocks": []}, {"id": "dragon", "title": "Dragon Heist", "kind": "Work project / publication approval pending", "group": "work", "companyId": "spribe", "category": "work", "placement": "work", "featured": false, "legacy": true, "visible": true, "art": "dragon", "intro": "Character, action and a game outcome you can read through motion.", "role": "Dragon reactions, button presses, platform and gold-bar movement, wheel states and bonus transitions.", "proof": "Approved footage will be accompanied by a clear breakdown of personal contributions.", "scope": ["Action direction", "Character reactions", "States & transitions"], "status": "Schematic preview only. Original artwork and commercial results require separate approval.", "blocks": [{"type": "video", "src": "", "mp4": "", "poster": "", "caption": "", "width": 16, "height": 9}]}, {"id": "chick", "title": "Chick Fiesta", "kind": "Work concept / publication approval pending", "group": "work", "companyId": "spribe", "category": "work", "placement": "work", "featured": false, "legacy": true, "visible": true, "art": "chick", "intro": "A character and interface inspired by a Filipino festival setting.", "role": "Mobile UI clarity, simpler backgrounds, readable character design, harmless round endings and animation-ready parts.", "proof": "Approved concept iterations and changes informed by partner feedback will document the work.", "scope": ["Visual concept", "Mobile UI", "Character & animation"], "status": "The preview is not original project art. Release and conversion claims are not made here.", "blocks": [{"type": "image", "src": "", "alt": "Illustrative tall-image placeholder for Chick Fiesta. Original project art is not included.", "caption": "", "width": 1200, "height": 4480}]}, {"id": "bonus", "title": "Bonus flows", "kind": "Work direction / UI & animation", "group": "work", "companyId": "spribe", "category": "work", "placement": "work", "featured": false, "legacy": true, "visible": true, "art": "reels", "intro": "A bonus mechanic that explains itself through timing and sequence.", "role": "Entry banners, three-window reveals, staggered stops, scale and alpha accents, and the return to the main game.", "proof": "Original footage and a state diagram will identify the specific contribution.", "scope": ["Sequence", "Attention hierarchy", "Return transition"], "status": "Illustrative preview. No public-release or business-metric claims.", "blocks": []}, {"id": "early", "title": "Early work", "kind": "Freelance / 11.2013 — 10.2018", "group": "work", "companyId": "freelance", "category": "work", "placement": "work", "featured": false, "visible": true, "legacy": true, "art": "type", "intro": "The first chapter in graphic design.", "role": "Graphic Designer", "proof": "Project material is being prepared.", "scope": ["Graphics"], "status": "Case study in preparation.", "blocks": []}, {"id": "poly-diary", "title": "Poly Art Diary", "kind": "Playgendary / 10.2018 — 02.2019", "group": "work", "companyId": "playgendary", "category": "work", "placement": "work", "featured": false, "visible": true, "legacy": true, "art": "poly2", "intro": "Polysphere: visual direction, UI/UX, VFX and team leadership.", "role": "Product Owner", "proof": "Project material is being prepared.", "scope": ["Product", "UI/UX", "VFX", "Team"], "status": "Case study in preparation.", "blocks": []}, {"id": "solitaire", "title": "Solitaire Clash", "kind": "RocketScience / 03.2019 — 10.2021", "group": "work", "companyId": "rocketscience", "category": "work", "placement": "work", "featured": false, "visible": true, "legacy": true, "art": "cards", "intro": "From game interfaces and animation to store assets.", "role": "Art Generalist", "proof": "Project material is being prepared.", "scope": ["2D / 3D", "UI", "Animation", "VFX"], "status": "Case study in preparation.", "blocks": []}, {"id": "mahjong", "title": "Words Mahjong", "kind": "RocketScience / 03.2019 — 10.2021", "group": "work", "companyId": "rocketscience", "category": "work", "placement": "work", "featured": false, "visible": true, "legacy": true, "art": "tiles", "intro": "From game interfaces and animation to store assets.", "role": "Art Generalist", "proof": "Project material is being prepared.", "scope": ["2D / 3D", "UI", "Animation", "VFX"], "status": "Case study in preparation.", "blocks": []}, {"id": "cradle", "title": "Cradle Inc.", "kind": "RocketScience / 03.2019 — 10.2021", "group": "work", "companyId": "rocketscience", "category": "work", "placement": "work", "featured": false, "visible": true, "legacy": true, "art": "story", "intro": "From game interfaces and animation to store assets.", "role": "Art Generalist", "proof": "Project material is being prepared.", "scope": ["2D / 3D", "UI", "Animation", "VFX"], "status": "Case study in preparation.", "blocks": []}, {"id": "hypercasual", "title": "Hypercasual", "kind": "PandaPlay / 12.2020 — 11.2021", "group": "work", "companyId": "pandaplay", "category": "work", "placement": "work", "featured": false, "visible": true, "legacy": true, "art": "world", "intro": "Hypercasual visuals, team leadership and optimization.", "role": "Lead Artist", "proof": "Project material is being prepared.", "scope": ["Art lead", "Prototypes", "Optimization"], "status": "Case study in preparation.", "blocks": []}]}
+</script><script data-nocturne-source="src/cms-runtime.js">
+/* Editable content is embedded by rebuild.py, so the public site remains static and works via file://. */
+(() => {
+  'use strict';
+  const source=document.getElementById('portfolio-cms');
+  let cms={projects:[],chapters:{},copy:{}};
+  try{cms=JSON.parse(source?.textContent||'{}');}catch(error){console.warn('CMS data could not be read',error);}
+  const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const safePath=s=>typeof s==='string'&&/^(?:assets\/uploads\/|assets\/)[\w./%-]+$/i.test(s)&&!s.includes('..')?s:'';
+  const setText=(selector,value)=>{const node=$(selector);if(node&&typeof value==='string'&&node.textContent.trim()!==value.trim())node.textContent=value;};
+  const copyTargets={hero_tagline:'.hero-tagline',story_title:'#story-title',projects_title:'#projects-title',bento_title:'#bento-title',bento_intro:'.bento-head>p',lab_title:'#lab-title',lab_note:'.lab-foot',footer_title:'.footer h2',footer_note:'.footer-note'};
+  for(const [key,selector] of Object.entries(copyTargets))setText(selector,cms.copy?.[key]);
+  const projects=Array.isArray(cms.projects)?cms.projects:[];
+  const byId=Object.fromEntries(projects.map(p=>[p.id,p]));
+  const legacyData=$('#portfolio-data');
+  if(legacyData){try{
+    const data=JSON.parse(legacyData.textContent);
+    for(const experience of data.experience||[])experience.cases=(experience.cases||[]).filter(c=>byId[c.id]?.visible!==false).map(c=>{
+      const project=byId[c.id];return project?{...c,name:project.title,art:project.art||c.art,type:project.kind}:c;
+    });
+    for(const project of projects){
+      if(project.group!=='work'||!project.companyId||project.visible===false)continue;
+      const experience=(data.experience||[]).find(e=>e.id===project.companyId);
+      if(experience&&!experience.cases.some(c=>c.id===project.id))experience.cases.push({id:project.id,name:project.title,type:project.kind,art:project.art||'type'});
+    }
+    legacyData.textContent=JSON.stringify(data);
+  }catch(error){console.warn('Career case data could not be updated',error);}}
+  const firstMedia=p=>p.blocks?.find(b=>safePath(b.src)&&['image','video'].includes(b.type));
+  function mediaElement(block){
+    const src=safePath(block?.type==='video'?(block.poster||block.src):block?.src);
+    if(!src)return null;
+    const image=document.createElement('img');image.src=src;image.alt=block.alt||'';image.loading='lazy';image.decoding='async';return image;
+  }
+  function updateBento(tile,p){
+    const frame=$('.bento-frame',tile),name=$('.bento-meta b',tile),desc=$('.bento-meta i',tile);
+    if(name)name.textContent=p.title;if(desc)desc.textContent=p.kind;
+    tile.setAttribute('aria-label',`${p.title}. Open details`);
+    const media=firstMedia(p);if(frame&&media){const image=mediaElement(media);if(image){frame.replaceChildren(image);frame.dataset.slot=media.type==='video'?'MOTION / PROJECT':'IMAGE / PROJECT';}}
+    tile.hidden=p.visible===false;
+  }
+  for(const tile of $$('.bento-tile[data-case]')){const p=byId[tile.dataset.case];if(p)updateBento(tile,p);}
+  for(const row of $$('#labRows .project-row')){
+    const p=byId[row.dataset.case];if(!p)continue;
+    $('.proj-name',row).textContent=p.title;$('.proj-field',row).textContent=p.kind;
+    row.dataset.group=p.group||'personal';row.dataset.category=p.category||'tools';row.hidden=p.visible===false;
+  }
+  const rows=$('#labRows'),wall=$('.bento-wall'),columns=$$('.bento-col',wall);
+  if(rows){
+    let number=rows.querySelectorAll('.project-row').length;
+    for(const p of projects){
+      if(p.visible===false||$(`#labRows [data-case="${CSS.escape(p.id)}"]`))continue;
+      if(p.placement==='bento'&&columns.length){
+        const col=columns.reduce((a,b)=>a.children.length<=b.children.length?a:b);
+        const tile=document.createElement('button');tile.type='button';tile.className='bento-tile';tile.dataset.case=p.id;tile.style.setProperty('--th','300px');
+        tile.innerHTML='<span class="bento-frame" data-slot="PROJECT"></span><span class="bento-num"></span><span class="bento-meta"><b></b><i></i></span>';
+        $('.bento-num',tile).textContent=String(++number).padStart(2,'0');col.append(tile);updateBento(tile,p);
+      }else{
+        const row=document.createElement('button');row.type='button';row.className='project-row';row.dataset.case=p.id;row.dataset.group=p.group||'personal';row.dataset.category=p.category||'tools';
+        row.innerHTML='<span class="num"></span><span class="proj-name"></span><span class="proj-field"></span><span class="arrow">↗</span>';
+        $('.num',row).textContent=String(++number).padStart(2,'0');$('.proj-name',row).textContent=p.title;$('.proj-field',row).textContent=p.kind;rows.append(row);
+      }
+    }
+    const ordered=[...projects.filter(p=>p.group!=='work'),...projects.filter(p=>p.group==='work')];
+    for(const p of ordered){const row=$(`#labRows [data-case="${CSS.escape(p.id)}"]`);if(row)rows.append(row);}
+    $$('.project-row',rows).forEach((row,index)=>{$('.num',row).textContent=String(index+1).padStart(2,'0');});
+  }
+  const existingChapters=new Set(['vice','companion','party','elemental','color']);
+  const addedFeatured=projects.filter(p=>p.visible!==false&&p.featured&&!existingChapters.has(p.id));
+  if(addedFeatured.length){
+    const section=document.createElement('section');section.className='cms-featured';section.id='more-work';
+    section.innerHTML='<div class="cms-featured-head"><span class="eyebrow">SELECTED WORK / MORE STORIES</span><h2>More work to explore.</h2></div><div class="cms-featured-grid"></div>';
+    const grid=$('.cms-featured-grid',section);
+    for(const p of addedFeatured){
+      const card=document.createElement('button');card.type='button';card.className='cms-featured-card';card.dataset.case=p.id;
+      const visual=document.createElement('span');visual.className='cms-featured-visual';const img=mediaElement(firstMedia(p));if(img)visual.append(img);
+      const content=document.createElement('span');content.className='cms-featured-content';
+      const name=document.createElement('strong');name.textContent=p.title;const kind=document.createElement('small');kind.textContent=p.kind;
+      content.append(name,kind);card.append(visual,content);grid.append(card);
+    }
+    document.getElementById('bento')?.before(section);
+  }
+  const filters=$('.filters');
+  if(filters){for(const [key,label] of [['work','Work'],['personal','Personal']]){
+    if($(`[data-filter="${key}"]`,filters))continue;
+    const button=document.createElement('button');button.type='button';button.className='filter';button.dataset.filter=key;button.setAttribute('aria-pressed','false');button.textContent=label;filters.append(button);
+  }}
+  function fillCard(card,slide,index,total){
+    card.dataset.slide=String(index);card.setAttribute('aria-label',`${index+1} of ${total}: ${slide.title||'Project media'}`);
+    card.classList.toggle('cms-media-card',slide.type!=='legacy');
+    const title=$('.media-caption h4',card),subtitle=$('.media-caption p',card),num=$('.media-caption>.mono',card);
+    if(title)title.textContent=slide.title||'Project media';if(subtitle)subtitle.textContent=slide.subtitle||'';if(num)num.textContent=String(index+1).padStart(2,'0');
+    if(slide.type==='legacy'&&!safePath(slide.src))return;
+    const glass=$('.card-glass',card);if(!glass)return;
+    glass.replaceChildren();
+    if(slide.type==='video'){
+      const v=document.createElement('video');v.controls=true;v.playsInline=true;v.preload='none';v.muted=true;v.setAttribute('playsinline','');
+      if(safePath(slide.poster))v.poster=slide.poster;
+      for(const [key,mime] of [['src','video/webm'],['mp4','video/mp4']])if(safePath(slide[key])){const source=document.createElement('source');source.src=slide[key];source.type=mime;v.append(source);}
+      glass.append(v);
+    }else if(safePath(slide.src)){
+      const image=mediaElement(slide);if(image)glass.append(image);
+    }
+  }
+  for(const [id,chapter] of Object.entries(cms.chapters||{})){
+    const root=document.getElementById(id);if(!root)continue;
+    setText(`#${id} .chapter-eyebrow`,chapter.eyebrow);
+    setText(`#${id} .chapter-heading h2`,chapter.title);
+    setText(`#${id} .chapter-heading>p`,chapter.description);
+    setText(`#${id} .scene-note`,chapter.note);
+    const rail=$('.media-rail',root),track=$('.rail-track',rail),dots=$('.rail-dots',rail);
+    if(!rail||!track||!dots||!Array.isArray(chapter.slides))continue;
+    const old=new Map($$('.media-card[data-frame-id]',track).map(card=>[card.dataset.frameId,card]));
+    const cards=[];
+    for(const slide of chapter.slides){
+      let card=old.get(slide.id);
+      if(!card){card=document.createElement('article');card.className='media-card';card.dataset.frameId=slide.id;card.setAttribute('role','group');card.setAttribute('aria-roledescription','slide');card.innerHTML='<div class="card-glass"></div><div class="media-caption"><div><h4></h4><p></p></div><span class="mono"></span></div>';}
+      cards.push(card);
+    }
+    if(!cards.length)continue;
+    track.replaceChildren(...cards);dots.replaceChildren();rail.dataset.count=String(cards.length);
+    cards.forEach((card,index)=>{fillCard(card,chapter.slides[index],index,cards.length);const dot=document.createElement('button');dot.type='button';dot.className='rail-dot';dot.dataset.slideTo=String(index);dot.setAttribute('aria-label',`Slide ${index+1}`);dot.setAttribute('aria-pressed',String(index===0));dots.append(dot);});
+  }
+  window.PortfolioCMS={data:cms,projects:byId,safePath};
+})();
+</script><script data-nocturne-source="src/director.js">
 /* NOCTURNE R14 — one reversible scroll timeline, with semantic checkpoint navigation.
  * update() reads layout on scroll/resize; tick() renders only visible chapters.
  * A carousel has ONE source of truth: its chapter's scroll coordinate.
@@ -4967,6 +5116,11 @@ body.reduced .mobile-history-intro{transition:none!important}
     "status": "Illustrative preview. No public-release or business-metric claims."
   }
 };
+    // The editor owns project text and any projects added after the original build.
+    for(const project of window.PortfolioCMS?.data?.projects||[]){
+      caseInfo[project.id]={title:project.title,kind:project.kind,art:project.art||'type',intro:project.intro,
+        role:project.role,proof:project.proof,scope:Array.isArray(project.scope)?project.scope:[],status:project.status};
+    }
     // Reuse the original explicitly illustrative art; these are not product captures.
     $$('.bento-tile[data-case]').forEach(el=>{const frame=$('.bento-frame',el),c=caseInfo[el.dataset.case];if(frame&&c){frame.innerHTML=artSvg(c.art);frame.dataset.slot='VISUAL STUDY';}});
     function baseCase(id) { let f; for (const exp of DATA.experience) {
@@ -5000,6 +5154,7 @@ body.reduced .mobile-history-intro{transition:none!important}
         </div>
         <div class="case-editorial"><section><div class="case-label">01 / MY FOCUS</div><p>${escapeHtml(c.role)}</p></section><section><div class="case-label">02 / CASE-STUDY MATERIAL</div><p>${escapeHtml(c.proof)}</p></section></div>
         <div class="case-meta">${escapeHtml(c.status)}</div>
+        ${(window.PortfolioCMS?.projects?.[id]?.blocks||[]).length?`<div class="case-actions"><button type="button" data-media-open="${escapeHtml(id)}">Explore project media ↗</button></div>`:''}
         <footer class="case-foot"><span>Details, not just the outcome.</span><div class="case-actions"><button data-close>Back to the story ↙</button><a href="${DATA.person.linkedin}" target="_blank" rel="noopener noreferrer">Let’s talk ↗</a></div></footer>
       </article>`, 'HLEB / PROJECT NOTES', id);
     }
@@ -5048,7 +5203,7 @@ body.reduced .mobile-history-intro{transition:none!important}
     }
     window.portfolioNavigate=navigate;
     $$('.exp').forEach(el => el.addEventListener('toggle', () => { dirty = true; requestTick(); }));
-    $$('[data-filter]').forEach(b => b.addEventListener('click', () => { const f = b.dataset.filter; $$('[data-filter]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); $$('.project-row').forEach(x => x.hidden = f !== 'all' && x.dataset.category !== f); dirty = true; requestTick(); }));
+    $$('[data-filter]').forEach(b => b.addEventListener('click', () => { const f = b.dataset.filter; $$('[data-filter]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); $$('.project-row').forEach(x => {const visible=window.PortfolioCMS?.projects?.[x.dataset.case]?.visible!==false;x.hidden = !visible || (f !== 'all' && x.dataset.category !== f && x.dataset.group !== f);}); dirty = true; requestTick(); }));
     $('#utilityToggle').addEventListener('click', () => { const b = $('#utilityToggle'), open = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', String(open)); $('#utilityOptions').hidden = !open; });
     $('#authorToggle').addEventListener('click', () => { author = !author; document.body.classList.toggle('author-mode', author); $('#authorToggle').setAttribute('aria-pressed', String(author)); dirty = true; requestTick(); if (author)
         toast('Local media stays on your device.'); });
@@ -6655,8 +6810,22 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
         return; summary.dataset.opening = '1'; showCompany(r.id,summary); delete summary.dataset.opening; }); });
     // Navigation is a flat CSS glass surface; do not render a second inflated GPU skin.
     $$('.card-glass').forEach(el => registerSurface(el, el, 'media'));
+    // On native touch scroll the DOM card can move on the compositor before a
+    // main-thread WebGL frame is submitted. Project its box from the same
+    // cached layout and scroll snapshot used by the DOM entrance animation.
+    // This also avoids a forced layout read after that animation's style writes.
+    function mobileCareerBox(s, scroll) {
+        if (!touchViewport || innerWidth > 760) return null;
+        const row=s.el.closest('.exp'),m=rowMetrics.get(row),pose=s.anchor._glassPose;
+        if (!m || !pose || row.classList.contains('mx-expanded') || row.classList.contains('mx-return-focus') || s.anchor._returnPose) return null;
+        const width=m.width*pose.sx,height=m.boxH*pose.sy;
+        const left=m.left+pose.x+(m.width-width)*.5;
+        const top=m.summaryTop-scroll+pose.y+(m.boxH-height)*.5;
+        return {left,top,right:left+width,bottom:top+height,width,height};
+    }
+    const setIfChanged=(style,name,value)=>{if(style.getPropertyValue(name)!==value)style.setProperty(name,value);};
     function updateSurfaces(t, dt) {
-        const {innerWidth,innerHeight}=window;
+        const {innerWidth,innerHeight,scrollY:frameScroll}=window.NocturneFrame||window;
         const visible=[],batch=[],modal=$('#dialog').open;
         // Read all bounds before changing transforms. Avoid read/write ping-pong.
         for(const [el,s] of surfaces){
@@ -6670,7 +6839,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             if(el.closest('[inert]'))continue;
             // Read the transformed anchor in this frame, including the story gate and focus.
             // The former hand-built box omitted ancestor transforms and summary offsets.
-            const analytic=s.kind==='career'?null:s.box;
+            const analytic=s.kind==='career'?mobileCareerBox(s,frameScroll):s.box;
             const bounds=analytic||s.anchor.getBoundingClientRect();
             if(bounds.bottom < -120||bounds.top > innerHeight+120||bounds.width<1||bounds.height<1)continue;
             // Self-healing: a pointer sequence swallowed by a modal, a rail
@@ -6689,7 +6858,9 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
               s.hoverTo=on?1:0;s.dx=on?clamp((railPointer.x-r.left)/r.width*2-1,-1,1):0;s.dy=on?clamp((railPointer.y-r.top)/r.height*2-1,-1,1):0;
             }
             const opacityRow=s.kind==='career'?s.el.closest('.exp'):null;
-            batch.push([s,bounds,analytic?s.boxW:s.el.offsetWidth,analytic?s.boxH:s.el.offsetHeight,opacityRow?Number(getComputedStyle(opacityRow).opacity):1]);
+            const measured=analytic&&s.kind==='career'?rowMetrics.get(opacityRow):null;
+            const rowOpacity=opacityRow&&!(measured&&!window.NocturneLab?.inlineOpen)?Number(getComputedStyle(opacityRow).opacity):1;
+            batch.push([s,bounds,measured?.bw??(analytic?s.boxW:s.el.offsetWidth),measured?.bh??(analytic?s.boxH:s.el.offsetHeight),rowOpacity]);
         }
         for(const [s,bounds,width,height,rowOpacity] of batch){
             const expandedRow=s.el.closest('.mx-expanded');
@@ -6704,7 +6875,8 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
                 s.bounce*=1-.052*Math.pow(Math.sin(Math.PI*phase),2)*Math.exp(-3*phase);
                 if(phase===1)delete landingRow._landingAt;
             }
-            s.el.style.scale=s.bounce===1?'':s.bounce.toFixed(5);
+            const bounceScale=s.bounce===1?'':s.bounce.toFixed(5);
+            if(s.el.style.scale!==bounceScale)s.el.style.scale=bounceScale;
             s.x=lerp(s.x,s.dx,1-Math.exp(-dt*9));s.y=lerp(s.y,s.dy,1-Math.exp(-dt*9));
             s.hover=lerp(s.hover,reduced?0:s.hoverTo,1-Math.exp(-dt*8));
             // Analytic spring survives slow frames without an unstable scale kick.
@@ -6731,9 +6903,9 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
                 if(elapsed===1)delete returnedRow._hoverReleaseAt;
             }
             const st=s.el.style;
-            st.setProperty('--rx',s.rx.toFixed(3)+'deg');st.setProperty('--ry',s.ry.toFixed(3)+'deg');st.setProperty('--rz',s.rz.toFixed(3)+'deg');
-            st.setProperty('--px',s.tx.toFixed(2)+'px');st.setProperty('--py',s.ty.toFixed(2)+'px');st.setProperty('--ps',s.scale.toFixed(4));
-            st.setProperty('--hover',(.16+s.hover*.74).toFixed(3));st.setProperty('--light-x',((s.x*.5+.5)*100).toFixed(2)+'%');st.setProperty('--light-y',((s.y*.5+.5)*100).toFixed(2)+'%');
+            setIfChanged(st,'--rx',s.rx.toFixed(3)+'deg');setIfChanged(st,'--ry',s.ry.toFixed(3)+'deg');setIfChanged(st,'--rz',s.rz.toFixed(3)+'deg');
+            setIfChanged(st,'--px',s.tx.toFixed(2)+'px');setIfChanged(st,'--py',s.ty.toFixed(2)+'px');setIfChanged(st,'--ps',s.scale.toFixed(4));
+            setIfChanged(st,'--hover',(.16+s.hover*.74).toFixed(3));setIfChanged(st,'--light-x',((s.x*.5+.5)*100).toFixed(2)+'%');setIfChanged(st,'--light-y',((s.y*.5+.5)*100).toFixed(2)+'%');
             if(s.kind!=='career')continue;
             s.radius=innerWidth<=760?34:46;
             // Hand-varied silhouette and a slight yaw of the inner edge toward
@@ -6783,7 +6955,7 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             // every frame — after the same frame had written its transform —
             // forced a full style/layout pass and was what made the glass trail
             // the text and the scroll feel notched.
-            rowMetrics.set(row,{top:r.top,height:r.height,summary:sm,
+            rowMetrics.set(row,{top:r.top,height:r.height,summary:sm,summaryTop:sb.top,
                 left:sb.left,width:sb.width,boxH:sb.height,
                 bw:bub?bub.offsetWidth:sb.width,bh:bub?bub.offsetHeight:sb.height});
             points.push({ x: W * .5 + (r.left + r.width * .5 - W * .5) * (W<=760?.9:.42), y: r.top + r.height * .50 });
@@ -6942,6 +7114,10 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             }
             const tf='translate3d('+tx.toFixed(3)+'px,'+ty.toFixed(3)+'px,0) scale('+scaleX.toFixed(5)+','+scaleY.toFixed(5)+')';
             if(w.tf!==tf){w.tf=tf;s.style.transform=tf;}
+            // Keep the shader projection in lockstep with the exact CSS pose.
+            const glassPose=s._glassPose||(s._glassPose={x:0,y:0,sx:1,sy:1});
+            glassPose.x=Number(tx.toFixed(3));glassPose.y=Number(ty.toFixed(3));
+            glassPose.sx=Number(scaleX.toFixed(5));glassPose.sy=Number(scaleY.toFixed(5));
             const al=displayAlpha.toFixed(4);
             if(w.al!==al){w.al=al;s.style.opacity=al;s.dataset.visibility=al;}
             const yaw=displayYaw.toFixed(3),rot=displayRot.toFixed(3);
@@ -8645,66 +8821,7 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
 })();
 </script>
 <script id="portfolio-media" type="application/json" data-nocturne-source="content/media.json">
-{
-  "version": 1,
-  "items": {
-    "polysphere": {
-      "type": "long-image",
-      "title": "Polysphere",
-      "eyebrow": "PLAYGENDARY / VISUAL STORY",
-      "src": "",
-      "width": 1200,
-      "height": 4480,
-      "alt": "Illustrative vertical case-study layout. Original Polysphere images have not been added.",
-      "demoArt": "poly",
-      "demo": true,
-      "description": "A place for the complete visual story: key art, interface details and the decisions behind the work.",
-      "sections": [
-        {"title": "The visual story", "text": "Replace this clearly labelled layout study with one tall image, or an ordered array of image segments. The artwork stays at its natural aspect ratio."},
-        {"title": "Context beside the work", "text": "Use this space for your contribution, the brief, constraints and credits. On a phone these notes follow the final image rather than covering it."}
-      ],
-      "tags": ["Visual direction", "UI / UX", "VFX"],
-      "note": "LAYOUT DEMO — NOT ORIGINAL PRODUCT IMAGERY"
-    },
-    "chick": {
-      "type": "long-image",
-      "title": "Chick Fiesta",
-      "eyebrow": "SPRIBE / VISUAL STORY",
-      "src": "",
-      "width": 1200,
-      "height": 4480,
-      "alt": "Illustrative tall-image placeholder for Chick Fiesta. Original project art is not included.",
-      "demoArt": "chick",
-      "demo": true,
-      "description": "One continuous canvas for the character, the interface and the rhythm of the game.",
-      "sections": [
-        {"title": "Character & interface", "text": "This is a functional tall-image viewer with schematic placeholder content. Approved character art, UI frames and animation breakdowns can replace it without changing the viewer."},
-        {"title": "Your contribution", "text": "Add project-specific responsibilities, collaborators and context here. These notes remain beside the image on desktop and appear after it on mobile."}
-      ],
-      "tags": ["Character", "Mobile UI", "Motion"],
-      "note": "SCHEMATIC PLACEHOLDER — PUBLICATION APPROVAL PENDING"
-    },
-    "dragon": {
-      "type": "video",
-      "title": "Dragon Heist",
-      "eyebrow": "SPRIBE / MOTION STUDY",
-      "src": "",
-      "poster": "",
-      "demoVideoSelector": "#party video[data-owned-demo]",
-      "demo": true,
-      "autoplay": true,
-      "muted": true,
-      "loop": true,
-      "description": "A dedicated space for motion, with the context kept out of the picture.",
-      "sections": [
-        {"title": "Playback demo", "text": "The embedded clip is the site's synthetic Local Party demo, used only to demonstrate playback. It is not Dragon Heist footage. Replace it with approved project video."},
-        {"title": "About the work", "text": "Use this column for animation direction, sequence notes, your contribution and credits. Playback starts muted; sound and transport stay under the viewer's control."}
-      ],
-      "tags": ["Motion direction", "Character", "Sequence"],
-      "note": "SYNTHETIC PLAYBACK DEMO — NOT DRAGON HEIST FOOTAGE"
-    }
-  }
-}
+{"version": 1, "items": {"polysphere": {"type": "long-image", "title": "Polysphere", "eyebrow": "PLAYGENDARY / VISUAL STORY", "src": "", "width": 1200, "height": 4480, "alt": "Illustrative vertical case-study layout. Original Polysphere images have not been added.", "demoArt": "poly", "demo": true, "description": "A place for the complete visual story: key art, interface details and the decisions behind the work.", "sections": [{"title": "The visual story", "text": "Replace this clearly labelled layout study with one tall image, or an ordered array of image segments. The artwork stays at its natural aspect ratio."}, {"title": "Context beside the work", "text": "Use this space for your contribution, the brief, constraints and credits. On a phone these notes follow the final image rather than covering it."}], "tags": ["Visual direction", "UI / UX", "VFX"], "note": "LAYOUT DEMO — NOT ORIGINAL PRODUCT IMAGERY"}, "chick": {"type": "long-image", "title": "Chick Fiesta", "eyebrow": "SPRIBE / VISUAL STORY", "src": "", "width": 1200, "height": 4480, "alt": "Illustrative tall-image placeholder for Chick Fiesta. Original project art is not included.", "demoArt": "chick", "demo": true, "description": "One continuous canvas for the character, the interface and the rhythm of the game.", "sections": [{"title": "Character & interface", "text": "This is a functional tall-image viewer with schematic placeholder content. Approved character art, UI frames and animation breakdowns can replace it without changing the viewer."}, {"title": "Your contribution", "text": "Add project-specific responsibilities, collaborators and context here. These notes remain beside the image on desktop and appear after it on mobile."}], "tags": ["Character", "Mobile UI", "Motion"], "note": "SCHEMATIC PLACEHOLDER — PUBLICATION APPROVAL PENDING"}, "dragon": {"type": "video", "title": "Dragon Heist", "eyebrow": "SPRIBE / MOTION STUDY", "src": "", "poster": "", "demoVideoSelector": "#party video[data-owned-demo]", "demo": true, "autoplay": true, "muted": true, "loop": true, "description": "A dedicated space for motion, with the context kept out of the picture.", "sections": [{"title": "Playback demo", "text": "The embedded clip is the site's synthetic Local Party demo, used only to demonstrate playback. It is not Dragon Heist footage. Replace it with approved project video."}, {"title": "About the work", "text": "Use this column for animation direction, sequence notes, your contribution and credits. Playback starts muted; sound and transport stay under the viewer's control."}], "tags": ["Motion direction", "Character", "Sequence"], "note": "SYNTHETIC PLAYBACK DEMO — NOT DRAGON HEIST FOOTAGE"}}}
 </script>
 <script data-nocturne-source="src/media-viewer.js">
 /* FLOW58 / NocturneMedia. Separate top-layer viewer, never replaces the case DOM.
@@ -8718,6 +8835,11 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const root=document.documentElement,body=document.body;
  let registry={};try{registry=JSON.parse($('#portfolio-media')?.textContent||'{}').items||{};}catch(e){console.warn('Media config could not be read.',e);}
+ for(const project of window.PortfolioCMS?.data?.projects||[]){
+  if(project.visible===false||!Array.isArray(project.blocks)||!project.blocks.some(b=>b.type==='text'||b.src||b.mp4))continue;
+  registry[project.id]={type:'gallery',title:project.title,eyebrow:project.kind,description:project.intro,
+   sections:[{title:'My focus',text:project.role},{title:'Project notes',text:project.proof}],tags:project.scope,note:project.status,blocks:project.blocks};
+ }
  let viewer=null,shell=null,layout=null,media=null,notes=null,progress=null,opener=null,activeId=null,current=null,animation=null,closing=false,token=0,lock=null,observer=null;
  const replacements=new Map();let pauseList=[],scrollFrame=0;
  const reduced=()=>body.classList.contains('reduced')||matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -8791,12 +8913,36 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
   notes.classList.add('mv-notes-pending');observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){notes.classList.remove('mv-notes-pending');observer.disconnect();}},{root:layout,rootMargin:'0px 0px 50px 0px',threshold:.03});observer.observe(notes);
  }
  function status(text){const el=document.createElement('p');el.className='mv-status';el.setAttribute('role','status');el.textContent=text;return el;}
+ function addVideoSources(video,block){
+  for(const [key,type] of [['src','video/webm'],['mp4','video/mp4']]){
+   const src=safeURL(block[key],'video');if(!src)continue;
+   const source=document.createElement('source');source.src=src;source.type=src.toLowerCase().endsWith('.mp4')?'video/mp4':type;video.append(source);
+  }
+ }
  function paint(item){
   current=item;media.replaceChildren();notes.replaceChildren();layout.scrollTop=media.scrollTop=notes.scrollTop=0;progress.removeAttribute('aria-valuenow');
   viewer.dataset.mediaType=item.type;$('.mv-title',viewer).textContent=item.title||'Project media';$('.mv-eyebrow',viewer).textContent=item.eyebrow||'SELECTED WORK';$('.mv-hint',viewer).textContent=item.type==='video'?'PLAY / PAUSE / EXPLORE':'SCROLL TO EXPLORE ↓';
   notes.innerHTML=`<p class="mv-description">${esc(item.description||'')}</p>${(item.sections||[]).map(s=>`<section class="mv-text-section"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></section>`).join('')}${item.tags?.length?`<div class="mv-tags">${item.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}${item.note?`<p class="mv-note">${esc(item.note)}</p>`:''}`;
   const replacement=replacements.get(activeId);
-  if(item.type==='long-image'&&item.demo&&!replacement&&!item.src&&!item.images?.length){
+  if(item.type==='gallery'){
+   for(const block of item.blocks||[]){
+    if(!['image','video','text'].includes(block.type))continue;
+    const figure=document.createElement('figure');figure.className='mv-block';
+    if(block.type==='text'){
+     figure.classList.add('mv-text-block');const heading=document.createElement('h3');heading.textContent=block.title||'';const paragraph=document.createElement('p');paragraph.textContent=block.text||'';figure.append(heading,paragraph);
+    }else if(block.type==='image'){
+     const src=safeURL(block.src);if(!src)continue;
+     const img=document.createElement('img');img.className='mv-image';img.src=src;img.alt=block.alt||item.title||'Project image';img.loading=media.childElementCount?'lazy':'eager';img.decoding='async';
+     if(Number(block.width)>0&&Number(block.height)>0){img.width=Number(block.width);img.height=Number(block.height);}figure.append(img);
+    }else{
+     if(!safeURL(block.src,'video')&&!safeURL(block.mp4,'video'))continue;
+     const video=document.createElement('video');video.className='mv-video';video.controls=true;video.playsInline=true;video.setAttribute('playsinline','');video.preload='metadata';
+     if(safeURL(block.poster))video.poster=block.poster;addVideoSources(video,block);figure.append(video);
+    }
+    if(block.caption){const caption=document.createElement('figcaption');caption.textContent=block.caption;figure.append(caption);}media.append(figure);
+   }
+   if(!media.childElementCount)media.append(status('No media has been added to this project yet.'));
+  }else if(item.type==='long-image'&&item.demo&&!replacement&&!item.src&&!item.images?.length){
    media.innerHTML=demoStory(item);
   }else if(item.type==='long-image'){
    const loading=document.createElement('span');loading.className='mv-loading';loading.textContent='LOADING IMAGE';loading.setAttribute('role','status');media.append(loading);
@@ -8818,7 +8964,7 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
    let src=safeURL(replacement?.url||item.src,'video'),poster=safeURL(item.poster);
    if(!src&&item.demoVideoSelector){try{const demo=$(item.demoVideoSelector);src=safeURL(demo?.currentSrc||demo?.getAttribute('src')||$('source',demo||document)?.getAttribute('src'),'video');poster=poster||safeURL(demo?.poster);}catch{}}
    if(poster)v.poster=poster;
-   if(src){v.src=src;wrap.append(v);const fallback=document.createElement('button');fallback.className='mv-play-fallback';fallback.type='button';fallback.textContent='Play video ▷';fallback.hidden=true;wrap.append(fallback);fallback.onclick=()=>v.play().then(()=>fallback.hidden=true).catch(()=>fallback.textContent='Playback unavailable — choose another file');
+   if(src){addVideoSources(v,{src,mp4:item.mp4});wrap.append(v);const fallback=document.createElement('button');fallback.className='mv-play-fallback';fallback.type='button';fallback.textContent='Play video ▷';fallback.hidden=true;wrap.append(fallback);fallback.onclick=()=>v.play().then(()=>fallback.hidden=true).catch(()=>fallback.textContent='Playback unavailable — choose another file');
     v.addEventListener('play',()=>fallback.hidden=true);v.addEventListener('error',()=>{fallback.hidden=true;wrap.append(status('This video could not be played. Try an H.264 MP4 or a supported WebM file.'));},{once:true});
     // Called synchronously in the initiating click, before awaiting animation.
     if(v.autoplay)v.play().catch(()=>{if(viewer.open&&!closing)fallback.hidden=false;});
@@ -8836,7 +8982,7 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
   requestAnimationFrame(()=>{observeNotes();updateProgress();});
  }
  function open(id,source=document.activeElement){
-  const item=registry[id];if(!item||!['long-image','video'].includes(item.type))return false;
+  const item=registry[id];if(!item||!['long-image','video','gallery'].includes(item.type))return false;
   ensure();const already=viewer.open;token++;animation?.cancel();closing=false;viewer.classList.remove('is-closing');
   if(!already){opener=source;freezeBackground();}
   activeId=id;body.classList.add('media-viewer-open');if(!already)viewer.showModal();
@@ -8864,7 +9010,7 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
   $$('[data-case]',rootNode).forEach(button=>{
    const item=registry[button.dataset.case];if(!item||!button.closest('.case-company,.case-works'))return;
    button.dataset.mediaOpen=button.dataset.case;button.setAttribute('aria-haspopup','dialog');
-   button.setAttribute('aria-label',(item.type==='video'?'Play video: ':'View visual story: ')+item.title);
+   button.setAttribute('aria-label',(item.type==='video'?'Play video: ':'View project media: ')+item.title);
    const action=$('.cover-action',button);if(action){const label=item.type==='video'?'Play motion study ▷':'View visual story ↗';if(action.textContent!==label)action.textContent=label;}
    const small=$('.frame-label small',button);if(small&&!small.dataset.mediaLabel){small.dataset.mediaLabel='1';small.textContent+=(item.type==='video'?' · Video':' · Visual story');}
   });
@@ -8875,7 +9021,7 @@ document.querySelector('#labRows')?.addEventListener('click',event=>{
  addEventListener('resize',()=>{if(viewer?.open){observeNotes();updateProgress();}},{passive:true});
  addEventListener('pagehide',()=>{for(const v of replacements.values())URL.revokeObjectURL(v.url);replacements.clear();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)$$('video',viewer||document.createElement('div')).forEach(v=>v.pause());});
- window.NocturneMedia={open,close,register(id,item){if(!id||!['long-image','video'].includes(item?.type))throw new TypeError('Media requires an id and long-image/video type.');registry[id]={...item};bind();},get isOpen(){return !!viewer?.open;},diagnostics:()=>({id:activeId,type:current?.type||null,open:!!viewer?.open,closing,backgroundY:lock?.y??null,scrollTop:(mobile()?layout:media)?.scrollTop||0,videoTime:$('video',media||document.createElement('div'))?.currentTime??null,notesVisible:notes?!notes.classList.contains('mv-notes-pending'):false})};
+ window.NocturneMedia={open,close,register(id,item){if(!id||!['long-image','video','gallery'].includes(item?.type))throw new TypeError('Media requires an id and long-image/video/gallery type.');registry[id]={...item};bind();},get isOpen(){return !!viewer?.open;},diagnostics:()=>({id:activeId,type:current?.type||null,open:!!viewer?.open,closing,backgroundY:lock?.y??null,scrollTop:(mobile()?layout:media)?.scrollTop||0,videoTime:$('video',media||document.createElement('div'))?.currentTime??null,notesVisible:notes?!notes.classList.contains('mv-notes-pending'):false})};
  bind();
 })();
 </script>

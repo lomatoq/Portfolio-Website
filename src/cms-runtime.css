@@ -1,0 +1,16 @@
+/* Project cards added through the editor use the site's existing color language. */
+.cms-featured{padding:clamp(80px,11vw,170px) var(--gutter,36px);background:#0b1017;color:#eef3f5}
+.cms-featured-head{max-width:1400px;margin:0 auto 35px}
+.cms-featured-head h2{font-size:clamp(36px,6vw,78px);font-weight:400;letter-spacing:-.05em;margin:12px 0 0}
+.cms-featured-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:20px;max-width:1400px;margin:auto}
+.cms-featured-card{display:block;min-width:0;text-align:left;border:1px solid #ffffff22;border-radius:24px;background:linear-gradient(150deg,#1a2935,#0d151e);overflow:hidden;color:inherit;cursor:pointer;transition:transform .25s,border-color .25s}
+.cms-featured-card:hover{transform:translateY(-5px);border-color:#ffffff7a}
+.cms-featured-card:focus-visible{outline:2px solid #c2e9ff;outline-offset:4px}
+.cms-featured-visual{display:block;aspect-ratio:16/10;background:radial-gradient(circle at 40% 35%,#60748a,#172634 60%,#0c131c)}
+.cms-featured-visual img{width:100%;height:100%;display:block;object-fit:contain}
+.cms-featured-content{display:flex;flex-direction:column;gap:7px;padding:21px 23px 25px}
+.cms-featured-content strong{font-size:clamp(20px,2.2vw,29px);font-weight:500}
+.cms-featured-content small{font-size:11px;color:#afbdc9;line-height:1.4}
+.media-card.cms-media-card .card-glass{background:#0b1117}
+.media-card.cms-media-card .card-glass>img,.media-card.cms-media-card .card-glass>video{object-fit:contain!important}
+[hidden]{display:none!important}

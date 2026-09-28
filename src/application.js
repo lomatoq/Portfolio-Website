@@ -430,12 +430,24 @@
         const H = innerHeight, Y = window.scrollY;
         scrollY = Y;
         const max = document.documentElement.scrollHeight - H;
-        $('.page-progress').style.transform = `scaleX(${max > 0 ? clamp(Y / max) : 0})`;
+        // Native touch scrolling can advance before the main thread paints the
+        // WebGL glass. Collect geometry first so this coordinator does not
+        // force several layouts between its own style writes and that paint.
+        const rowRects=$$('.exp').map(el=>({el,r:el.getBoundingClientRect()}));
+        const sectionRects=['story', 'projects', 'vice', 'companion', 'party', 'elemental', 'tools', 'bento', 'lab', 'contact']
+            .map(key=>({key,r:document.getElementById(key)?.getBoundingClientRect()}));
+        const sceneRects=sceneEls.map(el=>({el,r:el.getBoundingClientRect()}));
+        const introRect=$('.intro').getBoundingClientRect();
+        const playingVideos=$$('video').filter(v=>!v.paused).map(v=>({v,r:v.getBoundingClientRect()}));
         let closest = null, dist = Infinity;
-        $$('.exp').map(el => ({el,r:el.getBoundingClientRect()})).forEach(({el,r}) => { const d = Math.abs(r.top + 50 - H * .44); if (d < dist) {
+        rowRects.forEach(({el,r}) => { const d = Math.abs(r.top + 50 - H * .44); if (d < dist) {
             dist = d;
             closest = el;
-        } el.style.setProperty('--row-x', `${reduced ? 0 : clamp((r.top - H * .45) / H, -1, 1) * 5}px`); });
+        } });
+        $('.page-progress').style.transform = `scaleX(${max > 0 ? clamp(Y / max) : 0})`;
+        // The mobile row transform is disabled by CSS, so writing its custom
+        // property on every native scroll frame only invalidates styles.
+        if(innerWidth>760)rowRects.forEach(({el,r})=>el.style.setProperty('--row-x', `${reduced ? 0 : clamp((r.top - H * .45) / H, -1, 1) * 5}px`));
         if (closest) {
             $$('.exp').forEach(el => el.classList.toggle('is-active', el === closest));
             const exp = DATA.experience.find(x => x.id === closest.id);
@@ -446,8 +458,7 @@
             }
         }
         let current = 'story';
-        for (const key of ['story', 'projects', 'vice', 'companion', 'party', 'elemental', 'tools', 'bento', 'lab', 'contact']) {
-            const r = document.getElementById(key)?.getBoundingClientRect();
+        for (const {key,r} of sectionRects) {
             if (r && r.top < H * .42)
                 current = key;
         }
@@ -457,14 +468,12 @@
         else
             a.removeAttribute('aria-current'); });
         window.LiquidPortfolio?.update(Y, H, reduced, current);
-        sceneEls.forEach(el => { const ss = scenes[el.dataset.scene], r = el.getBoundingClientRect(); ss.visible = !mediaUrls.has(el.dataset.scene) && (window.LiquidPortfolio?.isStudyVisible(el.dataset.scene) ?? (r.top < H && r.bottom > 0)); ss.p = reduced ? .36 : (window.LiquidPortfolio?.stateProgress(el.dataset.scene) ?? 0); const progress = reduced ? .82 : clamp((ss.p - .01) / .24); el.style.setProperty('--p', progress.toFixed(4)); if (el.dataset.scene === 'vice' && !vectorManual) {
+        sceneRects.forEach(({el,r}) => { const ss = scenes[el.dataset.scene]; ss.visible = !mediaUrls.has(el.dataset.scene) && (window.LiquidPortfolio?.isStudyVisible(el.dataset.scene) ?? (r.top < H && r.bottom > 0)); ss.p = reduced ? .36 : (window.LiquidPortfolio?.stateProgress(el.dataset.scene) ?? 0); const progress = reduced ? .82 : clamp((ss.p - .01) / .24); el.style.setProperty('--p', progress.toFixed(4)); if (el.dataset.scene === 'vice' && !vectorManual) {
             vectorAmount = progress;
             const slider=$('#contour');if(slider)slider.value = Math.round(progress * 100);
         } });
-        const ir = $('.intro').getBoundingClientRect();
-        ribbonVisible = ir.bottom > 0 && ir.top < H;
-        for (const v of $$('video')) {
-            const r = v.getBoundingClientRect();
+        ribbonVisible = introRect.bottom > 0 && introRect.top < H;
+        for (const {v,r} of playingVideos) {
             if (r.bottom < 0 || r.top > H)
                 v.pause();
         }
@@ -914,11 +923,14 @@
         // One layout snapshot per presented frame. Reading window.scrollY
         // between modules' style writes forces a synchronous style flush.
         window.NocturneFrame={scrollY:window.scrollY,innerWidth,innerHeight};
-        if (dirty)
-            updateScroll();
+        // Modules with a dedicated read phase must run before updateScroll's
+        // class/style changes. This keeps the career glass render on the same
+        // frame without paying another forced layout in between.
         window.NocturneR14?.read(t);
         window.NocturneFX?.read();
         window.Nocturne?.read?.();
+        if (dirty)
+            updateScroll();
         window.NocturneLab?.tick(t,uiDt);
         window.LiquidPortfolio?.tick(t, uiDt, reduced);
         window.NocturneMotion?.tick(t,uiDt,reduced);

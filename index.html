@@ -3226,11 +3226,54 @@ body #labRows .project-row::before{border-radius:0;background:linear-gradient(90
 /* Reserve separate mobile bands for the Elemental scene, its controls and
    the chapter footer. The canvas scales inside its own remaining space. */
 @media(max-width:760px){
- body #elemental .stage-study .rock-art{top:calc(var(--content-top,294px) + 12px)!important;bottom:164px!important}
+  body #elemental .stage-study .rock-art{top:calc(var(--content-top,294px) + 12px)!important;bottom:164px!important}
  body #elemental #rockCanvas{height:calc(100% - 52px)!important;top:0;bottom:auto}
  body #elemental .rock-ui{bottom:0;gap:10px}
  body #elemental .rock-ui .pill{min-height:40px}
  body #elemental .rock-caption{top:8%;font-size:6px}
+}
+
+/* The chapter transition keeps the same contrast in every scene theme. */
+body .project-chapter .scene-foot .chapter-skip{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:42px;padding:10px 19px;
+ border:1px solid #dce8ff42!important;border-radius:999px!important;
+ background:#101827e8!important;color:#f3f7ff!important;
+ box-shadow:inset 0 1px 0 #ffffff20,0 8px 22px #06091466!important;
+ backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+
+/* Mobile chapters keep the study, its controls and the navigation in distinct
+   vertical bands. The footer is shared by every colour theme. */
+@media(max-width:760px){
+ body .nav-scrim{display:none!important}
+ body .mx-cursor{display:none!important}
+ body.mx-cursor-ready,body.mx-cursor-ready a,body.mx-cursor-ready button,body.mx-cursor-ready summary{cursor:auto}
+ body.mx-case-open .floating-ui,body.mx-case-open>.mx-tools{opacity:0!important;pointer-events:none!important}
+ body .project-chapter .scene-foot,body.reduced .project-chapter .scene-foot{
+  bottom:max(65px,calc(env(safe-area-inset-bottom) + 58px))!important;
+  left:18px;right:18px;min-height:90px;gap:9px;align-items:center;justify-content:flex-end;
+ }
+ body .project-chapter .scene-note{color:#dce5f1!important;font-size:10px!important;line-height:1.45!important;text-align:center;max-width:36ch!important;text-shadow:0 1px 8px #090b1dbb}
+ body .project-chapter .scene-foot .chapter-skip{
+  align-self:center;min-height:42px;margin:0;padding:10px 19px!important;
+ }
+ body .stage-study .project-art,body.reduced .stage-study .project-art{bottom:clamp(190px,24svh,215px)!important}
+ body .stage-study .pet-art,body .stage-study .rock-art,
+ body.reduced .stage-study .pet-art,body.reduced .stage-study .rock-art{bottom:clamp(195px,25svh,225px)!important}
+ body #elemental .stage-study .rock-art{bottom:clamp(195px,25svh,225px)!important}
+ body .stage-study .party-art,body.reduced .stage-study .party-art{bottom:clamp(225px,29svh,255px)!important}
+ body .stage-study .party-ui{bottom:-48px!important;right:0!important;left:0!important;display:flex;justify-content:center;flex-wrap:wrap;gap:5px!important}
+ body .stage-study .party-feedback{width:100%;max-width:none!important;text-align:center;margin-top:0!important}
+ body .stage-study .tools-art,body.reduced .stage-study .tools-art{bottom:clamp(190px,24svh,215px)!important}
+ body .project-chapter .media-rail,body.reduced .project-chapter .media-rail{bottom:clamp(170px,21svh,190px)!important}
+}
+@media(max-width:760px) and (max-height:780px){
+ body .stage-study .party-art{top:350px!important}
+ body .stage-study .pet-art,body .stage-study .rock-art{top:315px!important}
+ body .stage-study .pet-response{bottom:34px!important}
+ body .stage-study .tools-art{top:370px!important}
+ body .stage-study .project-art{top:340px!important}
 }
 
 /* A deliberate handoff from the landing page into the timeline. */
@@ -3394,7 +3437,7 @@ body .exp.mx-expanded>.mx-inline-case{
   -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,var(--mx-top-alpha,1)) 0,rgba(0,0,0,calc(.25 + var(--mx-top-alpha,1)*.75)) 28px,#000 72px,#000 calc(100% - 138px),#000000f5 calc(100% - 112px),#000000c9 calc(100% - 78px),#0000006e calc(100% - 38px),transparent 100%)!important;
   transform:scale(var(--mx-inv-x,1),var(--mx-inv-y,1)) translate3d(60px,125px,0)!important;
 }
-body .exp.mx-expanded>.career-play:after{content:'↙';position:absolute;inset:0;display:grid;place-items:center;font:400 25px/1 'Space Grotesk',sans-serif;color:#e0e9f2;opacity:var(--mx-open,0);pointer-events:none;filter:none!important;background:none!important;mix-blend-mode:normal;mask:none!important;transform:none;animation:none;box-shadow:none}
+body .exp.mx-expanded>.career-play:after{content:'';position:absolute;inset:0;display:block;opacity:var(--mx-open,0);pointer-events:none;filter:none!important;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e0e9f2' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 7 7 17M7 17V9M7 17h8'/%3E%3C/svg%3E") center/23px 23px no-repeat!important;mix-blend-mode:normal;mask:none!important;transform:none;animation:none;box-shadow:none}
 body .exp.mx-expanded>.career-play svg{opacity:calc(1 - var(--mx-open,0))}
 body .mx-inline-case .mx-case-back{display:inline-flex;align-items:center;min-height:42px;margin:0 0 24px;padding:10px 16px;font:500 13px/1.4 'Space Grotesk',sans-serif;border-radius:999px;border:1px solid #d0e3f333;background:#d9eaff0c;color:#e1eaf5}
 .mx-case-shared-clip{position:fixed!important;z-index:260!important;display:block!important;pointer-events:none!important;overflow:hidden!important;contain:strict;isolation:isolate;clip-path:inset(0 round 38px);mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 118px),#000000e8 calc(100% - 82px),#0000007a calc(100% - 38px),transparent 100%);-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 118px),#000000e8 calc(100% - 82px),#0000007a calc(100% - 38px),transparent 100%)}
@@ -5227,12 +5270,24 @@ body.reduced .mobile-history-intro{transition:none!important}
         const H = innerHeight, Y = window.scrollY;
         scrollY = Y;
         const max = document.documentElement.scrollHeight - H;
-        $('.page-progress').style.transform = `scaleX(${max > 0 ? clamp(Y / max) : 0})`;
+        // Native touch scrolling can advance before the main thread paints the
+        // WebGL glass. Collect geometry first so this coordinator does not
+        // force several layouts between its own style writes and that paint.
+        const rowRects=$$('.exp').map(el=>({el,r:el.getBoundingClientRect()}));
+        const sectionRects=['story', 'projects', 'vice', 'companion', 'party', 'elemental', 'tools', 'bento', 'lab', 'contact']
+            .map(key=>({key,r:document.getElementById(key)?.getBoundingClientRect()}));
+        const sceneRects=sceneEls.map(el=>({el,r:el.getBoundingClientRect()}));
+        const introRect=$('.intro').getBoundingClientRect();
+        const playingVideos=$$('video').filter(v=>!v.paused).map(v=>({v,r:v.getBoundingClientRect()}));
         let closest = null, dist = Infinity;
-        $$('.exp').map(el => ({el,r:el.getBoundingClientRect()})).forEach(({el,r}) => { const d = Math.abs(r.top + 50 - H * .44); if (d < dist) {
+        rowRects.forEach(({el,r}) => { const d = Math.abs(r.top + 50 - H * .44); if (d < dist) {
             dist = d;
             closest = el;
-        } el.style.setProperty('--row-x', `${reduced ? 0 : clamp((r.top - H * .45) / H, -1, 1) * 5}px`); });
+        } });
+        $('.page-progress').style.transform = `scaleX(${max > 0 ? clamp(Y / max) : 0})`;
+        // The mobile row transform is disabled by CSS, so writing its custom
+        // property on every native scroll frame only invalidates styles.
+        if(innerWidth>760)rowRects.forEach(({el,r})=>el.style.setProperty('--row-x', `${reduced ? 0 : clamp((r.top - H * .45) / H, -1, 1) * 5}px`));
         if (closest) {
             $$('.exp').forEach(el => el.classList.toggle('is-active', el === closest));
             const exp = DATA.experience.find(x => x.id === closest.id);
@@ -5243,8 +5298,7 @@ body.reduced .mobile-history-intro{transition:none!important}
             }
         }
         let current = 'story';
-        for (const key of ['story', 'projects', 'vice', 'companion', 'party', 'elemental', 'tools', 'bento', 'lab', 'contact']) {
-            const r = document.getElementById(key)?.getBoundingClientRect();
+        for (const {key,r} of sectionRects) {
             if (r && r.top < H * .42)
                 current = key;
         }
@@ -5254,14 +5308,12 @@ body.reduced .mobile-history-intro{transition:none!important}
         else
             a.removeAttribute('aria-current'); });
         window.LiquidPortfolio?.update(Y, H, reduced, current);
-        sceneEls.forEach(el => { const ss = scenes[el.dataset.scene], r = el.getBoundingClientRect(); ss.visible = !mediaUrls.has(el.dataset.scene) && (window.LiquidPortfolio?.isStudyVisible(el.dataset.scene) ?? (r.top < H && r.bottom > 0)); ss.p = reduced ? .36 : (window.LiquidPortfolio?.stateProgress(el.dataset.scene) ?? 0); const progress = reduced ? .82 : clamp((ss.p - .01) / .24); el.style.setProperty('--p', progress.toFixed(4)); if (el.dataset.scene === 'vice' && !vectorManual) {
+        sceneRects.forEach(({el,r}) => { const ss = scenes[el.dataset.scene]; ss.visible = !mediaUrls.has(el.dataset.scene) && (window.LiquidPortfolio?.isStudyVisible(el.dataset.scene) ?? (r.top < H && r.bottom > 0)); ss.p = reduced ? .36 : (window.LiquidPortfolio?.stateProgress(el.dataset.scene) ?? 0); const progress = reduced ? .82 : clamp((ss.p - .01) / .24); el.style.setProperty('--p', progress.toFixed(4)); if (el.dataset.scene === 'vice' && !vectorManual) {
             vectorAmount = progress;
             const slider=$('#contour');if(slider)slider.value = Math.round(progress * 100);
         } });
-        const ir = $('.intro').getBoundingClientRect();
-        ribbonVisible = ir.bottom > 0 && ir.top < H;
-        for (const v of $$('video')) {
-            const r = v.getBoundingClientRect();
+        ribbonVisible = introRect.bottom > 0 && introRect.top < H;
+        for (const {v,r} of playingVideos) {
             if (r.bottom < 0 || r.top > H)
                 v.pause();
         }
@@ -5711,11 +5763,14 @@ body.reduced .mobile-history-intro{transition:none!important}
         // One layout snapshot per presented frame. Reading window.scrollY
         // between modules' style writes forces a synchronous style flush.
         window.NocturneFrame={scrollY:window.scrollY,innerWidth,innerHeight};
-        if (dirty)
-            updateScroll();
+        // Modules with a dedicated read phase must run before updateScroll's
+        // class/style changes. This keeps the career glass render on the same
+        // frame without paying another forced layout in between.
         window.NocturneR14?.read(t);
         window.NocturneFX?.read();
         window.Nocturne?.read?.();
+        if (dirty)
+            updateScroll();
         window.NocturneLab?.tick(t,uiDt);
         window.LiquidPortfolio?.tick(t, uiDt, reduced);
         window.NocturneMotion?.tick(t,uiDt,reduced);
@@ -6951,12 +7006,17 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             // Measure the row untransformed: by the time a relayout happens the
             // summary already carries the previous frame's arrival transform.
             const sb=documentBox(sm);
+            const rowRect=W<=760?row.getBoundingClientRect():null;
+            const summaryStyle=W<=760?getComputedStyle(sm):null;
             // The card's static box is measured once per layout. Reading it back
             // every frame — after the same frame had written its transform —
             // forced a full style/layout pass and was what made the glass trail
             // the text and the scroll feel notched.
-            rowMetrics.set(row,{top:r.top,height:r.height,summary:sm,summaryTop:sb.top,
-                left:sb.left,width:sb.width,boxH:sb.height,
+            rowMetrics.set(row,{top:r.top,height:r.height,summary:sm,
+                summaryTop:rowRect?rowRect.top+scrollY+sm.offsetTop:sb.top,
+                left:rowRect?rowRect.left+sm.offsetLeft:sb.left,
+                width:summaryStyle?parseFloat(summaryStyle.width)||sb.width:sb.width,
+                boxH:summaryStyle?parseFloat(summaryStyle.height)||sb.height:sb.height,
                 bw:bub?bub.offsetWidth:sb.width,bh:bub?bub.offsetHeight:sb.height});
             points.push({ x: W * .5 + (r.left + r.width * .5 - W * .5) * (W<=760?.9:.42), y: r.top + r.height * .50 });
         }

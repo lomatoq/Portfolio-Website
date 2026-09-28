@@ -1120,12 +1120,17 @@ void main(){float d=length(world-camera);float fog=1.-exp(-pow(d*.012,1.7));vec3
             // Measure the row untransformed: by the time a relayout happens the
             // summary already carries the previous frame's arrival transform.
             const sb=documentBox(sm);
+            const rowRect=W<=760?row.getBoundingClientRect():null;
+            const summaryStyle=W<=760?getComputedStyle(sm):null;
             // The card's static box is measured once per layout. Reading it back
             // every frame — after the same frame had written its transform —
             // forced a full style/layout pass and was what made the glass trail
             // the text and the scroll feel notched.
-            rowMetrics.set(row,{top:r.top,height:r.height,summary:sm,summaryTop:sb.top,
-                left:sb.left,width:sb.width,boxH:sb.height,
+            rowMetrics.set(row,{top:r.top,height:r.height,summary:sm,
+                summaryTop:rowRect?rowRect.top+scrollY+sm.offsetTop:sb.top,
+                left:rowRect?rowRect.left+sm.offsetLeft:sb.left,
+                width:summaryStyle?parseFloat(summaryStyle.width)||sb.width:sb.width,
+                boxH:summaryStyle?parseFloat(summaryStyle.height)||sb.height:sb.height,
                 bw:bub?bub.offsetWidth:sb.width,bh:bub?bub.offsetHeight:sb.height});
             points.push({ x: W * .5 + (r.left + r.width * .5 - W * .5) * (W<=760?.9:.42), y: r.top + r.height * .50 });
         }
